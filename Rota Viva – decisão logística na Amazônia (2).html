@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rota Viva – decisão logística na Amazônia</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap">
+<style>
+:root{--bg:#e8efec;--card:#f7faf8;--ink:#10302f;--mute:#4d6663;--line:#c3d3cd;--acc:#5a2a6b;--accink:#fff;--bar:#0f6b6b;--bad:#a23b3b;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1d1d;--card:#142a29;--ink:#e3f0ec;--mute:#93b0aa;--line:#2a4745;--acc:#c79be0;--accink:#1b0b24;--bar:#4fc0b8;--bad:#e28a8a}}
+:root[data-theme="dark"]{--bg:#0d1d1d;--card:#142a29;--ink:#e3f0ec;--mute:#93b0aa;--line:#2a4745;--acc:#c79be0;--accink:#1b0b24;--bar:#4fc0b8;--bad:#e28a8a}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Bricolage Grotesque",system-ui,sans-serif;line-height:1.5}
+main{max-width:760px;margin:0 auto;padding:20px 16px 48px}
+h1{font-size:clamp(2rem,8vw,3.2rem);line-height:1;margin:8px 0 10px;font-weight:800;letter-spacing:-.03em}
+.lead{color:var(--mute);margin:0 0 22px;max-width:56ch}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:16px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:520px){.grid{grid-template-columns:1fr}}
+label{display:block;font-size:.85rem;color:var(--mute);margin-bottom:4px}
+select,input[type=number]{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button,.pre button{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:8px 14px;cursor:pointer}
+.seg button[aria-pressed=true],.pre button[aria-pressed=true]{background:var(--acc);color:var(--accink);border-color:var(--acc)}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--bar);outline-offset:2px}
+.pre{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 12px}
+.w{display:grid;grid-template-columns:90px 1fr 20px;align-items:center;gap:10px;margin:6px 0;font-size:.95rem}
+input[type=range]{width:100%;accent-color:var(--acc)}
+.rec{border-left:6px solid var(--acc);padding:4px 0 4px 14px;font-size:1.1rem;font-weight:600;margin:0 0 6px}
+.sub{color:var(--mute);margin:0}
+.opt{border:1px solid var(--line);border-radius:12px;padding:14px;margin:10px 0;background:var(--card)}
+.opt.top{border:2px solid var(--acc)}
+.opt.off{opacity:.55}
+.head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.head b{font-size:1.15rem}
+.score{font-weight:800;font-size:1.4rem}
+.bar{height:8px;border-radius:4px;background:var(--line);margin:8px 0 10px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--bar);transition:width .35s}
+.m{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;font-size:.88rem}
+@media(max-width:520px){.m{grid-template-columns:1fr 1fr}}
+.m span{display:block;color:var(--mute);font-size:.78rem}
+.warn{color:var(--bad);font-size:.88rem;margin-top:8px}
+small{color:var(--mute);display:block;margin-top:18px}
+@media(prefers-reduced-motion:reduce){.bar i{transition:none}}
+</style>
+</head>
+<body>
+<main>
+<h1>Rota Viva</h1>
+<p class="lead">Compare rio, estrada, avião e multimodal para levar carga na Amazônia. Diga o que importa para a sua empresa e veja qual rota vence.</p>
+
+<section class="panel" aria-label="Dados da carga">
+<div class="grid">
+<div><label for="rt">Trajeto</label><select id="rt"></select></div>
+<div><label for="ton">Carga (toneladas)</label><input id="ton" type="number" min="1" max="5000" value="120"></div>
+</div>
+<div style="margin-top:12px"><label>Período do ano</label>
+<div class="seg" id="ss"></div></div>
+</section>
+
+<section class="panel" aria-label="Prioridades">
+<label>O que pesa mais na decisão?</label>
+<div class="pre" id="pre"></div>
+<div id="ws"></div>
+</section>
+
+<section aria-live="polite" id="out"></section>
+<small>Valores estimados para fins educacionais (custos médios por tonelada-quilômetro, velocidades típicas e emissões de referência). Para contratar frete, confirme cotações reais.</small>
+</main>
+<script>
+var ROUTES=[
+{n:"Itacoatiara → Manaus",d:{hid:270,rod:270,aer:230,mul:null}},
+{n:"Manaus → Belém",d:{hid:1650,rod:null,aer:1290,mul:null}},
+{n:"Manaus → Porto Velho",d:{hid:1100,rod:880,aer:740,mul:1000}},
+{n:"Manaus → Santos",d:{hid:4600,rod:5000,aer:2800,mul:4800}}];
+var MODES={
+hid:{n:"Hidroviário (balsa/navio)",c:.14,v:280,h:1,co:.025,r:.30},
+rod:{n:"Rodoviário",c:.38,v:550,h:.5,co:.10,r:.40},
+aer:{n:"Aéreo",c:3.2,v:800,h:1,co:.60,r:.15},
+mul:{n:"Multimodal (rio + estrada)",c:.22,v:380,h:2,co:.05,r:.35}};
+var SEASONS=[{k:"cheia",n:"Cheia"},{k:"seca",n:"Seca"}];
+var CRIT=[{k:"c",n:"Custo"},{k:"p",n:"Prazo"},{k:"e",n:"Emissões"},{k:"r",n:"Risco"}];
+var PRESETS={Equilibrado:[3,3,3,3],"Mais barato":[5,1,1,2],"Mais rápido":[1,5,1,2],"Mais verde":[2,1,5,2]};
+var st={rt:2,ton:120,ss:"seca",w:[3,3,3,3],pre:"Equilibrado"};
+var $=function(i){return document.getElementById(i)};
+var f=function(n,d){return n.toLocaleString("pt-BR",{maximumFractionDigits:d||0})};
+
+$("rt").innerHTML=ROUTES.map(function(r,i){return '<option value="'+i+'">'+r.n+'</option>'}).join("");
+$("rt").value=st.rt;
+$("rt").onchange=function(){st.rt=+this.value;run()};
+$("ton").oninput=function(){st.ton=Math.max(1,+this.value||1);run()};
+
+function drawSeg(){
+$("ss").innerHTML=SEASONS.map(function(s){return '<button aria-pressed="'+(st.ss==s.k)+'" data-k="'+s.k+'">'+s.n+'</button>'}).join("");
+$("ss").querySelectorAll("button").forEach(function(b){b.onclick=function(){st.ss=b.dataset.k;drawSeg();run()}});}
+function drawPre(){
+$("pre").innerHTML=Object.keys(PRESETS).map(function(k){return '<button aria-pressed="'+(st.pre==k)+'" data-k="'+k+'">'+k+'</button>'}).join("");
+$("pre").querySelectorAll("button").forEach(function(b){b.onclick=function(){st.w=PRESETS[b.dataset.k].slice();st.pre=b.dataset.k;drawPre();drawWs();run()}});}
+function drawWs(){
+$("ws").innerHTML=CRIT.map(function(c,i){return '<div class="w"><span>'+c.n+'</span><input type="range" min="0" max="5" value="'+st.w[i]+'" aria-label="Peso de '+c.n+'" data-i="'+i+'"><b>'+st.w[i]+'</b></div>'}).join("");
+$("ws").querySelectorAll("input").forEach(function(s){s.oninput=function(){st.w[+s.dataset.i]=+s.value;s.nextSibling.textContent=s.value;st.pre="";drawPre();run()}});}
+
+function calc(){
+var r=ROUTES[st.rt],seca=st.ss=="seca",out=[];
+Object.keys(MODES).forEach(function(k){
+var m=MODES[k],km=r.d[k];
+if(km==null){out.push({k:k,n:m.n,off:true});return}
+var cost=km*st.ton*m.c,days=km/m.v+m.h,risk=m.r,note="";
+if(seca&&(k=="hid"||k=="mul")){days*=1.4;cost*=1.15;risk+=.35;note="Seca reduz o calado: menos carga por balsa e viagem mais lenta."}
+if(!seca&&(k=="rod"||k=="mul")){days*=1.2;risk+=.2;note="Chuvas na cheia podem alagar trechos e atrasar a entrega."}
+out.push({k:k,n:m.n,km:km,cost:cost,days:days,co:km*st.ton*m.co/1000,risk:Math.min(1,risk),note:note});});
+var ok=out.filter(function(o){return !o.off});
+var ks=["cost","days","co","risk"];
+ks.forEach(function(q){var v=ok.map(function(o){return o[q]}),lo=Math.min.apply(0,v),hi=Math.max.apply(0,v);ok.forEach(function(o){o["n_"+q]=hi==lo?0:(o[q]-lo)/(hi-lo)})});
+var sw=st.w.reduce(function(a,b){return a+b},0)||1;
+ok.forEach(function(o){var pen=(st.w[0]*o.n_cost+st.w[1]*o.n_days+st.w[2]*o.n_co+st.w[3]*o.n_risk)/sw;o.score=Math.round(100*(1-pen))});
+ok.sort(function(a,b){return b.score-a.score});
+return ok.concat(out.filter(function(o){return o.off}));}
+
+function run(){
+var l=calc(),best=l[0],r=ROUTES[st.rt];
+var cheap=l.filter(function(o){return !o.off}).sort(function(a,b){return a.cost-b.cost})[0];
+var h='<div class="panel"><p class="rec">Para '+f(st.ton)+' t em '+r.n+' na '+st.ss+', a melhor escolha é '+best.n.split(" (")[0].toLowerCase()+'.</p>'
++'<p class="sub">Custa cerca de R$ '+f(best.cost)+', leva '+f(best.days,1)+' dias e emite '+f(best.co,1)+' t de CO₂.'
++(cheap.k!=best.k?' O mais barato seria o '+cheap.n.split(" (")[0].toLowerCase()+' (R$ '+f(cheap.cost)+').':'')+'</p></div>';
+l.forEach(function(o,i){
+if(o.off){h+='<div class="opt off"><div class="head"><b>'+o.n+'</b><span>Sem rota viável neste trajeto</span></div></div>';return}
+h+='<div class="opt'+(i==0?' top':'')+'"><div class="head"><b>'+o.n+'</b><span class="score">'+o.score+'<small style="display:inline;margin:0 0 0 2px"> /100</small></span></div>'
++'<div class="bar"><i style="width:'+o.score+'%"></i></div>'
++'<div class="m"><div><span>Custo</span>R$ '+f(o.cost)+'</div><div><span>Prazo</span>'+f(o.days,1)+' dias</div><div><span>CO₂</span>'+f(o.co,1)+' t</div><div><span>Risco</span>'+(o.risk<.35?"Baixo":o.risk<.6?"Médio":"Alto")+'</div></div>'
++(o.note?'<div class="warn">'+o.note+'</div>':'')+'</div>';});
+$("out").innerHTML=h;}
+drawSeg();drawPre();drawWs();run();
+</script>
+</body>
+</html>
