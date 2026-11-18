@@ -8,21 +8,17 @@
 <style>
 :root{--bg:#0f1f1d;--card:#1a2e2b;--line:#233f3a;--ink:#e6f0ee;--mute:#9bbcb6;--acc:#c4a4ff;--acc2:#a78bfa}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;padding:0 14px 20px}
-main{max-width:700px;margin:0 auto}
-h1{font-size:2.1em;margin:22px 0 6px}
-.lead{color:var(--mute);font-size:1em;line-height:1.4;margin:0 0 18px}
+main{max-width:700px;margin:0 auto}h1{font-size:2.1em;margin:22px 0 6px}.lead{color:var(--mute);font-size:1em;margin:0 0 18px}
 .tabs{display:flex;gap:8px;margin:0 0 14px}.tab{flex:1;padding:12px;border-radius:12px;border:1px solid var(--line);background:transparent;color:var(--ink);font-weight:700;cursor:pointer}.tab.active{background:var(--acc);color:#1e1235;border-color:var(--acc)}
 .panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:14px}
-.label{font-size:.9em;color:var(--mute);margin:0 0 8px 2px;display:flex;align-items:center;gap:6px}
-select,input,textarea{width:100%;background:#122420;border:1px solid var(--line);color:var(--ink);border-radius:12px;padding:12px 14px;font-size:1em}
-.row{display:flex;gap:8px;flex-wrap:wrap}
-.chip{border:1px solid var(--line);background:transparent;color:var(--ink);padding:8px 16px;border-radius:999px;font-size:.92em;cursor:pointer}.chip.active{background:var(--acc);color:#1e1235;font-weight:700}
+.label{font-size:.9em;color:var(--mute);margin:0 0 8px 2px;display:flex;gap:6px}
+input,select,textarea{width:100%;background:#122420;border:1px solid var(--line);color:var(--ink);border-radius:12px;padding:12px 14px;font-size:1em}
+.row{display:flex;gap:8px;flex-wrap:wrap}.chip{border:1px solid var(--line);background:transparent;color:var(--ink);padding:8px 16px;border-radius:999px;font-size:.92em;cursor:pointer}.chip.active{background:var(--acc);color:#1e1235;font-weight:700}
 .range-row{display:flex;align-items:center;gap:12px;margin:14px 0}input[type=range]{flex:1;accent-color:var(--acc2)}
-.card{border:1px solid var(--line);border-radius:16px;padding:14px;margin-top:12px;background:#162a27}.card.best{border-color:var(--acc2);background:#231e36}
-.score{float:right;color:var(--acc);font-weight:700}.mute{color:var(--mute);font-size:.88em}
-.total{font-size:1.55em;font-weight:800;margin-top:4px}
+.card{border:1px solid var(--line);border-radius:16px;padding:14px;margin-top:12px;background:#162a27}.card.best{border:2px solid var(--acc2);background:#231e36}
+.score{float:right;color:var(--acc);font-weight:700}.mute{color:var(--mute);font-size:.88em}.total{font-size:1.6em;font-weight:800;margin-top:4px}
 .bar{height:5px;background:#0e201d;border-radius:10px;margin:8px 0;overflow:hidden}.bar i{display:block;height:100%;background:var(--acc2)}
-.i{width:18px;height:18px;border-radius:50%;background:#1e3a36;border:1px solid var(--line);color:var(--mute);display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;cursor:pointer}
+.i{width:18px;height:18px;border-radius:50%;background:#1e3a36;border:1px solid var(--line);color:var(--mute);display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
 .badge{background:var(--acc2);color:#1a0f2e;padding:2px 8px;border-radius:20px;font-size:.7em;font-weight:800;margin-left:6px}
 table{width:100%;border-collapse:collapse;margin-top:10px}th{color:var(--mute);font-size:.8em;text-align:left;padding:8px;border-bottom:1px solid var(--line)}td{padding:10px 8px;border-bottom:1px solid var(--line);font-size:.9em}
 .btn{width:100%;padding:14px;border-radius:12px;border:none;background:var(--acc);color:#1e1235;font-weight:800;font-size:1em;cursor:pointer;margin-top:10px}
@@ -33,83 +29,65 @@ table{width:100%;border-collapse:collapse;margin-top:10px}th{color:var(--mute);f
 <body>
 <main>
 <h1>Rota Viva</h1>
-<p class="lead">Compare rio, estrada e avião na Amazônia. Simples e com tudo que importa.</p>
+<p class="lead">Exemplo real ao abrir: 500kg de farinha</p>
 
 <div class="tabs">
 <button class="tab active" id="tabCalc" onclick="showTab('calc')">Calculadora</button>
 <button class="tab" id="tabPlan" onclick="showTab('plan')">Minhas Cargas</button>
 </div>
 
-<!-- ABA CALCULADORA -->
 <div id="viewCalc">
 <div class="panel">
-<div class="label">Trajeto <span class="i" title="De onde para onde vai">i</span></div>
+<div class="label">Trajeto</div>
 <select id="rt">
-<option value="itacoatiara-manaus" selected>Itacoatiara → Manaus (270km) - Ex: 500kg farinha</option>
+<option value="itacoatiara-manaus" selected>Itacoatiara → Manaus (270km) - 500kg farinha</option>
 <option value="manaus-porto-velho">Manaus → Porto Velho</option>
 <option value="itacoatiara-belem">Itacoatiara → Belém</option>
 <option value="itacoatiara-boa-vista">Itacoatiara → Boa Vista</option>
 <option value="manaus-belem">Manaus → Belém</option>
-<option value="manaus-boa-vista">Manaus → Boa Vista</option>
 </select>
 
 <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
-<div><div class="label">Peso da carga</div><div class="row"><input id="carga" type="number" value="500"><select id="unidade" style="max-width:70px"><option value="kg" selected>KG</option><option value="ton">TON</option></select></div><div class="mute">Ex: 500kg = 10 sacas</div></div>
-<div><div class="label">Valor da carga <span class="i" title="Quanto vale pra fazer o seguro">i</span></div><input id="vMerc" type="number" value="5000"><div class="mute">Ex: R$ 5.000</div></div>
+<div><div class="label">Peso (ton) <span class="i" title="0.5 ton = 500kg = 10 sacas de farinha">i</span></div><input id="carga" type="number" value="0.5" step="0.1"><div class="mute">0.5 = 500kg</div></div>
+<div><div class="label">Valor carga</div><input id="vMerc" type="number" value="5000"><div class="mute">R$ 5.000</div></div>
 </div>
 
-<div style="margin-top:14px"><div class="label">Período <span class="i" title="Na seca a balsa cobra 25% a mais">i</span></div>
-<div class="row"><button class="chip" id="cheia" onclick="setP('cheia')">Cheia (normal)</button><button class="chip active" id="seca" onclick="setP('seca')">Seca (rio baixo)</button></div></div>
+<div style="margin-top:14px"><div class="label">Período</div>
+<div class="row"><button class="chip" id="cheia" onclick="setP('cheia')">Cheia (normal)</button><button class="chip active" id="seca" onclick="setP('seca')">Seca +25%</button></div></div>
 </div>
 
 <div class="panel">
-<div class="label">O que é mais importante pra você?</div>
+<div class="label">O que importa mais?</div>
 <div class="row" style="margin-bottom:12px">
-<button class="chip active" id="bEq" onclick="setBias('eq')">Equilibrado</button>
-<button class="chip" id="bBar" onclick="setBias('barato')">Mais barato</button>
+<button class="chip" id="bEq" onclick="setBias('eq')">Equilibrado</button>
+<button class="chip active" id="bBar" onclick="setBias('barato')">Mais barato</button>
 <button class="chip" id="bRap" onclick="setBias('rapido')">Mais rápido</button>
 <button class="chip" id="bVer" onclick="setBias('verde')">Mais verde</button>
 </div>
-<div class="range-row"><span style="width:80px" class="mute">Custo</span><input type="range" id="wC" min="1" max="5" value="3"><span id="wCv">3</span></div>
-<div class="range-row"><span style="width:80px" class="mute">Prazo</span><input type="range" id="wP" min="1" max="5" value="3"><span id="wPv">3</span></div>
-<div class="range-row"><span style="width:80px" class="mute">Emissões</span><input type="range" id="wE" min="1" max="5" value="3"><span id="wEv">3</span></div>
-<div class="range-row"><span style="width:80px" class="mute">Risco</span><input type="range" id="wR" min="1" max="5" value="3"><span id="wRv">3</span></div>
+<div class="range-row"><span style="width:80px" class="mute">Custo</span><input type="range" id="wC" min="1" max="5" value="5"><span id="wCv">5</span></div>
+<div class="range-row"><span style="width:80px" class="mute">Prazo</span><input type="range" id="wP" min="1" max="5" value="1"><span id="wPv">1</span></div>
+<div class="range-row"><span style="width:80px" class="mute">Emissões</span><input type="range" id="wE" min="1" max="5" value="1"><span id="wEv">1</span></div>
+<div class="range-row"><span style="width:80px" class="mute">Risco</span><input type="range" id="wR" min="1" max="5" value="1"><span id="wRv">1</span></div>
 </div>
 
 <div id="res"></div>
 </div>
 
-<!-- ABA PLANILHA -->
 <div id="viewPlan" class="hidden">
 <div class="panel">
-<div class="label">Adicionar carga (o que você esqueceu)</div>
+<div class="label">Nova anotação - o que faltava</div>
 <div style="display:grid;gap:10px">
-<input id="pCliente" placeholder="Cliente - Ex: João da Feira">
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-<input id="pContato" placeholder="WhatsApp / Contato">
-<input id="pNF" placeholder="Nota Fiscal">
+<input id="pCliente" placeholder="Cliente - Ex: Maria da Feira">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><input id="pContato" placeholder="WhatsApp"><input id="pNF" placeholder="Nota Fiscal"></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><select id="pTipo"><option>Farinha</option><option>Peixe</option><option>Madeira</option><option>Gelo</option><option>Outros</option></select><select id="pPago"><option value="Não">Não pago</option><option value="Sim">Pago ✓</option></select></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><input id="pPeso" placeholder="500kg"><input id="pValor" placeholder="R$ 150"></div>
+<textarea id="pObs" placeholder="Obs: entregar até 18h"></textarea>
 </div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-<select id="pTipo"><option>Tipo: Farinha</option><option>Tipo: Peixe</option><option>Tipo: Madeira</option><option>Tipo: Gelo</option><option>Tipo: Outros</option></select>
-<select id="pPago"><option value="Não">Não pago</option><option value="Sim">Pago ✓</option></select>
+<button class="btn" onclick="addCarga()">Salvar</button>
+<button class="btn btn2" onclick="exportCSV()">Exportar Excel</button>
 </div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-<input id="pPeso" placeholder="Peso - Ex: 500kg">
-<input id="pValor" placeholder="Valor frete - Ex: R$ 150">
+<div class="panel"><table id="tabCargas"><thead><tr><th>Cliente</th><th>Peso</th><th>Valor</th><th>Pago</th><th></th></tr></thead><tbody></tbody></table><div id="empty" class="mute" style="text-align:center;padding:20px">Nenhuma carga ainda</div></div>
 </div>
-<textarea id="pObs" placeholder="Observações - Ex: Entregar até 18h, cuidado frágil"></textarea>
-</div>
-<button class="btn" onclick="addCarga()">Salvar na planilha</button>
-<button class="btn btn2" onclick="exportCSV()">Exportar para Excel</button>
-</div>
-
-<div class="panel">
-<div class="label">Minhas anotações salvas no celular</div>
-<div style="overflow:auto"><table id="tabCargas"><thead><tr><th>Cliente</th><th>Peso</th><th>Valor</th><th>Pago</th><th></th></tr></thead><tbody></tbody></table></div>
-<div id="empty" class="mute" style="text-align:center;padding:20px">Nenhuma carga ainda. Adicione acima.<br>Ex: Cliente João, 500kg, R$150, Não pago</div>
-</div>
-</div>
-
 </main>
 <script>
 const base={
@@ -118,43 +96,40 @@ const base={
 "manaus-porto-velho":{rod:{d:3,co2:0.4,r:'Alto',def:450},hidro:{d:7,co2:0.2,r:'Alto',def:220},aereo:{d:0.5,co2:0.6,r:'Baixo',def:1500}},
 "itacoatiara-boa-vista":{rod:{d:2,co2:0.3,r:'Médio',def:500},hidro:{d:0,co2:0,r:'',def:0},aereo:{d:0.6,co2:0.4,r:'Baixo',def:1200}},
 "manaus-belem":{rod:{d:0,co2:0,r:'',def:0},hidro:{d:5,co2:0.2,r:'Alto',def:180},aereo:{d:0.5,co2:0.5,r:'Baixo',def:1200}},
-"manaus-boa-vista":{rod:{d:2.5,co2:0.3,r:'Médio',def:400},hidro:{d:0,co2:0,r:'',def:0},aereo:{d:0.4,co2:0.3,r:'Baixo',def:900}},
 };
 let periodo='seca';
 function showTab(t){document.getElementById('viewCalc').className=t=='calc'?'':'hidden';document.getElementById('viewPlan').className=t=='plan'?'':'hidden';document.getElementById('tabCalc').className=t=='calc'?'tab active':'tab';document.getElementById('tabPlan').className=t=='plan'?'tab active':'tab';if(t=='plan')render();}
 function setP(p){periodo=p;document.getElementById('cheia').className=p=='cheia'?'chip active':'chip';document.getElementById('seca').className=p=='seca'?'chip active':'chip';calc();}
-function setBias(b){document.querySelectorAll('#bEq,#bBar,#bRap,#bVer').forEach(el=>el.className='chip');if(b=='eq'){bEq.className='chip active';wC.value=3;wP.value=3;wE.value=3;wR.value=3}if(b=='barato'){bBar.className='chip active';wC.value=5;wP.value=1;wE.value=1;wR.value=2}if(b=='rapido'){bRap.className='chip active';wC.value=2;wP.value=5;wE.value=1;wR.value=2}if(b=='verde'){bVer.className='chip active';wC.value=2;wP.value=2;wE.value=5;wR.value=3}upd();calc();}
+function setBias(b){document.querySelectorAll('#bEq,#bBar,#bRap,#bVer').forEach(el=>el.className='chip');if(b=='eq'){bEq.className='chip active';wC.value=3;wP.value=3;wE.value=3;wR.value=3}if(b=='barato'){bBar.className='chip active';wC.value=5;wP.value=1;wE.value=1;wR.value=1}if(b=='rapido'){bRap.className='chip active';wC.value=1;wP.value=5;wE.value=1;wR.value=2}if(b=='verde'){bVer.className='chip active';wC.value=1;wP.value=1;wE.value=5;wR.value=2}upd();calc();}
 function upd(){['C','P','E','R'].forEach(k=>document.getElementById('w'+k+'v').innerText=document.getElementById('w'+k).value);}
 function calc(){
-const t=document.getElementById('rt').value; const raw=parseFloat(document.getElementById('carga').value)||0; const uni=document.getElementById('unidade').value;
-const kgReal=uni=='ton'?raw*1000:raw; const ton=kgReal/1000; const mult=periodo=='seca'?1.25:1;
-const d=base[t]||base['itacoatiara-manaus'];
-function conta(o){if(!o.def) return null; const cTon=o.def; let frete=cTon*ton*mult; if(kgReal>0 && kgReal<50) frete=Math.max(frete,30); let icms=frete*0.12; let porto=kgReal>=50?30:0; let total=frete+icms+porto; return {...o,cTon,frete,icms,porto,total};}
+const t=document.getElementById('rt').value; const ton=parseFloat(document.getElementById('carga').value)||0.5; const kgReal=ton*1000;
+const mult=periodo=='seca'?1.25:1; const d=base[t]||base['itacoatiara-manaus'];
+function conta(o){if(!o.def) return null; const cTon=o.def; let frete=cTon*ton*mult; if(kgReal>0 && kgReal<50) frete=Math.max(frete,30); let icms=frete*0.12; let porto=kgReal>=50?30:0; let total=frete+icms+porto; return {...o,cTon,frete,total};}
 const oR=conta(d.rod), oH=conta(d.hidro), oA=conta(d.aereo);
-function score(o){if(!o) return 0; let raw=(1200/(o.cTon*mult))*(+wC.value)+(10/(o.d||1))*(+wP.value)*18+(1/(o.co2+0.1))*(+wE.value)*10; let rv=o.r=='Baixo'?3:o.r=='Médio'?2:1; raw+=rv*(+wR.value)*5; return Math.min(100,Math.max(0,Math.round(raw/15)));}
+const list=[oR,oH,oA].filter(Boolean); const maxC=Math.max(...list.map(o=>o.total)); const minC=Math.min(...list.map(o=>o.total));
+const maxD=Math.max(...list.map(o=>o.d||1)); const minD=Math.min(...list.map(o=>o.d||1));
+function score(o){
+if(!o) return 0;
+let sC = maxC==minC?50: ((maxC - o.total)/(maxC-minC))*100;
+let sP = maxD==minD?50: ((maxD - o.d)/(maxD-minD))*100;
+let sE = (1/(o.co2+0.1)); sE = (sE/10)*100;
+let rv = o.r=='Baixo'?100:o.r=='Médio'?60:20;
+let total = (sC*(+wC.value) + sP*(+wP.value) + sE*(+wE.value) + rv*(+wR.value)) / (+wC.value+ +wP.value+ +wE.value+ +wR.value);
+return Math.round(total);
+}
 const sR=score(oR), sH=score(oH), sA=score(oA); const best=Math.max(sR,sH,sA);
-function card(nome,o,sc,bestFlag){if(!o) return ''; return `<div class="card ${bestFlag?'best':''}"><span class="score">${sc}/100</span><b>${nome}</b> ${bestFlag?'<span class="badge">MELHOR</span>':''}<div class="bar"><i style="width:${sc}%"></i></div><div class="mute">${o.d} dias • Risco ${o.r}</div><div class="total">R$ ${o.total.toFixed(2)}</div><div class="mute">R$ ${(o.total/Math.max(kgReal,1)).toFixed(2)}/kg • ICMS+Porto inclusos</div></div>`;}
+function card(nome,o,sc,bestFlag){if(!o) return ''; return `<div class="card ${bestFlag?'best':''}"><span class="score">${sc}/100</span><b>${nome}</b> ${bestFlag?'<span class="badge">MELHOR</span>':''}<div class="bar"><i style="width:${sc}%"></i></div><div class="mute">${o.d} dias • Risco ${o.r} • CO2 ${o.co2}</div><div class="total">R$ ${o.total.toFixed(2)}</div><div class="mute">R$ ${(o.total/kgReal).toFixed(2)}/kg • 500kg = R$ ${o.total.toFixed(2)} total</div></div>`;}
 document.getElementById('res').innerHTML=card('Rodoviário',oR,sR,best==sR)+card('Hidroviário',oH,sH,best==sH)+card('Aéreo',oA,sA,best==sA);
 }
 document.getElementById('rt').addEventListener('change',calc);
 document.querySelectorAll('input,select').forEach(e=>e.addEventListener('input',()=>{upd();calc();}));
 upd();calc();
-// PLANILHA
 let cargas=JSON.parse(localStorage.getItem('rv_cargas')||'[]');
-function addCarga(){
-const c={cliente:pCliente.value||'Sem nome',contato:pContato.value,nf:pNF.value,tipo:pTipo.value,pago:pPago.value,peso:pPeso.value||'500kg',valor:pValor.value||'R$0',obs:pObs.value,data:new Date().toLocaleDateString()};
-if(!c.cliente) return alert('Coloque o cliente'); cargas.unshift(c); localStorage.setItem('rv_cargas',JSON.stringify(cargas));
-pCliente.value='';pContato.value='';pNF.value='';pPeso.value='';pValor.value='';pObs.value=''; render();
-}
-function render(){
-const tbody=document.querySelector('#tabCargas tbody'); tbody.innerHTML=''; if(cargas.length==0){document.getElementById('empty').style.display='block';return;} document.getElementById('empty').style.display='none';
-cargas.forEach((c,i)=>{const tr=document.createElement('tr'); tr.innerHTML=`<td><b>${c.cliente}</b><div class="mute">${c.tipo}</div></td><td>${c.peso}</td><td>${c.valor}</td><td>${c.pago}</td><td><button onclick="del(${i})" style="background:transparent;border:none;color:var(--mute)">X</button></td>`; tbody.appendChild(tr);});
-}
+function addCarga(){const c={cliente:pCliente.value||'Sem nome',contato:pContato.value,nf:pNF.value,tipo:pTipo.value,pago:pPago.value,peso:pPeso.value||'500kg',valor:pValor.value||'R$0',obs:pObs.value,data:new Date().toLocaleDateString()}; cargas.unshift(c); localStorage.setItem('rv_cargas',JSON.stringify(cargas)); pCliente.value='';pContato.value='';pNF.value='';pPeso.value='';pValor.value='';pObs.value=''; render();}
+function render(){const tbody=document.querySelector('#tabCargas tbody'); tbody.innerHTML=''; if(cargas.length==0){document.getElementById('empty').style.display='block';return;} document.getElementById('empty').style.display='none'; cargas.forEach((c,i)=>{const tr=document.createElement('tr'); tr.innerHTML=`<td><b>${c.cliente}</b><div class="mute">${c.tipo}</div></td><td>${c.peso}</td><td>${c.valor}</td><td>${c.pago}</td><td><button onclick="del(${i})" style="background:transparent;border:none;color:var(--mute)">X</button></td>`; tbody.appendChild(tr);});}
 function del(i){cargas.splice(i,1); localStorage.setItem('rv_cargas',JSON.stringify(cargas)); render();}
-function exportCSV(){
-if(cargas.length==0) return alert('Nada pra exportar'); let csv='Cliente,Contato,NF,Tipo,Peso,Valor,Pago,Obs,Data\n'; cargas.forEach(c=>{csv+=`"${c.cliente}","${c.contato}","${c.nf}","${c.tipo}","${c.peso}","${c.valor}","${c.pago}","${c.obs}","${c.data}"\n`;});
-const blob=new Blob([csv],{type:'text/csv'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='minhas_cargas_rota_viva.csv'; a.click();
-}
+function exportCSV(){if(cargas.length==0) return alert('Nada'); let csv='Cliente,Contato,NF,Tipo,Peso,Valor,Pago,Obs,Data\n'; cargas.forEach(c=>{csv+=`"${c.cliente}","${c.contato}","${c.nf}","${c.tipo}","${c.peso}","${c.valor}","${c.pago}","${c.obs}","${c.data}"\n`;}); const blob=new Blob([csv],{type:'text/csv'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='minhas_cargas.csv'; a.click();}
 render();
 </script>
 </body>
