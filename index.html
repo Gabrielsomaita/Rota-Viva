@@ -2,88 +2,116 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="manifest" href="manifest.json">
 <title>Rota Viva</title>
 <style>
-:root{--bg:#e8efec;--card:#f7faf8;--ink:#10302f;--mute:#4d6663;--line:#c3d3cd;--acc:#5a2a6b;--accink:#fff;--bad:#a33}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;padding:16px}
-main{max-width:760px;margin:0 auto}
-h1{font-size:2em;margin:10px 0}
-.lead{color:var(--mute);margin:0 0 22px}
-.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:16px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-label{display:block;font-size:.85rem;color:var(--mute);margin-bottom:4px;font-weight:600}
-select,input{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
-.row{display:flex;gap:8px;align-items:center}
-.badge{background:#a78bfa;color:#0f2320;padding:2px 10px;border-radius:20px;font-size:12px;font-weight:bold}
-.price{border-left:4px solid var(--acc);padding:10px 14px;background:var(--bg);border-radius:8px;margin:8px 0}
-small.mute{color:var(--mute);font-size:.82rem}
+:root{--bg:#0f1f1d;--card:#1a2e2b;--line:#243e3a;--ink:#e6f0ee;--mute:#8fb3ad;--acc:#c4a4ff;--acc2:#a78bfa}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;padding:12px}
+main{max-width:760px;margin:0 auto}h1{margin:8px 0 2px;font-size:1.9em}p.lead{color:var(--mute);margin:0 0 16px;font-size:.92em;line-height:1.4}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px}
+label{font-size:.85rem;color:var(--mute);margin-bottom:6px;display:block;font-weight:600}
+select,input{width:100%;background:#0f2320;border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:10px 12px;font:inherit}
+.row{display:flex;gap:8px;align-items:center}.chip{border:1px solid var(--line);background:transparent;color:var(--ink);padding:6px 12px;border-radius:20px;font-size:.85em}.chip.active{background:var(--acc);color:#1a0f2e;border-color:var(--acc);font-weight:700}
+.range-row{display:flex;justify-content:space-between;align-items:center;margin:6px 0}input[type=range]{accent-color:var(--acc2)}
+.card{border:1px solid var(--line);border-radius:14px;padding:12px;margin-top:10px}.card.best{border-color:var(--acc2)}.score{float:right;color:var(--acc);font-weight:700}
+.bar{height:6px;background:#0a1a18;border-radius:10px;margin:6px 0;overflow:hidden}.bar i{display:block;height:100%;background:var(--acc2)}.mute{color:var(--mute);font-size:.82em}
 </style>
 </head>
 <body>
 <main>
 <h1>Rota Viva</h1>
-<p class="lead">Compare rio, estrada, avião com custo por local.</p>
+<p class="lead">Agora com todas as capitais do Norte e valores digitáveis.</p>
 
 <section class="panel">
-<div class="grid">
-<div><label>Trajeto</label><select id="rt">
-<option value="itacoatiara-manaus">Itacoatiara → Manaus</option>
-<option value="manaus-belem">Manaus → Belém</option>
-<option value="manaus-porto-velho">Manaus → Porto Velho</option>
-<option value="manaus-santos">Manaus → Santos</option>
-</select></div>
-<div><label>Carga</label>
-<div class="row">
-<input id="carga" type="number" value="10" min="0" step="any">
-<select id="unidade" style="max-width:95px"><option value="kg">KG</option><option value="ton" selected>TON</option></select>
-</div></div>
+<label>Trajeto</label>
+<select id="rt">
+<optgroup label="Saindo de Itacoatiara">
+<option value="itacoatiara-manaus">Itacoatiara → Manaus (AM)</option>
+<option value="itacoatiara-belem">Itacoatiara → Belém (PA)</option>
+<option value="itacoatiara-porto-velho">Itacoatiara → Porto Velho (RO)</option>
+<option value="itacoatiara-boa-vista">Itacoatiara → Boa Vista (RR)</option>
+<option value="itacoatiara-rio-branco">Itacoatiara → Rio Branco (AC)</option>
+<option value="itacoatiara-macapa">Itacoatiara → Macapá (AP)</option>
+<option value="itacoatiara-palmas">Itacoatiara → Palmas (TO)</option>
+</optgroup>
+<optgroup label="Saindo de Manaus">
+<option value="manaus-itacoatiara">Manaus → Itacoatiara</option>
+<option value="manaus-belem">Manaus → Belém (PA)</option>
+<option value="manaus-porto-velho">Manaus → Porto Velho (RO)</option>
+<option value="manaus-boa-vista">Manaus → Boa Vista (RR)</option>
+<option value="manaus-rio-branco">Manaus → Rio Branco (AC)</option>
+<option value="manaus-macapa">Manaus → Macapá (AP)</option>
+<option value="manaus-palmas">Manaus → Palmas (TO)</option>
+<option value="manaus-santos">Manaus → Santos (SP)</option>
+</optgroup>
+</select>
+
+<div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+<div><label>Carga</label><div class="row"><input id="carga" type="number" value="1" min="0" step="any" style="flex:1"><select id="unidade" style="max-width:90px"><option value="ton" selected>TON</option><option value="kg">KG</option></select></div></div>
+<div><label>Câmbio</label><div class="row"><select id="moeda" style="max-width:75px"><option value="BRL" selected>BRL</option><option value="USD">USD</option></select><input id="cot" type="number" value="5.50" step="0.01"></div></div>
 </div>
-<div class="grid" style="margin-top:12px">
-<div><label>Câmbio</label>
-<div class="row">
-<select id="moeda" style="max-width:90px"><option value="BRL" selected>BRL</option><option value="USD">USD</option></select>
-<input id="cot" type="number" value="5.50" step="0.01" min="0" placeholder="Ex: 5.73" style="max-width:120px">
+
+<div style="margin-top:12px"><label>Valor da carga / frete (digite) - R$ por TON</label>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+<div><span class="mute">Rodoviário</span><input id="vRod" type="number" value="103" step="0.01"></div>
+<div><span class="mute">Hidroviário</span><input id="vHidro" type="number" value="43" step="0.01"></div>
+<div><span class="mute">Aéreo</span><input id="vAereo" type="number" value="736" step="0.01"></div>
+</div><span class="mute">Igual o dólar, você digita qualquer valor aqui e atualiza na hora</span>
 </div>
-<small class="mute">Digite o dólar do dia</small>
+
+<div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+<div><label>Período</label><div class="row"><button class="chip active" id="cheia" onclick="setPeriodo('cheia')">Cheia</button><button class="chip" id="seca" onclick="setPeriodo('seca')">Seca</button></div></div>
+<div><label>O que pesa?</label><div class="row" style="flex-wrap:wrap"><button class="chip active" id="bEq" onclick="setBias('eq')">Equilibrado</button><button class="chip" id="bBar" onclick="setBias('barato')">Mais barato</button></div></div>
 </div>
-<div><label>Período</label><select id="periodo"><option value="cheia">Cheia</option><option value="seca">Seca (+25%)</option></select></div>
-</div>
+
+<div style="margin-top:10px"><div class="range-row"><span class="mute">Custo</span><input type="range" id="wC" min="1" max="5" value="3" style="width:60%"><span id="wCv">3</span></div><div class="range-row"><span class="mute">Prazo</span><input type="range" id="wP" min="1" max="5" value="3" style="width:60%"><span id="wPv">3</span></div><div class="range-row"><span class="mute">Emissões</span><input type="range" id="wE" min="1" max="5" value="3" style="width:60%"><span id="wEv">3</span></div><div class="range-row"><span class="mute">Risco</span><input type="range" id="wR" min="1" max="5" value="3" style="width:60%"><span id="wRv">3</span></div></div>
 </section>
 
-<section class="panel" id="resultado"></section>
+<section class="panel" id="res"></section>
 </main>
 <script>
 const base={
-"itacoatiara-manaus":{rod:{c:103,d:1},hidro:{c:43,d:2.8},aereo:{c:736,d:1.3}},
-"manaus-belem":{rod:{c:0,d:0},hidro:{c:180,d:5},aereo:{c:1200,d:2}},
-"manaus-porto-velho":{rod:{c:450,d:3},hidro:{c:220,d:7},aereo:{c:1500,d:2}},
-"manaus-santos":{rod:{c:1800,d:8},hidro:{c:0,d:0},aereo:{c:4000,d:3}}
+"itacoatiara-manaus":{rod:{d:1,co2:0.1,r:'Médio',def:103},hidro:{d:2.8,co2:0.1,r:'Alto',def:43},aereo:{d:0.3,co2:0.1,r:'Baixo',def:736}},
+"itacoatiara-belem":{rod:{d:0,co2:0,r:'',def:0},hidro:{d:5,co2:0.2,r:'Alto',def:250},aereo:{d:1,co2:0.8,r:'Baixo',def:1500}},
+"itacoatiara-porto-velho":{rod:{d:4,co2:0.5,r:'Alto',def:600},hidro:{d:6,co2:0.3,r:'Alto',def:300},aereo:{d:0.8,co2:0.7,r:'Baixo',def:1800}},
+"itacoatiara-boa-vista":{rod:{d:2,co2:0.3,r:'Médio',def:500},hidro:{d:0,co2:0,r:'',def:0},aereo:{d:0.6,co2:0.4,r:'Baixo',def:1200}},
+"itacoatiara-rio-branco":{rod:{d:5,co2:0.8,r:'Alto',def:1200},hidro:{d:8,co2:0.4,r:'Alto',def:400},aereo:{d:1,co2:1,r:'Baixo',def:2000}},
+"itacoatiara-macapa":{rod:{d:0,co2:0,r:'',def:0},hidro:{d:6,co2:0.3,r:'Alto',def:350},aereo:{d:1,co2:0.9,r:'Baixo',def:1800}},
+"itacoatiara-palmas":{rod:{d:6,co2:1,r:'Alto',def:1500},hidro:{d:0,co2:0,r:'',def:0},aereo:{d:1.2,co2:1.5,r:'Baixo',def:3000}},
+"manaus-itacoatiara":{rod:{d:1,co2:0.1,r:'Médio',def:103},hidro:{d:2.8,co2:0.1,r:'Alto',def:43},aereo:{d:0.3,co2:0.1,r:'Baixo',def:736}},
+"manaus-belem":{rod:{d:0,co2:0,r:'',def:0},hidro:{d:5,co2:0.2,r:'Alto',def:180},aereo:{d:0.5,co2:0.5,r:'Baixo',def:1200}},
+"manaus-porto-velho":{rod:{d:3,co2:0.4,r:'Alto',def:450},hidro:{d:7,co2:0.2,r:'Alto',def:220},aereo:{d:0.5,co2:0.6,r:'Baixo',def:1500}},
+"manaus-boa-vista":{rod:{d:2.5,co2:0.3,r:'Médio',def:400},hidro:{d:0,co2:0,r:'',def:0},aereo:{d:0.4,co2:0.3,r:'Baixo',def:900}},
+"manaus-rio-branco":{rod:{d:4,co2:0.6,r:'Alto',def:800},hidro:{d:9,co2:0.4,r:'Alto',def:350},aereo:{d:0.8,co2:0.8,r:'Baixo',def:1800}},
+"manaus-macapa":{rod:{d:0,co2:0,r:'',def:0},hidro:{d:4,co2:0.2,r:'Médio',def:280},aereo:{d:0.6,co2:0.4,r:'Baixo',def:1000}},
+"manaus-palmas":{rod:{d:7,co2:1.1,r:'Alto',def:1600},hidro:{d:0,co2:0,r:'',def:0},aereo:{d:1.3,co2:1.4,r:'Baixo',def:2800}},
+"manaus-santos":{rod:{d:8,co2:1.2,r:'Alto',def:1800},hidro:{d:0,co2:0,r:'',def:0},aereo:{d:1,co2:2,r:'Baixo',def:4000}}
 };
+let periodo='cheia';
+function setPeriodo(p){periodo=p;document.getElementById('cheia').className=p=='cheia'?'chip active':'chip';document.getElementById('seca').className=p=='seca'?'chip active':'chip';calc();}
+function setBias(b){if(b=='barato'){wC.value=5;wP.value=1;wE.value=1;wR.value=2}else{wC.value=3;wP.value=3;wE.value=3;wR.value=3}upd();calc();}
+function upd(){['C','P','E','R'].forEach(k=>document.getElementById('w'+k+'v').innerText=document.getElementById('w'+k).value);}
 function calc(){
-const t=document.getElementById('rt').value;
-const raw=parseFloat(document.getElementById('carga').value)||0;
-const uni=document.getElementById('unidade').value;
-const moeda=document.getElementById('moeda').value;
-const cot=parseFloat(document.getElementById('cot').value)||5.5;
-const per=document.getElementById('periodo').value;
-const ton=uni==='kg'?raw/1000:raw;
-const mult=per==='seca'?1.25:1;
-const d=base[t];
-function fmt(v){if(!v)return'-';let tot=v*ton*mult;return moeda==='USD'?`US$ ${(tot/cot).toFixed(2)} (R$ ${tot.toFixed(2)})`:`R$ ${tot.toFixed(2)}`}
-function fmtKg(v){if(!v)return'-';let kg=v/1000*mult;return moeda==='USD'?`US$ ${(kg/cot).toFixed(4)}/kg`:`R$ ${kg.toFixed(3)}/kg`}
+const t=document.getElementById('rt').value; const raw=parseFloat(document.getElementById('carga').value)||0; const uni=document.getElementById('unidade').value; const moeda=document.getElementById('moeda').value; const cot=parseFloat(document.getElementById('cot').value)||5.5;
+const vR=parseFloat(document.getElementById('vRod').value)||0; const vH=parseFloat(document.getElementById('vHidro').value)||0; const vA=parseFloat(document.getElementById('vAereo').value)||0;
+const ton=uni=='kg'?raw/1000:raw; const mult=periodo=='seca'?1.25:1; const d=base[t];
+if(d){d.rod.c=vR||d.rod.def; d.hidro.c=vH||d.hidro.def; d.aereo.c=vA||d.aereo.def;}
+function tot(c){return c*ton*mult} function fmt(v){if(!v)return'—';let t2=tot(v);return moeda=='USD'?`US$ ${(t2/cot).toFixed(2)} <span class="mute">(R$ ${t2.toFixed(2)})</span>`:`R$ ${t2.toFixed(2)}`} function fmtKg(v){if(!v)return'—';let k=v/1000*mult;return moeda=='USD'?`US$ ${(k/cot).toFixed(4)}/kg`:`R$ ${k.toFixed(3)}/kg`}
+const wc=+wC.value,wp=+wP.value,we=+wE.value,wr=+wR.value;
+function score(o){if(!o.c&&!o.def)return 0;let c=o.c||o.def; if(!c)return 0;let s=0; s+=(1000/(c*mult))*wc; s+=(10/(o.d||1))*wp*20; s+=(1/(o.co2+0.1))*we*10; let rv=o.r=='Baixo'?3:o.r=='Médio'?2:1; s+=rv*wr*5; return Math.round(s/5)}
+const sr=score(d.rod), sh=score(d.hidro), sa=score(d.aereo); const best=Math.max(sr,sh,sa);
 const nome=document.getElementById('rt').selectedOptions[0].text;
-document.getElementById('resultado').innerHTML=`
-<b>Frete estimado para ${raw} ${uni.toUpperCase()} em ${nome} na ${per}</b><br><small class="mute">${ton.toFixed(3)} toneladas equivalentes. Preço por local = custo base x sua carga.</small>
-<div class="price"><div style="display:flex;justify-content:space-between"><b>Rodoviário</b><span class="badge">${d.rod.d?d.rod.d+' dias':'-'}</span></div>Total: <b>${fmt(d.rod.c)}</b><br>Por KG: <b>${fmtKg(d.rod.c)}</b></div>
-<div class="price"><div style="display:flex;justify-content:space-between"><b>Hidroviário</b><span class="badge">${d.hidro.d?d.hidro.d+' dias':'-'}</span></div>Total: <b>${fmt(d.hidro.c)}</b><br>Por KG: <b>${fmtKg(d.hidro.c)}</b><br><small class="mute">Na seca balsa leva menos, preço sobe.</small></div>
-<div class="price"><div style="display:flex;justify-content:space-between"><b>Aéreo</b><span class="badge">rápido</span></div>Total: <b>${fmt(d.aereo.c)}</b><br>Por KG: <b>${fmtKg(d.aereo.c)}</b><br><small class="mute">Câmbio: ${moeda} @ ${cot.toFixed(2)}</small></div>
+document.getElementById('res').innerHTML=`
+<div style="border-left:4px solid var(--acc2);padding-left:10px;margin-bottom:12px">Para <b>${raw} ${uni.toUpperCase()}</b> em <b>${nome}</b> na <b>${periodo}</b>, a melhor é <b>${best==sr?'rodoviário':best==sh?'hidroviário':'aéreo'}</b>. Custo: ${fmt(best==sr?d.rod.c:best==sh?d.hidro.c:d.aereo.c)}.</div>
+<div class="card ${best==sr?'best':''}"><span class="score">${sr} /100</span><b>Rodoviário</b><div class="bar"><i style="width:${sr}%"></i></div><div style="display:grid;grid-template-columns:1fr 1fr"><div><span class="mute">Custo</span><div>${fmt(d.rod.c)}<div class="mute">${fmtKg(d.rod.c)}</div></div></div><div><span class="mute">Prazo</span><div>${d.rod.d||'—'} dias</div></div></div></div>
+<div class="card ${best==sh?'best':''}"><span class="score">${sh} /100</span><b>Hidroviário</b><div class="bar"><i style="width:${sh}%"></i></div><div style="display:grid;grid-template-columns:1fr 1fr"><div><span class="mute">Custo</span><div>${fmt(d.hidro.c)}<div class="mute">${fmtKg(d.hidro.c)}</div></div></div><div><span class="mute">Prazo</span><div>${d.hidro.d||'—'} dias</div></div></div></div>
+<div class="card ${best==sa?'best':''}"><span class="score">${sa} /100</span><b>Aéreo</b><div class="bar"><i style="width:${sa}%"></i></div><div style="display:grid;grid-template-columns:1fr 1fr"><div><span class="mute">Custo</span><div>${fmt(d.aereo.c)}<div class="mute">${fmtKg(d.aereo.c)}</div></div></div><div><span class="mute">Prazo</span><div>${d.aereo.d} dias</div></div></div><div class="mute" style="margin-top:6px">Câmbio ${moeda} @ ${cot.toFixed(2)} | Valores editáveis acima</div></div>
 `;
 }
-document.querySelectorAll('select,input').forEach(e=>{e.addEventListener('input',calc);e.addEventListener('change',calc);});
-calc();
+document.getElementById('rt').addEventListener('change',()=>{const d=base[document.getElementById('rt').value]; if(d){document.getElementById('vRod').value=d.rod.def;document.getElementById('vHidro').value=d.hidro.def;document.getElementById('vAereo').value=d.aereo.def;} calc();});
+document.querySelectorAll('input,select').forEach(e=>e.addEventListener('input',()=>{upd();calc();}));
+upd();calc();
 </script>
 </body>
 </html>
