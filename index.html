@@ -8,73 +8,99 @@
 <style>
 :root{--bg:#0e1e1c;--card:#1a2e2b;--line:#243e3a;--ink:#e6f0ee;--mute:#8aa39e;--acc:#c4a4ff;--ok:#4ade80;--okbg:#143d2a}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;padding:0 14px 24px}
-main{max-width:620px;margin:0 auto}h1{text-align:center;margin:28px 0 6px;font-size:2em}p.sub{text-align:center;color:var(--mute);margin:0 0 16px;font-size:.9em}
-.tabs{display:flex;gap:8px;margin-bottom:16px}.tab{flex:1;padding:12px;border-radius:12px;border:1px solid var(--line);background:transparent;color:var(--ink);font-weight:700;cursor:pointer}.tab.active{background:var(--acc);color:#1e1235}
-.top{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px}
-.top button{background:var(--card);border:1px solid var(--line);color:var(--ink);border-radius:16px;padding:20px 8px;font-size:1.45em;font-weight:800;cursor:pointer;line-height:1.1}
-.top button span{font-size:.55em;font-weight:400;color:var(--mute);display:block;margin-top:4px}
-.top button.active{border-color:var(--ok);background:var(--okbg);box-shadow:0 0 0 1px var(--ok) inset}
-.mid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
-.sel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px}
-.sel small{color:var(--mute);display:block;margin-bottom:6px;font-size:.8em}select,input,textarea{width:100%;background:transparent;border:none;color:var(--ink);font-size:1em;outline:none}
-.chips{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}.chip{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:10px 18px;border-radius:999px;cursor:pointer;font-size:.9em}.chip.active{border-color:var(--ok);background:var(--okbg);color:var(--ok);font-weight:700}
-.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:12px;cursor:pointer;transition:.2s}
-.card.best{border:2px solid var(--ok);background:#1b2f2b}.head{display:flex;justify-content:space-between;align-items:center}.price{font-size:1.9em;font-weight:900;letter-spacing:-.02em}.badge{background:var(--ok);color:#0a2e16;padding:4px 12px;border-radius:20px;font-size:.7em;font-weight:800}
-.mute{color:var(--mute);font-size:.88em}.detail{margin-top:14px;border-top:1px solid var(--line);padding-top:12px;display:none}
-.detail.open{display:block}.line{display:flex;justify-content:space-between;margin:6px 0;font-size:.9em}.line b{font-weight:600}
-.btn{width:100%;padding:14px;border-radius:12px;border:none;background:var(--acc);color:#1e1235;font-weight:800;cursor:pointer;margin-top:10px}.btn2{background:transparent;border:1px solid var(--line);color:var(--ink)}
-.hidden{display:none}table{width:100%;border-collapse:collapse}th{color:var(--mute);font-size:.8em;text-align:left;padding:10px 8px;border-bottom:1px solid var(--line)}td{padding:12px 8px;border-bottom:1px solid var(--line);font-size:.9em}
+main{max-width:620px;margin:0 auto}h1{text-align:center;margin:24px 0 4px;font-size:2em}.sub{text-align:center;color:var(--mute);margin:0 0 14px;font-size:.9em}
+.tabs{display:flex;gap:8px;margin-bottom:14px}.tab{flex:1;padding:12px;border-radius:12px;border:1px solid var(--line);background:transparent;color:var(--ink);font-weight:700;cursor:pointer}.tab.active{background:var(--acc);color:#1e1235}
 .panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:12px}
-.tag{font-size:.7em;padding:2px 8px;border-radius:20px;border:1px solid var(--line);color:var(--mute)}
+.label{color:var(--mute);font-size:.85em;margin-bottom:8px}select,input,textarea{width:100%;background:#122420;border:1px solid var(--line);color:var(--ink);border-radius:12px;padding:13px 14px;font-size:1em;outline:none}
+select:focus,input:focus,textarea:focus{border-color:var(--ok)}
+.top{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px}
+.top button{background:#122420;border:1px solid var(--line);color:var(--ink);border-radius:12px;padding:10px;font-size:.9em;font-weight:700;cursor:pointer}
+.top button.active{border-color:var(--ok);background:var(--okbg);color:var(--ok)}
+.chips{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}.chip{border:1px solid var(--line);background:transparent;color:var(--ink);padding:10px 18px;border-radius:999px;cursor:pointer}.chip.active{border-color:var(--ok);background:var(--okbg);color:var(--ok);font-weight:700}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:10px;cursor:pointer}
+.card.best{border:2px solid var(--ok);background:#1b2f2b}.head{display:flex;justify-content:space-between;align-items:center}.price{font-size:1.8em;font-weight:900}.badge{background:var(--ok);color:#0a2e16;padding:3px 10px;border-radius:20px;font-size:.7em;font-weight:800}
+.mute{color:var(--mute);font-size:.85em}.detail{display:none;margin-top:12px;border-top:1px solid var(--line);padding-top:10px}.detail.open{display:block}.line{display:flex;justify-content:space-between;margin:6px 0;font-size:.9em}
+.btn{width:100%;padding:14px;border-radius:12px;border:none;background:var(--acc);color:#1e1235;font-weight:800;cursor:pointer;margin-top:10px}.btn2{background:transparent;border:1px solid var(--line);color:var(--ink)}
+.hidden{display:none}
 </style>
 </head>
 <body>
 <main>
 <h1>Rota Viva</h1>
-<p class="sub">Logística amazônica real • Toque no card para ver taxas</p>
+<p class="sub">Toque no card para ver impostos</p>
 
 <div class="tabs">
 <button class="tab active" id="tabCalc" onclick="showTab('calc')">Calculadora</button>
-<button class="tab" id="tabPlan" onclick="showTab('plan')">Minhas Cargas</button>
+<button class="tab" id="tabPlan" onclick="showTab('plan')">Anotações</button>
 </div>
 
 <div id="viewCalc">
+<!-- TRAJETO SEPARADO COMO ANTIGAMENTE -->
+<div class="panel">
+<div class="label">Trajeto</div>
+<select id="rt" onchange="calc()">
+<option value="itacoatiara-manaus">Itacoatiara → Manaus (270km)</option>
+<option value="manaus-porto-velho">Manaus → Porto Velho (balsa R$4.800)</option>
+<option value="manaus-belem">Manaus → Belém (navio)</option>
+<option value="itacoatiara-boa-vista">Itacoatiara → Boa Vista (BR-174)</option>
+</select>
+</div>
+
+<!-- PERIODO SEPARADO COMO ANTIGAMENTE -->
+<div class="panel">
+<div class="label">Período / Rio</div>
+<select id="per" onchange="calc()">
+<option value="cheia">Cheia - normal</option>
+<option value="seca" selected>Seca - taxa +25% (Rio Negro &lt;17,7m)</option>
+</select>
+</div>
+
+<!-- QUANTIDADE COM TECLADO + ATALHOS -->
+<div class="panel">
+<div class="label">Quantidade (pode digitar)</div>
+<input id="carga" type="number" inputmode="decimal" placeholder="Ex: 0,75" value="0.5" step="0.01" oninput="syncPeso()">
+<div class="mute" id="kgHelp" style="margin-top:6px">500kg = 10 sacas farinha</div>
 <div class="top">
-<button class="active" id="b500" onclick="setW(0.5)">500kg<span>10 sacas farinha</span></button>
-<button id="b2" onclick="setW(2)">2 ton<span>Peixe / gelo</span></button>
-<button id="b14" onclick="setW(14)">14 ton<span>Caminhão cheio</span></button>
+<button id="b500" class="active" onclick="setW(0.5)">500kg</button>
+<button id="b2" onclick="setW(2)">2 ton</button>
+<button id="b14" onclick="setW(14)">14 ton</button>
 </div>
 
-<div class="mid">
-<div class="sel"><small>Trajeto</small><select id="rt" onchange="calc()"><option value="itacoatiara-manaus">Itacoatiara → Manaus (270km)</option><option value="manaus-porto-velho">Manaus → Porto Velho (balsa)</option><option value="manaus-belem">Manaus → Belém (navio)</option><option value="itacoatiara-boa-vista">Itacoatiara → Boa Vista</option></select></div>
-<div class="sel"><small>Período / Rio</small><select id="per" onchange="calc()"><option value="cheia">Cheia - normal</option><option value="seca" selected>Seca - taxa +25%</option></select></div>
+<div style="margin-top:14px">
+<div class="label">Valor da mercadoria (para seguro 1%)</div>
+<input id="vMerc" type="number" inputmode="numeric" value="5000" oninput="calc()">
+</div>
 </div>
 
-<div class="sel" style="margin-bottom:14px"><small>Valor da mercadoria (para seguro)</small><input id="vMerc" type="number" value="5000" oninput="calc()"><div class="mute" style="margin-top:4px">Ex: R$5.000 em farinha</div></div>
-
+<div class="panel">
+<div class="label">O que importa?</div>
 <div class="chips">
-<button class="chip active" id="cBar" onclick="setC('barato')">✓ Mais barato</button>
+<button class="chip active" id="cBar" onclick="setC('barato')">Mais barato</button>
 <button class="chip" id="cRap" onclick="setC('rapido')">Mais rápido</button>
 <button class="chip" id="cEq" onclick="setC('eq')">Equilibrado</button>
 </div>
+</div>
 
 <div id="res"></div>
-<div class="mute" style="text-align:center;margin-top:12px;font-size:.75em">Preços base: Rodov R$428/ton, Fluvial R$150-857/ton, Balsa R$4.800, ICMS 12%, Porto R$30, Seguro 1%</div>
 </div>
 
+<!-- ANOTAÇÕES SIMPLES - SÓ UMA ÁREA -->
 <div id="viewPlan" class="hidden">
 <div class="panel">
-<div style="display:grid;gap:10px">
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><input id="pCliente" placeholder="Cliente *"><input id="pContato" placeholder="WhatsApp"></div>
-<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px"><input id="pPeso" placeholder="Peso: 500kg"><input id="pValor" placeholder="Frete: R$150"><select id="pPago" style="background:#122420;border:1px solid var(--line);border-radius:12px;padding:12px"><option value="Não pago">Não pago</option><option value="Pago">Pago ✓</option><option value="Atrasado">Atrasado</option></select></div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><input id="pNF" placeholder="Nota Fiscal"><input id="pEntrega" type="date"></div>
-<select id="pTipo" style="background:#122420;border:1px solid var(--line);border-radius:12px;padding:12px"><option>Farinha</option><option>Peixe</option><option>Açaí</option><option>Madeira</option><option>Gelo</option><option>Outros</option></select>
-<textarea id="pObs" placeholder="Observações logísticas: horário entrega, cuidado frágil, contato porto..." rows="2" style="background:#122420;border:1px solid var(--line);border-radius:12px;padding:12px"></textarea>
+<div class="label">Anotações de logística - fica salvo no celular</div>
+<textarea id="anotacoes" rows="12" placeholder="Ex:
+Cliente: Maria da Feira - 500kg farinha - R$150
+Entrega: Manaus até amanhã 18h
+WhatsApp: 92 9xxxx-xxxx
+NF: 12345
+Pago? Não
+
+Cliente: João peixe - 2 ton - R$400
+Obs: gelo, cuidado..."></textarea>
+<button class="btn" onclick="salvarAnot()">Salvar Anotações</button>
+<button class="btn btn2" onclick="exportTxt()">Exportar .txt</button>
+<div class="mute" id="saveMsg" style="text-align:center;margin-top:8px"></div>
 </div>
-<button class="btn" onclick="addCarga()">Salvar Carga</button>
-<button class="btn btn2" onclick="exportCSV()">Exportar Excel</button>
-</div>
-<div class="panel"><table id="tabCargas"><thead><tr><th>Cliente</th><th>Carga</th><th>Frete</th><th>Status</th><th></th></tr></thead><tbody></tbody></table><div id="empty" class="mute" style="text-align:center;padding:20px">Nenhuma carga salva ainda<br>Ex: Maria - 500kg farinha - R$150 - Não pago</div></div>
 </div>
 </main>
 <script>
@@ -84,76 +110,61 @@ const tabela={
 "manaus-belem":{rod:{def:0,d:0},hidro:{def:350,d:5,co2:0.08,r:'Médio'},aereo:{def:1500,d:1,co2:0.7,r:'Baixo'}},
 "itacoatiara-boa-vista":{rod:{def:520,d:2.5,co2:0.35,r:'Médio'},hidro:{def:0,d:0},aereo:{def:1600,d:0.6,co2:0.5,r:'Baixo'}}
 };
-let peso=0.5, crit='barato';
-function showTab(t){viewCalc.className=t=='calc'?'':'hidden';viewPlan.className=t=='plan'?'':'hidden';tabCalc.className=t=='calc'?'tab active':'tab';tabPlan.className=t=='plan'?'tab active':'tab';if(t=='plan')render();}
-function setW(v){peso=v;document.querySelectorAll('.top button').forEach(b=>b.className='');document.getElementById(v==0.5?'b500':v==2?'b2':'b14').className='active';calc();}
+let crit='barato';
+function showTab(t){viewCalc.className=t=='calc'?'':'hidden';viewPlan.className=t=='plan'?'':'hidden';tabCalc.className=t=='calc'?'tab active':'tab';tabPlan.className=t=='plan'?'tab active':'tab';}
+function syncPeso(){
+ const ton=parseFloat(carga.value)||0; const kg=ton*1000;
+ kgHelp.innerText=ton>=1?`${kg.toLocaleString('pt-BR')}kg = ${ton} ton`: `${kg}kg = ${ton} ton`;
+ document.querySelectorAll('.top button').forEach(b=>b.className='');
+ if(ton==0.5) b500.className='active'; else if(ton==2) b2.className='active'; else if(ton==14) b14.className='active';
+ calc();
+}
+function setW(v){carga.value=v; syncPeso();}
 function setC(c){crit=c;document.querySelectorAll('.chip').forEach(b=>b.className='chip');document.getElementById(c=='barato'?'cBar':c=='rapido'?'cRap':'cEq').className='chip active';calc();}
 function calc(){
- const rota=rt.value; const vMerc=parseFloat(document.getElementById('vMerc').value)||0;
+ const rota=rt.value; const ton=parseFloat(carga.value)||0.5; const vMerc=parseFloat(document.getElementById('vMerc').value)||0;
  const mult=per.value=='seca'?1.25:1; const r=tabela[rota];
  function build(def,d,co2,risco,nome){
   if(!def) return null;
-  const kg=peso*1000;
-  const freteBase=def*peso*mult;
+  const kg=ton*1000;
+  const freteBase=def*ton*mult;
   const balsaExtra=rota=='manaus-porto-velho' && nome!='Aéreo' ? 4800 : 0;
   const sub=freteBase+balsaExtra;
-  const icms=sub*0.12; // ICMS AM 12%
-  const porto=kg>=50?30:0; // taxa porto Chibatão/Super Terminais
-  const seguro=vMerc*0.01; // 1% valor mercadoria
-  const taxaSeca=per.value=='seca' ? sub*0.25 - sub : 0; // já no mult, só pra mostrar
-  const suframa=0; // Zona Franca isento, mas mostra
-  const total=sub+icms+porto+seguro;
-  return {nome, def, d, co2, risco, freteBase, balsaExtra, icms, porto, seguro, suframa, total, kg};
+  const icms=sub*0.12; // ICMS AM 12% atualizado 2024
+  const porto=kg>=50?30:0; // Taxa porto Chibatão/Super Terminais
+  const seguro=vMerc*0.01; // Seguro 1%
+  const afrmm=sub*0.08; // AFRMM 8% hidroviário
+  const total=sub+icms+porto+seguro+(nome.includes('Hidro')?afrmm:0);
+  return {nome,def,d,co2,risco,freteBase,balsaExtra,icms,porto,seguro,afrmm,total,kg};
  }
- const list=[
-  build(r.rod.def,r.rod.d,r.rod.co2,r.rod.r,'Rodoviário'),
-  build(r.hidro.def,r.hidro.d,r.hidro.co2,r.hidro.r,'Hidroviário'),
-  build(r.aereo.def,r.aereo.d,r.aereo.co2,r.aereo.r,'Aéreo')
- ].filter(Boolean);
+ const list=[ build(r.rod.def,r.rod.d,r.rod.co2,r.rod.r,'Rodoviário'), build(r.hidro.def,r.hidro.d,r.hidro.co2,r.hidro.r,'Hidroviário'), build(r.aereo.def,r.aereo.d,r.aereo.co2,r.aereo.r,'Aéreo') ].filter(Boolean);
  const best=crit=='barato'?list.reduce((a,b)=>a.total<b.total?a:b):crit=='rapido'?list.reduce((a,b)=>a.d<b.d?a:b):list.reduce((a,b)=>(a.total/500+a.d*100)<(b.total/500+b.d*100)?a:b);
  function cardHTML(o,i){
   const isBest=o.nome==best.nome;
   return `<div class="card ${isBest?'best':''}" onclick="toggle(${i})">
-    <div class="head"><div><b>${o.nome}</b><div class="mute">${o.d} dias • Risco ${o.risco} • ${o.co2} CO2</div></div>
+    <div class="head"><div><b>${o.nome}</b><div class="mute">${o.d} dias • Risco ${o.risco}</div></div>
     <div style="text-align:right">${isBest?'<span class="badge">MELHOR</span>':''}<div class="price">R$ ${o.total.toFixed(2).replace('.',',')}</div><div class="mute">R$ ${(o.total/o.kg).toFixed(2)}/kg</div></div></div>
     <div class="detail" id="det${i}">
-      <div class="line"><span>Frete base (${o.def}/ton × ${peso}ton ${per.value=='seca'?'+25% seca':''})</span><b>R$ ${o.freteBase.toFixed(2)}</b></div>
-      ${o.balsaExtra?`<div class="line"><span>Balsa Porto Velho-Manaus (R$4.500-5.000)</span><b>R$ ${o.balsaExtra.toFixed(2)}</b></div>`:''}
+      <div class="line"><span>Frete base (${o.def}/ton × ${ton}ton ${per.value=='seca'?'+25% seca':''})</span><b>R$ ${o.freteBase.toFixed(2)}</b></div>
+      ${o.balsaExtra?`<div class="line"><span>Balsa Rô-Rô (real R$4.500-5.000)</span><b>R$ ${o.balsaExtra.toFixed(2)}</b></div>`:''}
       <div class="line"><span>ICMS 12% (AM)</span><b>R$ ${o.icms.toFixed(2)}</b></div>
-      <div class="line"><span>Taxa Porto (Chibatão)</span><b>R$ ${o.porto.toFixed(2)}</b></div>
-      <div class="line"><span>Seguro 1% de R$${vMerc}</span><b>R$ ${o.seguro.toFixed(2)}</b></div>
+      <div class="line"><span>Taxa Porto (Chibatão/Super T.)</span><b>R$ ${o.porto.toFixed(2)}</b></div>
+      <div class="line"><span>Seguro 1% mercadoria</span><b>R$ ${o.seguro.toFixed(2)}</b></div>
+      ${o.afrmm?`<div class="line"><span>AFRMM 8% (hidroviário)</span><b>R$ ${o.afrmm.toFixed(2)}</b></div>`:''}
       <div class="line"><span>SUFRAMA / Zona Franca</span><b>Isento</b></div>
-      <div class="line" style="border-top:1px solid var(--line);padding-top:8px;margin-top:8px"><span>Total com impostos</span><b>R$ ${o.total.toFixed(2)}</b></div>
-      <div class="mute" style="margin-top:8px">Fontes: ANTT piso R$7,35/km, balsa R$4.800, taxa seca $1.900/contêiner, frete médio R$8,77/km</div>
+      <div class="line" style="border-top:1px solid var(--line);padding-top:8px;margin-top:8px"><span><b>Total com impostos atualizados</b></span><b>R$ ${o.total.toFixed(2)}</b></div>
     </div>
   </div>`;
  }
  res.innerHTML=list.map((o,i)=>cardHTML(o,i)).join('');
 }
 function toggle(i){const el=document.getElementById('det'+i); el.className=el.className.includes('open')?'detail':'detail open';}
-setW(0.5);
-
-// PLANILHA COMPLETA
-let cargas=JSON.parse(localStorage.getItem('rv_cargas')||'[]');
-function addCarga(){
- if(!pCliente.value) return alert('Coloque o cliente');
- const c={cliente:pCliente.value,contato:pContato.value,peso:pPeso.value||'500kg',valor:pValor.value||'R$0',pago:pPago.value,nf:pNF.value,entrega:pEntrega.value,tipo:pTipo.value,obs:pObs.value,data:new Date().toLocaleDateString()};
- cargas.unshift(c); localStorage.setItem('rv_cargas',JSON.stringify(cargas));
- pCliente.value='';pContato.value='';pPeso.value='';pValor.value='';pNF.value='';pObs.value=''; render();
-}
-function render(){
- const tbody=document.querySelector('#tabCargas tbody'); tbody.innerHTML='';
- if(!cargas.length){empty.style.display='block';return;} empty.style.display='none';
- cargas.forEach((c,i)=>{
-  const tr=document.createElement('tr');
-  tr.innerHTML=`<td><b>${c.cliente}</b><div class="tag">${c.tipo}</div></td><td>${c.peso}<div class="mute">${c.nf||''}</div></td><td>${c.valor}</td><td><span class="tag" style="${c.pago=='Pago'?'color:var(--ok);border-color:var(--ok)':c.pago=='Atrasado'?'color:#f87171;border-color:#f87171':''}">${c.pago}</span></td><td><button onclick="del(${i})" style="background:none;border:none;color:var(--mute)">X</button></td>`;
-  tbody.appendChild(tr);
- });
-}
-function del(i){cargas.splice(i,1); localStorage.setItem('rv_cargas',JSON.stringify(cargas)); render();}
-function exportCSV(){if(!cargas.length) return alert('Nada'); let csv='Cliente,Contato,Peso,Valor,NF,Entrega,Tipo,Pago,Obs,Data\n'; cargas.forEach(c=>csv+=`"${c.cliente}","${c.contato}","${c.peso}","${c.valor}","${c.nf}","${c.entrega}","${c.tipo}","${c.pago}","${c.obs}","${c.data}"\n`); const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'})); a.download='logistica_amazonica.csv'; a.click();}
-render();
+// ANOTAÇÕES SIMPLES
+const txtArea=document.getElementById('anotacoes');
+txtArea.value=localStorage.getItem('rv_anot')||'';
+function salvarAnot(){localStorage.setItem('rv_anot',txtArea.value); saveMsg.innerText='✓ Salvo no celular'; setTimeout(()=>saveMsg.innerText='',2000);}
+function exportTxt(){const blob=new Blob([txtArea.value],{type:'text/plain'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='anotacoes_rota_viva.txt'; a.click();}
+syncPeso();
 </script>
-</main>
 </body>
 </html>
