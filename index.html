@@ -4,27 +4,28 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="manifest" href="manifest.json">
-<title>Rota Viva v2 - KG + Cambio + Frete Local</title>
+<title>Rota Viva</title>
 <style>
 :root{--bg:#e8efec;--card:#f7faf8;--ink:#10302f;--mute:#4d6663;--line:#c3d3cd;--acc:#5a2a6b;--accink:#fff;--bad:#a33}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,sans-serif;padding:16px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;padding:16px}
 main{max-width:760px;margin:0 auto}
 h1{font-size:2em;margin:10px 0}
 .lead{color:var(--mute);margin:0 0 22px}
 .panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:16px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-label{display:block;font-size:.85rem;color:var(--mute);margin-bottom:4px}
-select,input{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px}
-.row{display:flex;gap:8px}
-.badge{background:#a78bfa;color:#0f2320;padding:2px 8px;border-radius:10px;font-size:12px;font-weight:bold}
-.price{border-left:4px solid var(--acc);padding:8px 14px;background:var(--bg);border-radius:8px;margin:8px 0}
+label{display:block;font-size:.85rem;color:var(--mute);margin-bottom:4px;font-weight:600}
+select,input{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.row{display:flex;gap:8px;align-items:center}
+.badge{background:#a78bfa;color:#0f2320;padding:2px 10px;border-radius:20px;font-size:12px;font-weight:bold}
+.price{border-left:4px solid var(--acc);padding:10px 14px;background:var(--bg);border-radius:8px;margin:8px 0}
+small.mute{color:var(--mute);font-size:.82rem}
 </style>
 </head>
 <body>
 <main>
-<h1>Rota Viva v2</h1>
-<p class="lead">Compare rio, estrada, avião. Agora com KG, toneladas, câmbio e preço estimado por local.</p>
+<h1>Rota Viva</h1>
+<p class="lead">Compare rio, estrada, avião com custo por local.</p>
 
 <section class="panel">
 <div class="grid">
@@ -36,16 +37,18 @@ select,input{width:100%;font:inherit;color:var(--ink);background:var(--bg);borde
 </select></div>
 <div><label>Carga</label>
 <div class="row">
-<input id="carga" type="number" value="500" min="1">
-<select id="unidade" style="max-width:110px"><option value="kg">KG</option><option value="ton">TON</option></select>
+<input id="carga" type="number" value="10" min="0" step="any">
+<select id="unidade" style="max-width:95px"><option value="kg">KG</option><option value="ton" selected>TON</option></select>
 </div></div>
 </div>
 <div class="grid" style="margin-top:12px">
 <div><label>Câmbio</label>
 <div class="row">
-<select id="moeda"><option value="BRL">BRL</option><option value="USD">USD</option></select>
-<select id="cot" style="max-width:110px"><option value="5.5">5,50</option><option value="5.0">5,00</option><option value="6.0">6,00</option></select>
-</div></div>
+<select id="moeda" style="max-width:90px"><option value="BRL" selected>BRL</option><option value="USD">USD</option></select>
+<input id="cot" type="number" value="5.50" step="0.01" min="0" placeholder="Ex: 5.73" style="max-width:120px">
+</div>
+<small class="mute">Digite o dólar do dia</small>
+</div>
 <div><label>Período</label><select id="periodo"><option value="cheia">Cheia</option><option value="seca">Seca (+25%)</option></select></div>
 </div>
 </section>
@@ -64,7 +67,7 @@ const t=document.getElementById('rt').value;
 const raw=parseFloat(document.getElementById('carga').value)||0;
 const uni=document.getElementById('unidade').value;
 const moeda=document.getElementById('moeda').value;
-const cot=parseFloat(document.getElementById('cot').value);
+const cot=parseFloat(document.getElementById('cot').value)||5.5;
 const per=document.getElementById('periodo').value;
 const ton=uni==='kg'?raw/1000:raw;
 const mult=per==='seca'?1.25:1;
@@ -73,15 +76,13 @@ function fmt(v){if(!v)return'-';let tot=v*ton*mult;return moeda==='USD'?`US$ ${(
 function fmtKg(v){if(!v)return'-';let kg=v/1000*mult;return moeda==='USD'?`US$ ${(kg/cot).toFixed(4)}/kg`:`R$ ${kg.toFixed(3)}/kg`}
 const nome=document.getElementById('rt').selectedOptions[0].text;
 document.getElementById('resultado').innerHTML=`
-<b>Frete estimado para ${raw} ${uni.toUpperCase()} em ${nome} na ${per}</b><br><small style="color:var(--mute)">${ton} toneladas equivalentes. Valor por local calculado com base em custo médio por tonelada.</small>
-<div class="price"><div style="display:flex;justify-content:space-between"><b>Rodoviário</b><span class="badge">${d.rod.d||'-'} dias</span></div>Total: <b>${fmt(d.rod.c)}</b><br>Por KG: <b>${fmtKg(d.rod.c)}</b></div>
-<div class="price"><div style="display:flex;justify-content:space-between"><b>Hidroviário</b><span class="badge">${d.hidro.d||'-'} dias</span></div>Total: <b>${fmt(d.hidro.c)}</b><br>Por KG: <b>${fmtKg(d.hidro.c)}</b><br><small>Na seca balsa leva menos, preço sobe.</small></div>
-<div class="price"><div style="display:flex;justify-content:space-between"><b>Aéreo</b><span class="badge">rápido</span></div>Total: <b>${fmt(d.aereo.c)}</b><br>Por KG: <b>${fmtKg(d.aereo.c)}</b><br>Câmbio: ${moeda} @ ${cot}</div>
-<div style="margin-top:10px;font-size:11px;color:var(--mute)">Estimativa local: custo base x sua carga. Para Itacoatiara/Manaus confirme com transportadora local. Isso ajuda a negociar frete.</div>
+<b>Frete estimado para ${raw} ${uni.toUpperCase()} em ${nome} na ${per}</b><br><small class="mute">${ton.toFixed(3)} toneladas equivalentes. Preço por local = custo base x sua carga.</small>
+<div class="price"><div style="display:flex;justify-content:space-between"><b>Rodoviário</b><span class="badge">${d.rod.d?d.rod.d+' dias':'-'}</span></div>Total: <b>${fmt(d.rod.c)}</b><br>Por KG: <b>${fmtKg(d.rod.c)}</b></div>
+<div class="price"><div style="display:flex;justify-content:space-between"><b>Hidroviário</b><span class="badge">${d.hidro.d?d.hidro.d+' dias':'-'}</span></div>Total: <b>${fmt(d.hidro.c)}</b><br>Por KG: <b>${fmtKg(d.hidro.c)}</b><br><small class="mute">Na seca balsa leva menos, preço sobe.</small></div>
+<div class="price"><div style="display:flex;justify-content:space-between"><b>Aéreo</b><span class="badge">rápido</span></div>Total: <b>${fmt(d.aereo.c)}</b><br>Por KG: <b>${fmtKg(d.aereo.c)}</b><br><small class="mute">Câmbio: ${moeda} @ ${cot.toFixed(2)}</small></div>
 `;
 }
-document.querySelectorAll('select,input').forEach(e=>e.addEventListener('input',calc));
-document.querySelectorAll('select').forEach(e=>e.addEventListener('change',calc));
+document.querySelectorAll('select,input').forEach(e=>{e.addEventListener('input',calc);e.addEventListener('change',calc);});
 calc();
 </script>
 </body>
