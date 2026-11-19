@@ -8,31 +8,27 @@
 <style>
 :root{--bg:#0b1e1c;--card:#17302d;--line:#254642;--ink:#eaf2f0;--mute:#8fa8a3;--acc:#c8a8ff;--ok:#4ade80;--teal:#5ecac0;--red:#ff9a9a}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;padding:0 12px 24px}
-main{max-width:640px;margin:0 auto}h1{text-align:center;margin:18px 0 2px;font-size:1.8em}.sub{text-align:center;color:var(--mute);font-size:.8em;margin-bottom:12px}
-.tabs{display:flex;gap:8px;margin-bottom:12px}.tab{flex:1;padding:11px;border-radius:12px;border:1px solid var(--line);background:transparent;color:var(--ink);font-weight:700;cursor:pointer}.tab.active{background:var(--acc);color:#1e1235}
+main{max-width:640px;margin:0 auto}h1{text-align:center;margin:18px 0 2px}.sub{text-align:center;color:var(--mute);font-size:.8em;margin-bottom:12px}
 .panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;margin-bottom:10px;position:relative}
-.label{color:var(--mute);font-size:.8em;margin-bottom:5px}input,select,textarea{width:100%;background:#102623;border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:11px;font-size:.95em;outline:none}
-.city-list{position:absolute;left:12px;right:12px;top:64px;background:#1c3d3a;border:1px solid var(--line);border-radius:12px;max-height:260px;overflow:auto;z-index:50;display:none}.city-list.open{display:block}.city-item{padding:11px 12px;border-bottom:1px solid var(--line);cursor:pointer;display:flex;justify-content:space-between}.city-item:hover{background:#143d2a}.city-item b{font-weight:700}.city-item small{color:var(--mute)}
+.label{color:var(--mute);font-size:.8em;margin-bottom:5px}input,select{width:100%;background:#102623;border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:12px;font-size:.95em;outline:none}
+.city-list{position:absolute;left:12px;right:12px;top:64px;background:#1c3d3a;border:1px solid var(--line);border-radius:12px;max-height:280px;overflow:auto;z-index:50;display:none}.city-list.open{display:block}.city-item{padding:12px;border-bottom:1px solid var(--line);cursor:pointer;display:flex;justify-content:space-between}.city-item:hover{background:#143d2a}
 .swap{position:absolute;right:16px;top:74px;width:30px;height:30px;border-radius:50%;background:#143d2a;border:1px solid var(--teal);color:var(--teal);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10}
 .top{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px}.top button{background:#102623;border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:8px;font-size:.85em;font-weight:700;cursor:pointer}.top button.active{border-color:var(--ok);background:#143d2a;color:var(--ok)}
 .chips{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}.chip{border:1px solid var(--line);background:transparent;color:var(--ink);padding:7px 12px;border-radius:999px;font-size:.82em;cursor:pointer}.chip.active{background:#143d2a;border-color:var(--teal);color:var(--teal);font-weight:700}
-
-/* FACE IGUAL DA SUA PRINT */
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:.15s}
-.card:active{transform:scale(.99)}.card.best{border:1.5px solid var(--acc)}
-.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.title{font-size:1.15em;font-weight:800}.score{font-size:1.35em;font-weight:900}.score span{font-size:.6em;color:var(--mute);font-weight:600}
-.bar{height:8px;background:#264440;border-radius:99px;overflow:hidden;margin-bottom:12px}.fill{height:100%;background:var(--teal);border-radius:99px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:10px;cursor:pointer}.card.best{border:1.5px solid var(--acc)}
+.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.title{font-size:1.15em;font-weight:800}.score{font-size:1.35em;font-weight:900}.score span{font-size:.6em;color:var(--mute)}
+.bar{height:8px;background:#264440;border-radius:99px;overflow:hidden;margin-bottom:12px}.fill{height:100%;background:var(--teal)}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.k{color:var(--mute);font-size:.8em}.v{font-size:1em;font-weight:600;margin-top:2px}
 .alert{margin-top:10px;color:var(--red);font-size:.88em;line-height:1.35}
 .detail{display:none;margin-top:12px;border-top:1px solid var(--line);padding-top:10px}.detail.open{display:block}.line{display:flex;justify-content:space-between;margin:5px 0;font-size:.86em}
+.hidden{display:none}.tabs{display:flex;gap:8px;margin-bottom:12px}.tab{flex:1;padding:11px;border-radius:12px;border:1px solid var(--line);background:transparent;color:var(--ink);font-weight:700;cursor:pointer}.tab.active{background:var(--acc);color:#1e1235}
 .btn{width:100%;padding:12px;border-radius:10px;border:none;background:var(--acc);color:#1e1235;font-weight:800;cursor:pointer;margin-top:8px}
-.hidden{display:none}
 </style>
 </head>
 <body>
 <main>
 <h1>Rota Viva</h1>
-<p class="sub">Origem e destino com busca • toque no card pra ver impostos</p>
+<p class="sub">Toque no card para ver impostos • só Norte + Santarém</p>
 
 <div class="tabs">
 <button class="tab active" id="tabCalc" onclick="showTab('calc')">Calculadora</button>
@@ -40,41 +36,39 @@ main{max-width:640px;margin:0 auto}h1{text-align:center;margin:18px 0 2px;font-s
 </div>
 
 <div id="viewCalc">
-
 <div class="panel" id="boxOrigem">
-<div class="label">Origem - clique para escolher</div>
-<input id="origem" readonly placeholder="Selecione a origem..." onfocus="abrirLista('origem')" onclick="abrirLista('origem')">
+<div class="label">Origem - capitais do Norte + Santarém</div>
+<input id="origem" readonly placeholder="Selecione..." onclick="abrirLista('origem')">
 <div class="city-list" id="listOrigem"></div>
 <div class="swap" onclick="trocar()">↕</div>
 </div>
 
 <div class="panel" id="boxDestino">
-<div class="label">Destino - clique para escolher</div>
-<input id="destino" readonly placeholder="Selecione o destino..." onfocus="abrirLista('destino')" onclick="abrirLista('destino')">
+<div class="label">Destino - capitais do Norte + Santarém</div>
+<input id="destino" readonly placeholder="Selecione..." onclick="abrirLista('destino')">
 <div class="city-list" id="listDestino"></div>
 </div>
 
 <div class="panel">
-<div class="label">Período e Peso</div>
+<div class="label">Período / Peso</div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-<select id="per" onchange="calc()"><option value="cheia">Cheia - normal</option><option value="seca" selected>Seca - rio baixo</option></select>
-<input id="carga" type="number" inputmode="decimal" value="14" step="0.1" oninput="calc()" placeholder="Toneladas">
+<select id="per" onchange="calc()"><option value="cheia">Cheia - normal</option><option value="seca" selected>Seca +25%</option></select>
+<input id="carga" type="number" value="14" step="0.1" oninput="calc()">
 </div>
 <div class="top"><button id="b05" onclick="setW(0.5)">500kg</button><button id="b2" onclick="setW(2)">2 ton</button><button id="b14" class="active" onclick="setW(14)">14 ton</button></div>
-<div style="margin-top:8px"><input id="buscaCidade" placeholder="🔍 Buscar cidade na lista..." oninput="filtrarBusca(this.value)"></div>
-<div class="chips"><button class="chip active" id="cBar" onclick="setC('barato')">Mais barato</button><button class="chip" id="cRap" onclick="setC('rapido')">Mais rápido</button><button class="chip" id="cEq" onclick="setC('eq')">Equilibrado</button><button class="chip" id="cVer" onclick="setC('verde')">Mais verde</button></div>
+<div class="chips"><button class="chip active" id="cBar" onclick="setC('barato')">Mais barato</button><button class="chip" id="cRap" onclick="setC('rapido')">Mais rápido</button><button class="chip" id="cEq" onclick="setC('eq')">Equilibrado</button></div>
 </div>
 
 <div id="res"></div>
 </div>
 
 <div id="viewPlan" class="hidden">
-<div class="panel"><div class="label">Anotações de logística</div><textarea id="anotacoes" rows="12" placeholder="Ex: Cliente Maria - 500kg farinha..."></textarea><button class="btn" onclick="salvarAnot()">Salvar no celular</button></div>
+<div class="panel"><div class="label">Anotações</div><textarea id="anotacoes" rows="12"></textarea><button class="btn" onclick="salvarAnot()">Salvar</button></div>
 </div>
 </main>
 <script>
-// LISTA APENAS CAPITAIS + CIDADES IMPORTANTES DO NORTE
-const todasCidades=[
-{name:"Manaus",uf:"AM",lat:-3.119,lon:-60.021,imp:"Capital Norte"},
-{name:"Itacoatiara",uf:"AM",lat:-3.143,lon:-58.444,imp:"Importante AM"},
-{name:"Parintins",uf:"AM",lat:-2.628,
+// SÓ CAPITAIS DO NORTE + SANTARÉM
+const cidades=[
+{name:"Manaus",uf:"AM",lat:-3.119,lon:-60.021},
+{name:"Belém",uf:"PA",lat:-1.455,lon:-48.504},
+{name:"Porto Velho",uf:"RO",lat:-8.761,lon:-
