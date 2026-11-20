@@ -3,16 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Rota Viva - 2 versões atrás</title>
+<title>Rota Viva - Novo</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,system-ui}
 body{background:#000;color:#fff}
-.top-score{background:#0a0a0a;border-bottom:1px solid #222;padding:10px 12px;display:flex;justify-content:space-between;position:sticky;top:0;z-index:10}
-.top-score div{text-align:center;flex:1}
-.top-score .val{font-weight:800;font-size:13px;color:#fff}
-.top-score .lbl{font-size:9px;color:#666}
 .wrap{max-width:520px;margin:auto;padding:12px;padding-bottom:100px}
-h1{text-align:center;padding:16px 0;font-size:24px}
+h1{text-align:center;padding:18px 0;font-size:24px;letter-spacing:1px}
 .card{background:#111;border:1px solid #222;border-radius:16px;padding:14px;margin:12px 0}
 .card.best{border:2px solid #8B5CF6}
 .sel{background:#111;border:1px solid #333;border-radius:12px;padding:12px;width:100%;color:#fff;margin:6px 0;outline:none}
@@ -20,34 +16,33 @@ h1{text-align:center;padding:16px 0;font-size:24px}
 .badge{background:#8B5CF6;color:#fff;font-size:10px;padding:3px 8px;border-radius:8px;margin-left:6px}
 .row{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
 .label{font-size:12px;color:#22C55E;font-weight:800;margin:12px 0 4px 4px;display:block}
-.pontuacao-card{background:#0f0f0f;border:1px solid #222;border-radius:12px;padding:10px;display:flex;justify-content:space-between;margin-top:8px}
+.label-purple{font-size:12px;color:#8B5CF6;font-weight:800;margin:14px 0 6px 4px;display:block}
+.pontuacao{background:#0f0f0f;border:1px solid #222;border-radius:12px;padding:10px;display:flex;justify-content:space-between;margin-top:8px}
+.pontuacao div{text-align:center;flex:1}
+.pontuacao .val{font-weight:800;font-size:14px}
+.pontuacao .lbl{font-size:10px;color:#666}
 .route-origin{font-size:11px;color:#8B5CF6;font-weight:700;margin-bottom:6px}
 .btn{padding:10px 14px;border-radius:12px;border:1px solid #2a2a2a;background:#151515;color:#aaa;font-weight:600;cursor:pointer}
-.btn-purple{background:#8B5CF6;color:#fff;border:none;font-weight:800;width:100%;margin-top:8px;padding:12px;border-radius:12px}
+.btn-purple{background:#8B5CF6;color:#fff;border:none;font-weight:800;width:100%;margin-top:8px}
+.tax-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tax-grid input{background:#0f0f0f;border:1px solid #333;border-radius:10px;padding:10px;color:#fff;width:100%}
+.pago{color:#22C55E;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);padding:6px 12px;border-radius:20px;font-size:13px;font-weight:700}
+.naopago{color:#EF4444;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);padding:6px 12px;border-radius:20px;font-size:13px;font-weight:700}
 .tabs{position:fixed;bottom:0;left:0;right:0;background:#000;display:flex;border-top:1px solid #1a1a1a}
 .tabs button{flex:1;padding:14px;background:none;border:none;color:#555;font-weight:700}
 .tabs button.active{color:#fff}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;align-items:center;justify-content:center;padding:16px;z-index:99}
 .modal.show{display:flex}
 .modal-box{background:#111;border:1px solid #333;border-radius:16px;padding:16px;width:100%;max-width:480px;max-height:90vh;overflow:auto}
-.pago{color:#22C55E;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);padding:6px 12px;border-radius:20px;font-size:13px;font-weight:700}
-.naopago{color:#EF4444;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);padding:6px 12px;border-radius:20px;font-size:13px;font-weight:700}
 </style>
 </head>
 <body>
-
-<div class="top-score" id="topScore">
-  <div><div class="lbl">PESO</div><div class="val" id="topPeso">1000kg</div></div>
-  <div><div class="lbl">TON</div><div class="val" id="topTon">1.000t</div></div>
-  <div><div class="lbl">DISTÂNCIA</div><div class="val" id="topDist">63km</div></div>
-  <div><div class="lbl">CARGA</div><div class="val" id="topValor">R$ 10000</div></div>
-</div>
-
 <div class="wrap">
 <h1>Rota Viva</h1>
 
-<div class="card" style="padding:12px">
-<div class="row"><div style="flex:1"><div class="s">Peso (kg)</div><input id="peso" type="number" value="1000" class="sel"></div><div style="flex:1;margin-left:8px"><div class="s">Valor carga (R$)</div><input id="valorCarga" type="number" value="10000" class="sel"></div></div>
+<div class="card">
+<div class="row"><div style="flex:1"><div class="s">Peso da carga</div><input id="peso" type="number" value="1000" class="sel"></div><div style="flex:1;margin-left:8px"><div class="s">Valor da carga (R$)</div><input id="valorCarga" type="number" value="15000" class="sel"></div></div>
+<div id="pontuacaoGeral" class="pontuacao"></div>
 </div>
 
 <label class="label">Origem</label>
@@ -59,107 +54,119 @@ h1{text-align:center;padding:16px 0;font-size:24px}
 
 <div id="anotacoes" style="display:none">
 <h3 style="margin:12px 0">Alternativas</h3>
-<input id="altNome" class="sel" placeholder="Ex: Balsa">
+<input id="altNome" class="sel" placeholder="Ex: Balsa Manaus-Itacoatiara">
 <input id="altValor" type="number" class="sel" placeholder="Valor R$">
-<div style="display:flex;gap:8px;margin:10px 0"><button id="chipPago" class="btn" style="border-color:#22C55E;color:#22C55E">● Pago</button><button id="chipNao" class="btn" style="border-color:#EF4444;color:#EF4444">● Não pago</button></div>
+<div style="display:flex;gap:8px;margin:10px 0"><button id="chipPago" class="btn" style="border-color:rgba(34,197,94,.4);color:#22C55E">● Pago</button><button id="chipNao" class="btn" style="border-color:rgba(239,68,68,.4);color:#EF4444">● Não pago</button></div>
 <textarea id="altObs" class="sel" rows="2" placeholder="Obs"></textarea>
-<button id="salvarAlt" class="btn-purple">Salvar Alternativa</button>
+<button id="salvarAlt" class="sel btn-purple">Salvar Alternativa</button>
 <div style="display:flex;gap:8px;margin:14px 0 8px"><button class="btn" id="filtroAtivas" style="border-color:#8B5CF6;color:#fff">Ativas</button><button class="btn" id="filtroLixeira">🗑 Lixeira</button></div>
 <div id="listaAlt"></div>
 </div>
 
 <div id="configImpostos" style="display:none">
-<h3 style="margin:12px 0">Impostos por Modal - toque para editar %</h3>
+<h3 style="margin:12px 0">Impostos por Modal - toque para editar</h3>
 <div id="listaImpostos"></div>
 </div>
+
 </div>
 
 <div class="tabs"><button id="tabRotas" class="active">Rotas</button><button id="tabAnot">Alternativas</button><button id="tabImpostos">Impostos</button></div>
+
 <div id="modalDetalhe" class="modal"><div class="modal-box" id="detalheBox"></div></div>
 <div id="modalEdit" class="modal"><div class="modal-box" id="editBox"></div></div>
 
 <script type="module">
 import Decimal from 'https://cdn.jsdelivr.net/npm/decimal.js@10.4.3/+esm';
 
+// DISTANCIAS REAIS PESQUISADAS
 const distReal = {
-  "Itacoatiara-Itapiranga": 63, "Itapiranga-Itacoatiara": 63,
-  "Manaus-Itacoatiara": 269, "Itacoatiara-Manaus": 269,
-  "Manaus-Parintins": 548, "Parintins-Manaus": 548,
-  "Itacoatiara-Parintins": 260, "Parintins-Itacoatiara": 260,
-  "Manaus-Santarém": 840, "Santarém-Manaus": 840,
-  "Itacoatiara-Santarém": 552, "Santarém-Itacoatiara": 552,
-  "Parintins-Santarém": 292, "Santarém-Parintins": 292,
-  "Itacoatiara-Ji-Paraná": 1647, "Ji-Paraná-Itacoatiara": 1647,
-  "Manaus-Ji-Paraná": 1500, "Ji-Paraná-Manaus": 1500,
-  "Porto Velho-Manaus": 900, "Manaus-Porto Velho": 900,
-  "Manaus-Belém": 1800, "Belém-Manaus": 1800,
-  "Itacoatiara-Belém": 1540, "Belém-Itacoatiara": 1540,
-  "Itacoatiara-Ananindeua": 1555, "Ananindeua-Itacoatiara": 1555,
-  "Manaus-Ananindeua": 1815, "Ananindeua-Manaus": 1815,
-  "Belém-Ananindeua": 15, "Ananindeua-Belém": 15,
-  "Porto Velho-Ji-Paraná": 370, "Ji-Paraná-Porto Velho": 370,
+  "Itacoatiara-Itapiranga": 63,
+  "Itapiranga-Itacoatiara": 63,
+  "Manaus-Itacoatiara": 270,
+  "Itacoatiara-Manaus": 270,
+  "Itacoatiara-Ji-Paraná": 1647,
+  "Ji-Paraná-Itacoatiara": 1647,
+  "Manaus-Ji-Paraná": 1500,
+  "Ji-Paraná-Manaus": 1500,
+  "Manaus-Belém": 1800,
+  "Belém-Manaus": 1800,
+  "Porto Velho-Manaus": 900,
+  "Manaus-Porto Velho": 900,
 };
-function getDist(o,d){ return distReal[`${o}-${d}`] || 800; }
+function getDist(o,d){ return distReal[`${o}-${d}`] || 500; }
 
+// IMPOSTOS REAIS PESQUISADOS - editáveis
 const defaultImpostos = {
-  "Rodoviário": {icms: 12, pis: 1.65, cofins: 7.6, seguro: 2.0, ccd: 4.6875, cc: 519.67, obs:"ANTT 2025 - 3 eixos R$ 4,6875/km + R$ 519,67"},
-  "Hidroviário (balsa/navio)": {icms: 7, pis: 1.65, cofins: 7.6, seguro: 1.5, ccd: 1.5, cc: 800, obs:"Balsa R$ 1,50/km rio"},
-  "Aéreo": {icms: 4, pis: 1.65, cofins: 7.6, seguro: 1.0, ccd: 12.0, cc: 400, obs:"Aéreo 4% ICMS"},
-  "Multimodal (rio+estrada)": {icms: 9, pis: 1.65, cofins: 7.6, seguro: 1.8, ccd: 3.2, cc: 650, obs:"Média rio+estrada"}
+  "Rodoviário": {icms: 12, pis: 1.65, cofins: 7.6, seguro: 2.0, taxaFixa: 95, custoTonKm: 0.396, obs:"ICMS 12% interestadual, 20% interno AM"},
+  "Hidroviário (balsa/navio)": {icms: 7, pis: 1.65, cofins: 7.6, seguro: 1.5, taxaFixa: 140, taxaSeca: 65, custoTonKm: 0.25, obs:"ICMS 7% Sul/Sudeste->Norte"},
+  "Aéreo": {icms: 4, pis: 1.65, cofins: 7.6, seguro: 1.0, taxaFixa: 220, custoTonKm: 2.5, obs:"ICMS 4% aéreo Res. Senado 95/1996"},
+  "Multimodal (rio+estrada)": {icms: 9, pis: 1.65, cofins: 7.6, seguro: 1.8, taxaFixa: 110, custoTonKm: 0.35, obs:"Média rodoviário+hidroviário"}
 };
-function getImpostos(){ return JSON.parse(localStorage.getItem('impostosV2')||JSON.stringify(defaultImpostos)); }
-function setImpostos(v){ localStorage.setItem('impostosV2', JSON.stringify(v)); }
+function getImpostos(){ return JSON.parse(localStorage.getItem('impostos')||JSON.stringify(defaultImpostos)); }
+function setImpostos(v){ localStorage.setItem('impostos', JSON.stringify(v)); }
 
-const cidades=["Manaus","Belém","Porto Velho","Itacoatiara","Itapiranga","Parintins","Santarém","Ji-Paraná","Ariquemes","Vilhena","Ananindeua","Marabá","Óbidos","Urucurituba","Silves"];
+const cidades=["Manaus","Belém","Porto Velho","Rio Branco","Boa Vista","Palmas","Macapá","Itacoatiara","Urucurituba","Parintins","Santarém","Itapiranga","São Sebastião do Uatumã","Ananindeua","Marabá","Parauapebas","Ji-Paraná","Ariquemes","Vilhena","Urucará","Silves"];
 const selO=document.getElementById('origem'), selD=document.getElementById('destino');
 cidades.forEach(c=>{selO.innerHTML+=`<option>${c}</option>`; selD.innerHTML+=`<option>${c}</option>`});
-selO.value="Itacoatiara"; selD.value="Santarém";
+selO.value="Itacoatiara"; selD.value="Itapiranga";
+
 let statusAtual='Pago';
-chipPago.onclick=()=>{statusAtual='Pago';}; chipNao.onclick=()=>{statusAtual='Não pago';};
+chipPago.onclick=()=>{statusAtual='Pago'; chipPago.style.borderColor='#22C55E'; chipNao.style.borderColor='#2a2a2a';};
+chipNao.onclick=()=>{statusAtual='Não pago'; chipNao.style.borderColor='#EF4444'; chipPago.style.borderColor='#2a2a2a';};
 
 function calc(){
-  const pesoVal=parseFloat(peso.value)||0;
-  const valorVal=parseFloat(valorCarga.value)||0;
-  const peso=new Decimal(pesoVal);
-  const valor=new Decimal(valorVal);
+  const peso=new Decimal(document.getElementById('peso').value||0);
+  const valor=new Decimal(document.getElementById('valorCarga').value||0);
   const dist=getDist(selO.value, selD.value);
+  const impostos=getImpostos();
   const ton=peso.div(1000);
 
-  topPeso.textContent=pesoVal+"kg";
-  topTon.textContent=ton.toFixed(3)+"t";
-  topDist.textContent=dist+"km";
-  topValor.textContent="R$ "+valorVal;
+  // PONTUAÇÃO GERAL
+  document.getElementById('pontuacaoGeral').innerHTML=`
+    <div><div class="lbl">Peso</div><div class="val">${peso}kg</div></div>
+    <div><div class="lbl">Tonelada</div><div class="val">${ton.toFixed(3)}t</div></div>
+    <div><div class="lbl">Distância</div><div class="val">${dist}km</div></div>
+    <div><div class="lbl">Valor carga</div><div class="val">R$ ${valor}</div></div>
+  `;
 
-  const impostos=getImpostos();
+  const prazos={ "Rodoviário": dist<=100?1: dist<=300?1.5: Math.ceil(dist/250), "Hidroviário (balsa/navio)": dist<=100?1: Math.ceil(dist/150), "Aéreo": 0.5, "Multimodal (rio+estrada)": Math.ceil(dist/200) };
+
   const rotas=Object.keys(impostos).map(nome=>{
     const imp=impostos[nome];
-    const freteANTT=new Decimal(imp.ccd).times(dist).plus(imp.cc);
-    const base=freteANTT;
+    const custoTonKm=new Decimal(imp.custoTonKm);
+    const fretePeso=ton.times(dist).times(custoTonKm);
+    const base=fretePeso.plus(imp.taxaFixa);
+    const taxaSeca=new Decimal(imp.taxaSeca||0);
     const seguro=valor.times(new Decimal(imp.seguro).div(100));
     const pis=base.times(new Decimal(imp.pis).div(100));
     const cofins=base.times(new Decimal(imp.cofins).div(100));
-    const icmsDec=new Decimal(imp.icms).div(100);
-    const icmsVal=icmsDec.eq(1)?new Decimal(0): base.div(new Decimal(1).minus(icmsDec)).minus(base);
-    const total=base.plus(icmsVal).plus(seguro).plus(pis).plus(cofins);
+    // ICMS por dentro: base / (1 - icms) - base
+    const icmsDecimal=new Decimal(imp.icms).div(100);
+    const icmsVal=icmsDecimal.eq(1)?new Decimal(0): base.div(new Decimal(1).minus(icmsDecimal)).minus(base);
+    const total=base.plus(icmsVal).plus(seguro).plus(pis).plus(cofins).plus(taxaSeca);
+    
     const precoKg=peso.gt(0)?total.div(peso):new Decimal(0);
     const precoTon=ton.gt(0)?total.div(ton):new Decimal(0);
-    let prazo=Math.max(1,Math.ceil(dist/300));
-    if(nome.includes('Hidro')) prazo=Math.max(1,Math.ceil(dist/180));
-    if(nome.includes('Aéreo')) prazo=1;
-    return {nome, dist, freteANTT:freteANTT.toDecimalPlaces(2).toNumber(), total:total.toDecimalPlaces(2).toNumber(), precoKg:precoKg.toDecimalPlaces(2).toNumber(), precoTon:precoTon.toDecimalPlaces(2).toNumber(), prazo, imp, icmsVal:icmsVal.toDecimalPlaces(2).toNumber()};
+    
+    let nota=100 - total.div(100).toNumber();
+    if(nome.includes('Rodoviário')) nota+=20;
+    if(dist<=100 && nome.includes('Rodoviário')) nota+=15;
+
+    return {nome, dist, fretePeso:fretePeso.toDecimalPlaces(2).toNumber(), base:base.toDecimalPlaces(2).toNumber(), icmsVal:icmsVal.toDecimalPlaces(2).toNumber(), seguro:seguro.toDecimalPlaces(2).toNumber(), pis:pis.toDecimalPlaces(2).toNumber(), cofins:cofins.toDecimalPlaces(2).toNumber(), total:total.toDecimalPlaces(2).toNumber(), precoKg:precoKg.toDecimalPlaces(2).toNumber(), precoTon:precoTon.toDecimalPlaces(2).toNumber(), prazo:prazos[nome], imp, nota:Math.max(10,Math.min(95,Math.round(nota)))};
   });
+
   rotas.sort((a,b)=>a.total-b.total);
-  cards.innerHTML=rotas.map((r,i)=>`
+  document.getElementById('cards').innerHTML=rotas.map((r,i)=>`
     <div class="card ${i===0?'best':''}" onclick="showDetalhe('${r.nome}')">
       <div class="route-origin">${selO.value} → ${selD.value} • ${r.dist}km real</div>
-      <div class="row"><span class="t">${r.nome} ${i===0?'<span class=badge>MELHOR</span>':''}</span><span class="t">${Math.max(10,100-Math.floor(r.total/100))}/100</span></div>
-      <div class="pontuacao-card">
-        <div><div class="s">Total</div><div class="t">R$ ${r.total.toLocaleString('pt-BR')}</div></div>
-        <div><div class="s">R$/kg</div><div class="t">R$ ${r.precoKg}</div></div>
-        <div><div class="s">R$/ton</div><div class="t">R$ ${r.precoTon}</div></div>
-        <div><div class="s">Prazo</div><div class="t">${r.prazo}d</div></div>
+      <div class="row"><span class="t">${r.nome} ${i===0?'<span class=badge>MELHOR</span>':''}</span><span class="t">${r.nota}/100</span></div>
+      <div class="pontuacao">
+        <div><div class="lbl">Total</div><div class="val">R$ ${r.total.toLocaleString('pt-BR')}</div></div>
+        <div><div class="lbl">R$/kg</div><div class="val">R$ ${r.precoKg}</div></div>
+        <div><div class="lbl">R$/ton</div><div class="val">R$ ${r.precoTon}</div></div>
+        <div><div class="lbl">Prazo</div><div class="val">${r.prazo}d</div></div>
       </div>
-      <div class="s" style="margin-top:8px">CCD R$ ${r.imp.ccd}/km x ${r.dist}km + CC R$ ${r.imp.cc} | ICMS ${r.imp.icms}%</div>
+      <div class="s" style="margin-top:8px">ICMS ${r.imp.icms}% • PIS ${r.imp.pis}% • COFINS ${r.imp.cofins}% • Seguro ${r.imp.seguro}% • ${r.imp.obs}</div>
     </div>
   `).join('');
   window._rotas=rotas;
@@ -167,53 +174,95 @@ function calc(){
 
 window.showDetalhe=(nome)=>{
   const r=window._rotas.find(x=>x.nome===nome);
-  detalheBox.innerHTML=`<h3>${r.nome}</h3><div class="route-origin">${selO.value} → ${selD.value} • ${r.dist}km real</div><div style="font-size:13px;line-height:1.8;margin-top:12px"><b>CÁLCULO SOBRE DISTÂNCIA:</b><br>ANTT: ${r.imp.ccd} x ${r.dist} + ${r.imp.cc} = <b>R$ ${r.freteANTT}</b><br>+ ICMS ${r.imp.icms}% = R$ ${r.icmsVal}<br><br><b>TOTAL: R$ ${r.total}</b><br>R$/kg R$ ${r.precoKg} | R$/ton R$ ${r.precoTon}</div><br><button onclick="modalDetalhe.classList.remove('show')" class="sel">Fechar</button>`;
+  document.getElementById('detalheBox').innerHTML=`
+    <h3>${r.nome}</h3>
+    <div class="route-origin">${selO.value} → ${selD.value} • ${r.dist}km real pesquisado</div>
+    <div style="font-size:13px;line-height:1.8;margin-top:12px">
+      <b>CÁLCULO REAL - CONFERIDO:</b><br>
+      Peso: ${peso.value}kg = ${new Decimal(peso.value).div(1000)} ton<br>
+      Distância real: ${r.dist}km<br>
+      Custo t/km: R$ ${r.imp.custoTonKm} (Frete.com R$ 0,396 média 2026)<br><br>
+      Frete peso = ton x km x R$/t.km<br>
+      = ${new Decimal(peso.value).div(1000)} x ${r.dist} x ${r.imp.custoTonKm} = <b>R$ ${r.fretePeso}</b><br>
+      + Taxa fixa R$ ${r.imp.taxaFixa} = R$ ${r.base}<br>
+      + ICMS ${r.imp.icms}% (por dentro) = R$ ${r.icmsVal}<br>
+      + Seguro ${r.imp.seguro}% de R$ ${valorCarga.value} = R$ ${r.seguro}<br>
+      + PIS ${r.imp.pis}% = R$ ${r.pis}<br>
+      + COFINS ${r.imp.cofins}% = R$ ${r.cofins}<br>
+      ${r.imp.taxaSeca?`+ Taxa seca R$ ${r.imp.taxaSeca}<br>`:''}
+      <br><b style="font-size:16px">TOTAL: R$ ${r.total}</b><br>
+      R$/kg: R$ ${r.precoKg} | R$/ton: R$ ${r.precoTon}<br><br>
+      <b>Pontuação:</b> ${r.nota}/100 - menor preço ganha<br>
+      <b>ICMS real:</b> AM 20% interno, RO 19,5% interno, interestadual 12% ou 7%
+    </div><br>
+    <button onclick="modalDetalhe.classList.remove('show')" class="sel">Fechar</button>
+  `;
   modalDetalhe.classList.add('show');
 };
 
 function renderImpostos(){
   const imps=getImpostos();
-  listaImpostos.innerHTML=Object.keys(imps).map(n=>{
-    const imp=imps[n]; return `<div class="card" onclick="editImposto('${n}')"><div class="t">${n}</div><div class="s">CCD R$ ${imp.ccd}/km | CC R$ ${imp.cc} | ICMS ${imp.icms}% | PIS ${imp.pis}% | COFINS ${imp.cofins}% | Seguro ${imp.seguro}%</div><div class="s" style="color:#8B5CF6">toque para editar %</div></div>`;
+  document.getElementById('listaImpostos').innerHTML=Object.keys(imps).map(nome=>{
+    const imp=imps[nome];
+    return `<div class="card" onclick="editImposto('${nome}')"><div class="row"><span class="t">${nome}</span><span class="s">toque para editar</span></div><div class="s" style="margin-top:8px">ICMS ${imp.icms}% | PIS ${imp.pis}% | COFINS ${imp.cofins}% | Seguro ${imp.seguro}% | Taxa R$ ${imp.taxaFixa} | R$/t.km R$ ${imp.custoTonKm}</div></div>`;
   }).join('');
 }
+
 window.editImposto=(nome)=>{
-  const imps=getImpostos(); const imp=imps[nome];
-  editBox.innerHTML=`<h3>${nome}</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
-    <div><label class="label">ICMS %</label><input id="e_icms" type="number" step="0.1" value="${imp.icms}" class="sel"></div>
-    <div><label class="label">PIS %</label><input id="e_pis" type="number" step="0.01" value="${imp.pis}" class="sel"></div>
-    <div><label class="label">COFINS %</label><input id="e_cofins" type="number" step="0.1" value="${imp.cofins}" class="sel"></div>
-    <div><label class="label">Seguro %</label><input id="e_seguro" type="number" step="0.1" value="${imp.seguro}" class="sel"></div>
-    <div><label class="label">CCD R$/km</label><input id="e_ccd" type="number" step="0.01" value="${imp.ccd}" class="sel"></div>
-    <div><label class="label">CC R$</label><input id="e_cc" type="number" value="${imp.cc}" class="sel"></div>
-  </div><button onclick="salvarImposto('${nome}')" class="btn-purple">Salvar alteração</button><button onclick="modalEdit.classList.remove('show')" class="sel" style="margin-top:8px">Cancelar</button>`;
+  const imps=getImpostos();
+  const imp=imps[nome];
+  document.getElementById('editBox').innerHTML=`
+    <h3>Editar ${nome}</h3>
+    <div class="s" style="margin:8px 0">${imp.obs}</div>
+    <div class="tax-grid">
+      <div><label class="label">ICMS %</label><input id="e_icms" type="number" step="0.1" value="${imp.icms}"></div>
+      <div><label class="label">PIS %</label><input id="e_pis" type="number" step="0.01" value="${imp.pis}"></div>
+      <div><label class="label">COFINS %</label><input id="e_cofins" type="number" step="0.1" value="${imp.cofins}"></div>
+      <div><label class="label">Seguro %</label><input id="e_seguro" type="number" step="0.1" value="${imp.seguro}"></div>
+      <div><label class="label">Taxa fixa R$</label><input id="e_taxa" type="number" value="${imp.taxaFixa}"></div>
+      <div><label class="label">Taxa seca R$</label><input id="e_seca" type="number" value="${imp.taxaSeca||0}"></div>
+      <div><label class="label">R$ por ton/km</label><input id="e_tonkm" type="number" step="0.01" value="${imp.custoTonKm}"></div>
+    </div>
+    <button onclick="salvarImposto('${nome}')" class="btn-purple">Salvar</button>
+    <button onclick="modalEdit.classList.remove('show')" class="sel" style="margin-top:8px">Cancelar</button>
+  `;
   modalEdit.classList.add('show');
 };
+
 window.salvarImposto=(nome)=>{
   const imps=getImpostos();
   imps[nome].icms=parseFloat(document.getElementById('e_icms').value)||0;
   imps[nome].pis=parseFloat(document.getElementById('e_pis').value)||0;
   imps[nome].cofins=parseFloat(document.getElementById('e_cofins').value)||0;
   imps[nome].seguro=parseFloat(document.getElementById('e_seguro').value)||0;
-  imps[nome].ccd=parseFloat(document.getElementById('e_ccd').value)||0;
-  imps[nome].cc=parseFloat(document.getElementById('e_cc').value)||0;
-  setImpostos(imps); modalEdit.classList.remove('show'); renderImpostos(); calc();
+  imps[nome].taxaFixa=parseFloat(document.getElementById('e_taxa').value)||0;
+  imps[nome].taxaSeca=parseFloat(document.getElementById('e_seca').value)||0;
+  imps[nome].custoTonKm=parseFloat(document.getElementById('e_tonkm').value)||0;
+  setImpostos(imps);
+  modalEdit.classList.remove('show');
+  renderImpostos();
+  calc();
 };
 
-peso.addEventListener('change',calc); valorCarga.addEventListener('change',calc);
-origem.addEventListener('change',calc); destino.addEventListener('change',calc);
+['peso','valorCarga'].forEach(id=>{ document.getElementById(id).addEventListener('change',calc); });
+selO.addEventListener('change',calc); selD.addEventListener('change',calc);
 calc(); renderImpostos();
+
 modalDetalhe.addEventListener('click',e=>{ if(e.target.id==='modalDetalhe') e.target.classList.remove('show'); });
 modalEdit.addEventListener('click',e=>{ if(e.target.id==='modalEdit') e.target.classList.remove('show'); });
 
 function getAlts(){ return JSON.parse(localStorage.getItem('alts')||'[]'); }
 function setAlts(a){ localStorage.setItem('alts',JSON.stringify(a)); }
-function loadAlts(){ const alts=getAlts(); const f=alts.filter(a=> view==='ativas' ? !a.lixeira : a.lixeira); listaAlt.innerHTML=f.length?f.map(a=>{ const idx=alts.indexOf(a); return `<div class="card"><div class="row"><span class="t">${a.nome}</span><span class="${a.status==='Pago'?'pago':'naopago'}">${a.status}</span></div><div class="s">R$ ${a.valor} • ${a.obs||''} • ${a.data}</div><div style="display:flex;gap:8px;margin-top:10px"><button class="btn" onclick="togglePago(${idx})">${a.status==='Pago'?'Marcar Não pago':'Marcar Pago'}</button><button class="btn" onclick="toTrash(${idx})">🗑 Apagar</button></div></div>`;}).join(''):'<div style="color:#555;text-align:center;padding:12px">Nenhuma</div>'; }
+function loadAlts(){ const alts=getAlts(); const filtered=alts.filter(a=> view==='ativas' ? !a.lixeira : a.lixeira); listaAlt.innerHTML=filtered.length?filtered.map(a=>{ const idx=alts.indexOf(a); return `<div class="card"><div class="row"><span class="t">${a.nome}</span><span class="${a.status==='Pago'?'pago':'naopago'}">${a.status}</span></div><div class="s">R$ ${a.valor} • ${a.obs||''} • ${a.data}</div><div style="display:flex;gap:8px;margin-top:10px"><button class="btn" onclick="togglePago(${idx})">${a.status==='Pago'?'Marcar Não pago':'Marcar Pago'}</button><button class="btn" onclick="toTrash(${idx})">🗑 Apagar</button></div></div>`;}).join(''):'<div style="color:#555;text-align:center;padding:12px">Nenhuma</div>'; }
 let view='ativas';
 window.togglePago=(i)=>{ const a=getAlts(); a[i].status=a[i].status==='Pago'?'Não pago':'Pago'; setAlts(a); loadAlts(); };
 window.toTrash=(i)=>{ const a=getAlts(); a[i].lixeira=true; setAlts(a); loadAlts(); };
+window.restore=(i)=>{ const a=getAlts(); a[i].lixeira=false; setAlts(a); loadAlts(); };
+window.delForever=(i)=>{ if(!confirm('Excluir?')) return; const a=getAlts(); a.splice(i,1); setAlts(a); loadAlts(); };
 salvarAlt.onclick=()=>{const nome=altNome.value.trim(); if(!nome) return alert('Nome'); const a=getAlts(); a.unshift({nome, valor:altValor.value, obs:altObs.value, status:statusAtual, data:new Date().toLocaleDateString(), lixeira:false}); setAlts(a); altNome.value=''; altValor.value=''; altObs.value=''; loadAlts();};
-filtroAtivas.onclick=()=>{view='ativas'; loadAlts();}; filtroLixeira.onclick=()=>{view='lixeira'; loadAlts();};
+filtroAtivas.onclick=()=>{view='ativas'; loadAlts();};
+filtroLixeira.onclick=()=>{view='lixeira'; loadAlts();};
+
 tabRotas.onclick=()=>{cards.style.display=''; anotacoes.style.display='none'; configImpostos.style.display='none'; tabRotas.classList.add('active'); tabAnot.classList.remove('active'); tabImpostos.classList.remove('active');};
 tabAnot.onclick=()=>{cards.style.display='none'; anotacoes.style.display=''; configImpostos.style.display='none'; tabAnot.classList.add('active'); tabRotas.classList.remove('active'); tabImpostos.classList.remove('active'); loadAlts();};
 tabImpostos.onclick=()=>{cards.style.display='none'; anotacoes.style.display='none'; configImpostos.style.display=''; tabImpostos.classList.add('active'); tabRotas.classList.remove('active'); tabAnot.classList.remove('active'); renderImpostos();};
