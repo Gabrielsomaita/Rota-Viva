@@ -4,72 +4,131 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Rota Viva</title>
+<link rel="manifest" href="manifest.json">
 <style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:system-ui}
-body{background:#0e0e0e;color:#fff}
-.topbar{background:#0f3d3a;padding:14px;text-align:center;color:#8bd9d0;font-size:13px}
-.wrap{max-width:480px;margin:auto;padding:12px;padding-bottom:40px}
-h1{text-align:center;padding:12px 0 16px;font-size:32px}
-.box{background:#1c1c1c;border:1px solid #2b2b2b;border-radius:16px;padding:12px;margin:12px 0}
-.sel{background:#2a2a2a;border:1px solid #333;border-radius:12px;padding:14px;display:flex;justify-content:space-between;font-weight:700}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,system-ui}
+body{background:#0E1116;color:#fff}
+.top-bar{background:#1A1F2B;padding:14px;text-align:center;color:#8bd9d0;font-size:13px;display:flex;justify-content:space-between;align-items:center}
+.wrap{max-width:480px;margin:auto;padding:12px;padding-bottom:90px}
+h1{text-align:center;padding:12px 16px;font-size:28px;line-height:1.1}
+.card{background:#1c1c1c;border:1px solid #2b2b2b;border-radius:16px;padding:12px;margin:12px 0;cursor:pointer}
+.card.best{border:2px solid #8B5CF6}
+.sel{background:#2a2a2f;border:1px solid #333;border-radius:12px;padding:12px;width:100%;color:#fff;margin:6px 0}
 .s{font-size:11px;color:#8a8a8a;margin-bottom:6px}
 .inv{text-align:center;padding:8px;color:#666}
 .t{font-weight:800;font-size:16px;margin-bottom:2px}
-.ss{font-size:11px;color:#7a7a7a;margin-bottom:10px}
-.pills{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.p{border:1px solid #333;background:#2a2a2a;border-radius:12px;padding:12px;text-align:center;font-weight:600}
-.p.on{border-color:#3a7bff;background:#17315a;color:#8ab4ff}
-input{width:100%;background:#2a2a2a;border:1px solid #333;border-radius:12px;padding:14px;color:#fff}
-.chip{display:inline-block;padding:7px 12px;border:1px solid #333;background:#2a2a2a;border-radius:20px;margin:4px 4px 0 0;font-size:12px}
-.filt{display:flex;gap:6px;margin:8px 0 12px}
-.fi{flex:1;padding:10px;border-radius:20px;border:1px solid #333;background:#2a2a2a;text-align:center;font-size:12px;font-weight:700}
-.fi.on{background:#174a5e;color:#7dd3ff;border-color:#2a6a82}
-.card{background:#1c1c1c;border:1px solid #2b2b2b;border-radius:16px;padding:14px;margin:10px 0}
-.pr{float:right;font-size:20px;font-weight:900}
-.badge{font-size:10px;padding:5px 9px;border-radius:10px;background:#243a3a;color:#7ed6d6;font-weight:700}
-.row{display:flex;gap:6px;margin-top:12px}
-.ed{flex:1;background:#2a2a2a;border:1px solid #333;border-radius:10px;padding:8px;font-size:10px;color:#aaa}
-.ed b{display:block;font-size:13px;color:#fff;margin-top:2px}
-.warn{background:#8a1a1a;border-radius:12px;padding:12px;font-size:11px;margin-top:14px}
-.camb{display:flex;justify-content:space-between;align-items:center}
+.badge{background:#8B5CF6;color:#fff;font-size:10px;padding:2px 6px;border-radius:8px;margin-left:6px}
+.row{display:flex;justify-content:space-between;gap:8px}
+.dot{width:40px;height:6px;background:#4DD0E1;border-radius:6px;display:inline-block}
+#usd{color:#4DD0E1;cursor:pointer;text-decoration:underline}
+.tabs{position:fixed;bottom:0;left:0;right:0;background:#1A1F2B;display:flex;border-top:1px solid #333}
+.tabs button{flex:1;padding:14px;background:none;border:none;color:#777;font-weight:700}
+.tabs button.active{color:#4DD0E1}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;padding:20px}
+.modal.show{display:flex}
+.modal-box{background:#1A1F2B;border-radius:16px;padding:16px;width:100%;max-width:420px;max-height:80vh;overflow:auto}
 </style>
 </head>
 <body>
-<div class="topbar">gabrielsomaita.github.io</div>
+<div class="top-bar">
+  <span>$ <span id="usd">USD/BRL ...</span></span>
+  <span id="btnTabela" style="cursor:pointer">⊞ Tabela</span>
+</div>
 <div class="wrap">
-<h1>Rota Viva</h1>
-<div class="box">
-<div class="s">Origem</div><div class="sel" onclick="trocar(this)">São Paulo - SP <span>▼</span></div>
-<div class="inv">↕</div>
-<div class="s">Destino</div><div class="sel" onclick="trocar(this)">Manaus - AM <span>▼</span></div>
+  <h1>Rota Viva</h1>
+  
+  <select id="origem" class="sel"></select>
+  <select id="destino" class="sel"></select>
+  
+  <div id="cards"></div>
+  <div id="anotacoes" style="display:none">
+    <textarea id="nota" class="sel" rows="4" placeholder="Anotação da rota..."></textarea>
+    <button id="salvarNota" class="sel" style="background:#4DD0E1;color:#000;font-weight:800">Salvar Anotação</button>
+    <div id="listaNotas"></div>
+  </div>
 </div>
-<div class="box">
-<div class="t">Período</div><div class="ss">Selecione o período hidrológico</div>
-<div class="pills">
-<div class="p on" onclick="mark(this)">Seca</div>
-<div class="p" onclick="mark(this)">Vazante</div>
-<div class="p" onclick="mark(this)">Cheia</div>
-<div class="p" onclick="mark(this)">Enchente</div>
+
+<div class="tabs">
+  <button id="tabRotas" class="active">Rotas</button>
+  <button id="tabAnot">Anotações</button>
 </div>
-</div>
-<div class="box">
-<div class="t">Peso</div><div class="ss">Informe o peso da carga - digite</div>
-<input id="peso" placeholder="Digite o peso ex: 500kg, 2 ton, 14 ton">
-<div><span class="chip" onclick="peso.value='500kg'">500kg</span><span class="chip" onclick="peso.value='2 ton'">2 ton</span><span class="chip" onclick="peso.value='14 ton'">14 ton</span><span class="chip" onclick="peso.value='1200kg'">1200kg</span></div>
-</div>
-<div class="t">Filtros</div>
-<div class="filt"><div class="fi on" onclick="filtro(this)">Mais barato</div><div class="fi" onclick="filtro(this)">Mais rápido</div><div class="fi" onclick="filtro(this)">Equilibrado</div></div>
-<div class="t">Rotas recomendadas</div>
-<div class="card"><div><span class="badge">Mais barato</span> <b>Rodoviário</b> <span class="pr">R$ 2.180</span></div><div class="row"><div class="ed">ICMS <b contenteditable>18%</b></div><div class="ed">Frete <b contenteditable>R$ 1.840</b></div><div class="ed">Seguro <b contenteditable>R$ 340</b></div></div></div>
-<div class="card"><div><span class="badge">Equilibrado</span> <b>Multimodal fluvial</b> <span class="pr">R$ 3.520</span></div><div class="row"><div class="ed">ICMS <b contenteditable>18%</b></div><div class="ed">Frete <b contenteditable>R$ 2.980</b></div><div class="ed">Seguro <b contenteditable>R$ 420</b></div></div></div>
-<div class="card"><div><span class="badge">Mais rápido</span> <b>Multimodal aéreo</b> <span class="pr">R$ 4.150</span></div><div class="row"><div class="ed">ICMS <b contenteditable>18%</b></div><div class="ed">Frete <b contenteditable>R$ 3.500</b></div><div class="ed">Seguro <b contenteditable>R$ 480</b></div></div></div>
-<div class="box camb"><div><b>USD → BRL</b><br><small style="color:#888">Fonte: Banco Central • 5,42</small></div><div style="font-weight:900">5,42</div></div>
-<div class="warn">⚠️ Valores estimados - sujeitos a alteração conforme rio, combustível e taxas locais</div>
-</div>
-<script>
-function mark(el){el.parentElement.querySelectorAll('.p').forEach(p=>p.classList.remove('on'));el.classList.add('on')}
-function filtro(el){el.parentElement.querySelectorAll('.fi').forEach(p=>p.classList.remove('on'));el.classList.add('on')}
-function trocar(el){let o=["São Paulo - SP","Manaus - AM","Belém - PA","Porto Velho - RO","Rio Branco - AC","Boa Vista - RR","Macapá - AP","Palmas - TO","Santarém - PA"];let c=el.textContent.replace('▼','').trim();let i=o.indexOf(c);el.innerHTML=(o[(i+1)%o.length])+' <span>▼</span>'}
+
+<div id="modalDetalhe" class="modal"><div class="modal-box" id="detalheBox"></div></div>
+<div id="modalTabela" class="modal"><div class="modal-box">
+  <h3>Tabela Novembro 2026 <button id="atualizarPrecos" style="float:right;background:#4DD0E1;border:none;padding:4px 8px;border-radius:8px">Atualizar</button></h3>
+  <div id="tabelaBox" class="inv">Carregando...</div>
+</div></div>
+
+<script type="module">
+import Decimal from 'https://cdn.jsdelivr.net/npm/decimal.js@10.4.3/+esm';
+
+// 1. CIDADES
+const cidades = ["Manaus","Belém","Porto Velho","Rio Branco","Boa Vista","Palmas","Macapá","Itacoatiara","Urucurituba","Parintins","Santarém","Itapiranga","São Sebastião do Uatumã","Ananindeua","Marabá","Parauapebas","Ji-Paraná","Ariquemes","Vilhena"];
+const selO = document.getElementById('origem'), selD = document.getElementById('destino');
+cidades.forEach(c=>{selO.innerHTML+=`<option>${c}</option>`; selD.innerHTML+=`<option>${c}</option>`});
+selO.value="Manaus"; selD.value="Itacoatiara";
+
+// 2. DOLAR AO VIVO
+async function loadUSD(){
+  try{
+    const saved = localStorage.getItem('usd'); if(saved) document.getElementById('usd').textContent = `USD/BRL ${saved}`;
+    const r = await fetch('https://economia.awesomeapi.com.br/json/last/USD-BRL');
+    const j = await r.json(); const v = parseFloat(j.USDBRL.bid).toFixed(2);
+    localStorage.setItem('usd', v); document.getElementById('usd').textContent = `USD/BRL ${v}`;
+  }catch{ document.getElementById('usd').textContent = `USD/BRL ${localStorage.getItem('usd')||'5,42'}`; }
+}
+document.getElementById('usd').onclick=()=>{const n=prompt('Editar cotação USD/BRL', localStorage.getItem('usd')); if(n){localStorage.setItem('usd', n); document.getElementById('usd').textContent=`USD/BRL ${n}`; render();}};
+loadUSD();
+
+// 3. CALCULO SEM ERRO
+function calc(base, impostos){ let t=new Decimal(base); impostos.forEach(v=>t=t.plus(v)); return t.toDecimalPlaces(2).toNumber(); }
+
+// 4. RENDER CARDS
+function render(){
+  if(selO.value===selD.value){ document.getElementById('cards').innerHTML='<div class=inv>Origem e destino não podem ser iguais</div>'; return; }
+  const rotas=[
+    {nome:'Rodoviário', custo:40128, prazo:2.1, co2:10.6, risco:'Médio', nota:82, icms:3200, pis:420, seguro:800},
+    {nome:'Hidroviário (balsa/navio)', custo:21252, prazo:6.9, co2:3.3, risco:'Alto', nota:52, icms:1800, taxaSeca:1200},
+    {nome:'Aéreo', custo:284160, prazo:1.9, co2:12, risco:'Baixo', nota:50, icms:15000},
+    {nome:'Multimodal (rio+estrada)', custo:30360, prazo:6.5, co2:7, risco:'Médio', nota:50, icms:2500},
+  ];
+  rotas.sort((a,b)=>b.nota-a.nota);
+  document.getElementById('cards').innerHTML = rotas.map((r,i)=>`
+    <div class="card ${i===0?'best':''}" onclick="window.showDetalhe(${i})">
+      <div class="row"><span class="t">${r.nome} ${i===0?'<span class=badge>MELHOR ROTA</span>':''}</span><span class="t" style="color:#4DD0E1">${r.nota}/100</span></div>
+      <div class="row" style="margin-top:8px"><div class="s">Custo<br><span class=t>R$ ${calc(r.custo,[r.icms||0,r.pis||0]).toLocaleString('pt-BR')}</span></div><div class="s">Prazo<br><span class=t>${r.prazo} dias</span></div><div class="s">CO2<br><span class=t>${r.co2} t</span></div><div class="s">Risco<br><span class=t>${r.risco}</span></div></div>
+    </div>`).join('');
+  window._rotas=rotas;
+}
+window.showDetalhe=(i)=>{
+  const r=window._rotas[i]; const total=calc(r.custo,[r.icms||0,r.pis||0,r.seguro||0,r.taxaSeca||0]);
+  document.getElementById('detalheBox').innerHTML=`<h3>${r.nome}</h3><br>Custo base: R$ ${r.custo}<br>ICMS: R$ ${r.icms||0}<br>PIS/COFINS: R$ ${r.pis||0}<br>Seguro: R$ ${r.seguro||0}<br>Taxa seca: R$ ${r.taxaSeca||0}<br><br><b>Total: R$ ${total}</b><br><br><span class=s>Fórmula: base + impostos usando decimal.js</span><br><br><button onclick="document.getElementById('modalDetalhe').classList.remove('show')" class=sel>Fechar</button>`;
+  document.getElementById('modalDetalhe').classList.add('show');
+};
+selO.onchange=render; selD.onchange=render; render();
+
+// 5. TABELA
+async function loadTabela(){
+  document.getElementById('tabelaBox').textContent='Carregando...';
+  try{
+    const r=await fetch('./logistics_prices.json?v='+Date.now()); if(!r.ok) throw 0;
+    const j=await r.json(); localStorage.setItem('prices_cache', JSON.stringify(j));
+    renderTabela(j);
+  }catch{ const c=localStorage.getItem('prices_cache'); if(c) renderTabela(JSON.parse(c)); else document.getElementById('tabelaBox').textContent='Erro ao carregar, usando cache'; }
+}
+function renderTabela(j){
+  document.getElementById('tabelaBox').innerHTML=`<div class=s>Atualizado: ${j.last_updated||''}</div><table style="width:100%;font-size:12px;margin-top:8px">${j.prices.map(p=>`<tr><td>${p.modal}</td><td>${p.origem}->${p.destino}</td><td>R$ ${p.custo_ton_km}</td><td>${p.variacao_mes}</td></tr>`).join('')}</table>`;
+}
+document.getElementById('btnTabela').onclick=()=>{document.getElementById('modalTabela').classList.add('show'); loadTabela();};
+document.getElementById('atualizarPrecos').onclick=loadTabela;
+document.getElementById('modalTabela').onclick=(e)=>{if(e.target.id==='modalTabela') e.target.classList.remove('show')};
+document.getElementById('modalDetalhe').onclick=(e)=>{if(e.target.id==='modalDetalhe') e.target.classList.remove('show')};
+
+// 6. ABAS
+document.getElementById('tabRotas').onclick=()=>{document.getElementById('cards').style.display='';document.getElementById('anotacoes').style.display='none';tabRotas.classList.add('active');tabAnot.classList.remove('active')};
+document.getElementById('tabAnot').onclick=()=>{document.getElementById('cards').style.display='none';document.getElementById('anotacoes').style.display='';tabAnot.classList.add('active');tabRotas.classList.remove('active'); loadNotas()};
+function loadNotas(){const n=JSON.parse(localStorage.getItem('notas')||'[]'); document.getElementById('listaNotas').innerHTML=n.map(x=>`<div class=card>${x}</div>`).join('');}
+document.getElementById('salvarNota').onclick=()=>{const v=document.getElementById('nota').value; if(!v) return; const n=JSON.parse(localStorage.getItem('notas')||'[]'); n.unshift(`${new Date().toLocaleDateString()} - ${v}`); localStorage.setItem('notas', JSON.stringify(n)); document.getElementById('nota').value=''; loadNotas();};
 </script>
 </body>
 </html>
