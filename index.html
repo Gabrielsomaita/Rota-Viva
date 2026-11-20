@@ -3,13 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Rota Viva - Fix</title>
+<title>Rota Viva - 2 versões atrás</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,system-ui}
 body{background:#000;color:#fff}
-.top-dist{background:#0a0a0a;border-bottom:1px solid #222;padding:14px;text-align:center;position:sticky;top:0;z-index:10}
-.top-dist .val{font-weight:900;font-size:16px;color:#8B5CF6}
-.top-dist .lbl{font-size:10px;color:#666}
+.top-score{background:#0a0a0a;border-bottom:1px solid #222;padding:10px 12px;display:flex;justify-content:space-between;position:sticky;top:0;z-index:10}
+.top-score div{text-align:center;flex:1}
+.top-score .val{font-weight:800;font-size:13px;color:#fff}
+.top-score .lbl{font-size:9px;color:#666}
 .wrap{max-width:520px;margin:auto;padding:12px;padding-bottom:100px}
 h1{text-align:center;padding:16px 0;font-size:24px}
 .card{background:#111;border:1px solid #222;border-radius:16px;padding:14px;margin:12px 0}
@@ -35,20 +36,42 @@ h1{text-align:center;padding:16px 0;font-size:24px}
 </head>
 <body>
 
-<div class="top-dist">
-  <div class="lbl">DISTÂNCIA REAL</div>
-  <div class="val" id="topDist">Carregando...</div>
-  <div class="s" id="topFonte"></div>
+<div class="top-score" id="topScore">
+  <div><div class="lbl">PESO</div><div class="val" id="topPeso">1000kg</div></div>
+  <div><div class="lbl">TON</div><div class="val" id="topTon">1.000t</div></div>
+  <div><div class="lbl">DISTÂNCIA</div><div class="val" id="topDist">63km</div></div>
+  <div><div class="lbl">CARGA</div><div class="val" id="topValor">R$ 10000</div></div>
 </div>
 
 <div class="wrap">
 <h1>Rota Viva</h1>
-<div class="card"><div class="row"><div style="flex:1"><div class="s">Peso (kg)</div><input id="peso" type="number" value="1000" class="sel"></div><div style="flex:1;margin-left:8px"><div class="s">Valor carga (R$)</div><input id="valorCarga" type="number" value="10000" class="sel"></div></div></div>
-<label class="label">Origem</label><select id="origem" class="sel"></select>
-<label class="label">Destino</label><select id="destino" class="sel"></select>
+
+<div class="card" style="padding:12px">
+<div class="row"><div style="flex:1"><div class="s">Peso (kg)</div><input id="peso" type="number" value="1000" class="sel"></div><div style="flex:1;margin-left:8px"><div class="s">Valor carga (R$)</div><input id="valorCarga" type="number" value="10000" class="sel"></div></div>
+</div>
+
+<label class="label">Origem</label>
+<select id="origem" class="sel"></select>
+<label class="label">Destino</label>
+<select id="destino" class="sel"></select>
+
 <div id="cards"></div>
-<div id="anotacoes" style="display:none"><h3 style="margin:12px 0">Alternativas</h3><input id="altNome" class="sel" placeholder="Ex: Balsa"><input id="altValor" type="number" class="sel" placeholder="Valor R$"><div style="display:flex;gap:8px;margin:10px 0"><button id="chipPago" class="btn" style="border-color:#22C55E;color:#22C55E">● Pago</button><button id="chipNao" class="btn" style="border-color:#EF4444;color:#EF4444">● Não pago</button></div><textarea id="altObs" class="sel" rows="2" placeholder="Obs"></textarea><button id="salvarAlt" class="btn-purple">Salvar Alternativa</button><div style="display:flex;gap:8px;margin:14px 0 8px"><button class="btn" id="filtroAtivas" style="border-color:#8B5CF6;color:#fff">Ativas</button><button class="btn" id="filtroLixeira">🗑 Lixeira</button></div><div id="listaAlt"></div></div>
-<div id="configImpostos" style="display:none"><h3 style="margin:12px 0">Impostos por Modal</h3><div id="listaImpostos"></div></div>
+
+<div id="anotacoes" style="display:none">
+<h3 style="margin:12px 0">Alternativas</h3>
+<input id="altNome" class="sel" placeholder="Ex: Balsa">
+<input id="altValor" type="number" class="sel" placeholder="Valor R$">
+<div style="display:flex;gap:8px;margin:10px 0"><button id="chipPago" class="btn" style="border-color:#22C55E;color:#22C55E">● Pago</button><button id="chipNao" class="btn" style="border-color:#EF4444;color:#EF4444">● Não pago</button></div>
+<textarea id="altObs" class="sel" rows="2" placeholder="Obs"></textarea>
+<button id="salvarAlt" class="btn-purple">Salvar Alternativa</button>
+<div style="display:flex;gap:8px;margin:14px 0 8px"><button class="btn" id="filtroAtivas" style="border-color:#8B5CF6;color:#fff">Ativas</button><button class="btn" id="filtroLixeira">🗑 Lixeira</button></div>
+<div id="listaAlt"></div>
+</div>
+
+<div id="configImpostos" style="display:none">
+<h3 style="margin:12px 0">Impostos por Modal - toque para editar %</h3>
+<div id="listaImpostos"></div>
+</div>
 </div>
 
 <div class="tabs"><button id="tabRotas" class="active">Rotas</button><button id="tabAnot">Alternativas</button><button id="tabImpostos">Impostos</button></div>
@@ -58,67 +81,39 @@ h1{text-align:center;padding:16px 0;font-size:24px}
 <script type="module">
 import Decimal from 'https://cdn.jsdelivr.net/npm/decimal.js@10.4.3/+esm';
 
-// KM FLUVIAL OFICIAL DA FOZ: Santarém 704, Óbidos 824, Parintins 996, Itacoatiara 1256, Manaus 1544
-const distBase = {
-  "Manaus-Itacoatiara": {rod: 269, fluvial: 288, fonte: "269km AM-010 - 288km fluvial (1544-1256) oficial"},
-  "Itacoatiara-Manaus": {rod: 269, fluvial: 288, fonte: "269km AM-010 - 288km fluvial oficial"},
-  "Itacoatiara-Itapiranga": {rod: 64, fluvial: 70, fonte: "64km rodovia local"},
-  "Itapiranga-Itacoatiara": {rod: 64, fluvial: 70, fonte: "64km rodovia local"},
-  "Manaus-Parintins": {rod: 548, fluvial: 548, fonte: "548km fluvial (1544-996) oficial"},
-  "Parintins-Manaus": {rod: 548, fluvial: 548, fonte: "548km fluvial oficial"},
-  "Itacoatiara-Parintins": {rod: 260, fluvial: 260, fonte: "260km fluvial (1256-996) oficial"},
-  "Parintins-Itacoatiara": {rod: 260, fluvial: 260, fonte: "260km fluvial oficial"},
-  "Manaus-Santarém": {rod: 840, fluvial: 840, fonte: "840km fluvial oficial (1544-704) - 740km relato barco 30h"},
-  "Santarém-Manaus": {rod: 840, fluvial: 840, fonte: "840km fluvial oficial - 42h subindo"},
-  "Itacoatiara-Santarém": {rod: 552, fluvial: 552, fonte: "552km fluvial oficial (1256-704)"},
-  "Santarém-Itacoatiara": {rod: 552, fluvial: 552, fonte: "552km fluvial oficial"},
-  "Parintins-Santarém": {rod: 292, fluvial: 292, fonte: "292km fluvial (996-704) oficial"},
-  "Santarém-Parintins": {rod: 292, fluvial: 292, fonte: "292km fluvial oficial"},
-  "Manaus-Óbidos": {rod: 720, fluvial: 720, fonte: "720km fluvial (1544-824) oficial"},
-  "Itacoatiara-Óbidos": {rod: 432, fluvial: 432, fonte: "432km fluvial (1256-824) oficial"},
-  "Itacoatiara-Ji-Paraná": {rod: 1647, fluvial: 1239, fonte: "1647km rod BR-319/364 - 1239km balsa Porto Velho-Manaus"},
-  "Ji-Paraná-Itacoatiara": {rod: 1647, fluvial: 1239, fonte: "1647km rod - 1239km balsa"},
-  "Manaus-Ji-Paraná": {rod: 1500, fluvial: 1239, fonte: "1500km rod BR-319/364"},
-  "Ji-Paraná-Manaus": {rod: 1500, fluvial: 1239, fonte: "1500km rod"},
-  "Porto Velho-Manaus": {rod: 900, fluvial: 1239, fonte: "900km rod (860km BR-319 só 21km asfaltado) - 1239km balsa"},
-  "Manaus-Porto Velho": {rod: 900, fluvial: 1239, fonte: "900km rod - 1239km balsa"},
-  // BELÉM E REGIÃO
-  "Manaus-Belém": {rod: 1800, fluvial: 1800, fonte: "1800km fluvial Manaus-Belém"},
-  "Belém-Manaus": {rod: 1800, fluvial: 1800, fonte: "1800km fluvial Belém-Manaus"},
-  "Itacoatiara-Belém": {rod: 1540, fluvial: 1512, fonte: "1512km fluvial (Itacoatiara 1256 + 544km foz-Belém) - 1540km rod estimado"},
-  "Belém-Itacoatiara": {rod: 1540, fluvial: 1512, fonte: "1512km fluvial"},
-  "Itacoatiara-Ananindeua": {rod: 1555, fluvial: 1527, fonte: "Ananindeua 15km de Belém - 1527km fluvial"},
-  "Ananindeua-Itacoatiara": {rod: 1555, fluvial: 1527, fonte: "1527km fluvial - 1555km rod"},
-  "Manaus-Ananindeua": {rod: 1815, fluvial: 1815, fonte: "1815km - Belém +15km"},
-  "Ananindeua-Manaus": {rod: 1815, fluvial: 1815, fonte: "1815km"},
-  "Belém-Ananindeua": {rod: 15, fluvial: 20, fonte: "15km rod - região metropolitana"},
-  "Ananindeua-Belém": {rod: 15, fluvial: 20, fonte: "15km rod"},
-  "Belém-Marabá": {rod: 540, fluvial: 600, fonte: "540km rod BR-230"},
-  "Marabá-Belém": {rod: 540, fluvial: 600, fonte: "540km rod"},
-  "Porto Velho-Ji-Paraná": {rod: 370, fluvial: 400, fonte: "370km BR-364"},
-  "Ji-Paraná-Porto Velho": {rod: 370, fluvial: 400, fonte: "370km BR-364"},
+const distReal = {
+  "Itacoatiara-Itapiranga": 63, "Itapiranga-Itacoatiara": 63,
+  "Manaus-Itacoatiara": 269, "Itacoatiara-Manaus": 269,
+  "Manaus-Parintins": 548, "Parintins-Manaus": 548,
+  "Itacoatiara-Parintins": 260, "Parintins-Itacoatiara": 260,
+  "Manaus-Santarém": 840, "Santarém-Manaus": 840,
+  "Itacoatiara-Santarém": 552, "Santarém-Itacoatiara": 552,
+  "Parintins-Santarém": 292, "Santarém-Parintins": 292,
+  "Itacoatiara-Ji-Paraná": 1647, "Ji-Paraná-Itacoatiara": 1647,
+  "Manaus-Ji-Paraná": 1500, "Ji-Paraná-Manaus": 1500,
+  "Porto Velho-Manaus": 900, "Manaus-Porto Velho": 900,
+  "Manaus-Belém": 1800, "Belém-Manaus": 1800,
+  "Itacoatiara-Belém": 1540, "Belém-Itacoatiara": 1540,
+  "Itacoatiara-Ananindeua": 1555, "Ananindeua-Itacoatiara": 1555,
+  "Manaus-Ananindeua": 1815, "Ananindeua-Manaus": 1815,
+  "Belém-Ananindeua": 15, "Ananindeua-Belém": 15,
+  "Porto Velho-Ji-Paraná": 370, "Ji-Paraná-Porto Velho": 370,
 };
-
-function getDist(o,d){
-  const k=`${o}-${d}`;
-  if(distBase[k]) return distBase[k];
-  // fallback calculado mas nunca deixa em branco
-  return {rod: 1000, fluvial: 1000, fonte: `Estimativa ${o}-${d} - me fale que eu pesquiso real`};
-}
+function getDist(o,d){ return distReal[`${o}-${d}`] || 800; }
 
 const defaultImpostos = {
-  "Rodoviário": {icms: 12, pis: 1.65, cofins: 7.6, seguro: 2.0, ccd: 4.6875, cc: 519.67},
-  "Hidroviário (balsa/navio)": {icms: 7, pis: 1.65, cofins: 7.6, seguro: 1.5, ccd: 1.5, cc: 800},
-  "Aéreo": {icms: 4, pis: 1.65, cofins: 7.6, seguro: 1.0, ccd: 12.0, cc: 400},
-  "Multimodal (rio+estrada)": {icms: 9, pis: 1.65, cofins: 7.6, seguro: 1.8, ccd: 3.2, cc: 650}
+  "Rodoviário": {icms: 12, pis: 1.65, cofins: 7.6, seguro: 2.0, ccd: 4.6875, cc: 519.67, obs:"ANTT 2025 - 3 eixos R$ 4,6875/km + R$ 519,67"},
+  "Hidroviário (balsa/navio)": {icms: 7, pis: 1.65, cofins: 7.6, seguro: 1.5, ccd: 1.5, cc: 800, obs:"Balsa R$ 1,50/km rio"},
+  "Aéreo": {icms: 4, pis: 1.65, cofins: 7.6, seguro: 1.0, ccd: 12.0, cc: 400, obs:"Aéreo 4% ICMS"},
+  "Multimodal (rio+estrada)": {icms: 9, pis: 1.65, cofins: 7.6, seguro: 1.8, ccd: 3.2, cc: 650, obs:"Média rio+estrada"}
 };
-function getImpostos(){ return JSON.parse(localStorage.getItem('impostosV4')||JSON.stringify(defaultImpostos)); }
-function setImpostos(v){ localStorage.setItem('impostosV4', JSON.stringify(v)); }
+function getImpostos(){ return JSON.parse(localStorage.getItem('impostosV2')||JSON.stringify(defaultImpostos)); }
+function setImpostos(v){ localStorage.setItem('impostosV2', JSON.stringify(v)); }
 
 const cidades=["Manaus","Belém","Porto Velho","Itacoatiara","Itapiranga","Parintins","Santarém","Ji-Paraná","Ariquemes","Vilhena","Ananindeua","Marabá","Óbidos","Urucurituba","Silves"];
 const selO=document.getElementById('origem'), selD=document.getElementById('destino');
 cidades.forEach(c=>{selO.innerHTML+=`<option>${c}</option>`; selD.innerHTML+=`<option>${c}</option>`});
-selO.value="Itacoatiara"; selD.value="Ananindeua";
+selO.value="Itacoatiara"; selD.value="Santarém";
 let statusAtual='Pago';
 chipPago.onclick=()=>{statusAtual='Pago';}; chipNao.onclick=()=>{statusAtual='Não pago';};
 
@@ -127,18 +122,18 @@ function calc(){
   const valorVal=parseFloat(valorCarga.value)||0;
   const peso=new Decimal(pesoVal);
   const valor=new Decimal(valorVal);
-  const d=getDist(selO.value, selD.value);
+  const dist=getDist(selO.value, selD.value);
   const ton=peso.div(1000);
 
-  // TOPO SÓ DISTANCIA - NUNCA FICA EM BRANCO
-  topDist.textContent=`${selO.value} → ${selD.value} = ${d.rod}km rod / ${d.fluvial}km fluvial`;
-  topFonte.textContent=d.fonte;
+  topPeso.textContent=pesoVal+"kg";
+  topTon.textContent=ton.toFixed(3)+"t";
+  topDist.textContent=dist+"km";
+  topValor.textContent="R$ "+valorVal;
 
   const impostos=getImpostos();
   const rotas=Object.keys(impostos).map(nome=>{
     const imp=impostos[nome];
-    const distUsada=nome.includes('Hidro')?d.fluvial:d.rod;
-    const freteANTT=new Decimal(imp.ccd).times(distUsada).plus(imp.cc);
+    const freteANTT=new Decimal(imp.ccd).times(dist).plus(imp.cc);
     const base=freteANTT;
     const seguro=valor.times(new Decimal(imp.seguro).div(100));
     const pis=base.times(new Decimal(imp.pis).div(100));
@@ -148,15 +143,15 @@ function calc(){
     const total=base.plus(icmsVal).plus(seguro).plus(pis).plus(cofins);
     const precoKg=peso.gt(0)?total.div(peso):new Decimal(0);
     const precoTon=ton.gt(0)?total.div(ton):new Decimal(0);
-    let prazo=Math.max(1,Math.ceil(distUsada/300));
-    if(nome.includes('Hidro')) prazo=Math.max(1,Math.ceil(distUsada/180));
+    let prazo=Math.max(1,Math.ceil(dist/300));
+    if(nome.includes('Hidro')) prazo=Math.max(1,Math.ceil(dist/180));
     if(nome.includes('Aéreo')) prazo=1;
-    return {nome, dist:distUsada, total:total.toDecimalPlaces(2).toNumber(), precoKg:precoKg.toDecimalPlaces(2).toNumber(), precoTon:precoTon.toDecimalPlaces(2).toNumber(), prazo, imp, freteANTT:freteANTT.toDecimalPlaces(2).toNumber(), icmsVal:icmsVal.toDecimalPlaces(2).toNumber(), seguro:seguro.toDecimalPlaces(2).toNumber(), fonte:d.fonte};
+    return {nome, dist, freteANTT:freteANTT.toDecimalPlaces(2).toNumber(), total:total.toDecimalPlaces(2).toNumber(), precoKg:precoKg.toDecimalPlaces(2).toNumber(), precoTon:precoTon.toDecimalPlaces(2).toNumber(), prazo, imp, icmsVal:icmsVal.toDecimalPlaces(2).toNumber()};
   });
   rotas.sort((a,b)=>a.total-b.total);
   cards.innerHTML=rotas.map((r,i)=>`
     <div class="card ${i===0?'best':''}" onclick="showDetalhe('${r.nome}')">
-      <div class="route-origin">${selO.value} → ${selD.value} • ${r.dist}km • ${r.fonte}</div>
+      <div class="route-origin">${selO.value} → ${selD.value} • ${r.dist}km real</div>
       <div class="row"><span class="t">${r.nome} ${i===0?'<span class=badge>MELHOR</span>':''}</span><span class="t">${Math.max(10,100-Math.floor(r.total/100))}/100</span></div>
       <div class="pontuacao-card">
         <div><div class="s">Total</div><div class="t">R$ ${r.total.toLocaleString('pt-BR')}</div></div>
@@ -164,7 +159,7 @@ function calc(){
         <div><div class="s">R$/ton</div><div class="t">R$ ${r.precoTon}</div></div>
         <div><div class="s">Prazo</div><div class="t">${r.prazo}d</div></div>
       </div>
-      <div class="s" style="margin-top:8px">Cálculo sobre distância: ${r.imp.ccd} x ${r.dist}km + ${r.imp.cc}</div>
+      <div class="s" style="margin-top:8px">CCD R$ ${r.imp.ccd}/km x ${r.dist}km + CC R$ ${r.imp.cc} | ICMS ${r.imp.icms}%</div>
     </div>
   `).join('');
   window._rotas=rotas;
@@ -172,14 +167,14 @@ function calc(){
 
 window.showDetalhe=(nome)=>{
   const r=window._rotas.find(x=>x.nome===nome);
-  detalheBox.innerHTML=`<h3>${r.nome}</h3><div class="route-origin">${selO.value} → ${selD.value} • ${r.dist}km</div><div style="font-size:13px;line-height:1.8;margin-top:12px"><b>DISTÂNCIA REAL:</b><br>${r.fonte}<br><br><b>CÁLCULO SOBRE DISTÂNCIA:</b><br>${r.imp.ccd} x ${r.dist}km + ${r.imp.cc} = <b>R$ ${r.freteANTT}</b><br>+ ICMS ${r.imp.icms}% = R$ ${r.icmsVal}<br>+ Seguro = R$ ${r.seguro}<br><br><b>TOTAL: R$ ${r.total}</b></div><br><button onclick="modalDetalhe.classList.remove('show')" class="sel">Fechar</button>`;
+  detalheBox.innerHTML=`<h3>${r.nome}</h3><div class="route-origin">${selO.value} → ${selD.value} • ${r.dist}km real</div><div style="font-size:13px;line-height:1.8;margin-top:12px"><b>CÁLCULO SOBRE DISTÂNCIA:</b><br>ANTT: ${r.imp.ccd} x ${r.dist} + ${r.imp.cc} = <b>R$ ${r.freteANTT}</b><br>+ ICMS ${r.imp.icms}% = R$ ${r.icmsVal}<br><br><b>TOTAL: R$ ${r.total}</b><br>R$/kg R$ ${r.precoKg} | R$/ton R$ ${r.precoTon}</div><br><button onclick="modalDetalhe.classList.remove('show')" class="sel">Fechar</button>`;
   modalDetalhe.classList.add('show');
 };
 
 function renderImpostos(){
   const imps=getImpostos();
   listaImpostos.innerHTML=Object.keys(imps).map(n=>{
-    const imp=imps[n]; return `<div class="card" onclick="editImposto('${n}')"><div class="t">${n}</div><div class="s">CCD R$ ${imp.ccd}/km | CC R$ ${imp.cc} | ICMS ${imp.icms}% | PIS ${imp.pis}% | COFINS ${imp.cofins}% | Seguro ${imp.seguro}%</div><div class="s" style="color:#8B5CF6">toque para editar</div></div>`;
+    const imp=imps[n]; return `<div class="card" onclick="editImposto('${n}')"><div class="t">${n}</div><div class="s">CCD R$ ${imp.ccd}/km | CC R$ ${imp.cc} | ICMS ${imp.icms}% | PIS ${imp.pis}% | COFINS ${imp.cofins}% | Seguro ${imp.seguro}%</div><div class="s" style="color:#8B5CF6">toque para editar %</div></div>`;
   }).join('');
 }
 window.editImposto=(nome)=>{
