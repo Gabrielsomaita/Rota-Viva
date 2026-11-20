@@ -7,45 +7,69 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:system-ui}
 body{background:#0e0e0e;color:#fff}
-.wrap{max-width:440px;margin:auto;padding:12px}
-h1{text-align:center;padding:12px 0;font-size:28px}
-.box{background:#1c1c1c;border:1px solid #2a2a2a;border-radius:14px;padding:12px;margin:10px 0}
-.sel{background:#2a2a2a;border:1px solid #333;border-radius:10px;padding:12px;display:flex;justify-content:space-between;font-weight:700}
-.inv{text-align:center;padding:6px;color:#888}
-.t{font-weight:800}
-.s{font-size:11px;color:#999;margin-bottom:8px}
+.topbar{background:#0f3d3a;padding:14px;text-align:center;color:#8bd9d0;font-size:13px}
+.wrap{max-width:480px;margin:auto;padding:12px;padding-bottom:40px}
+h1{text-align:center;padding:12px 0 16px;font-size:32px}
+.box{background:#1c1c1c;border:1px solid #2b2b2b;border-radius:16px;padding:12px;margin:12px 0}
+.sel{background:#2a2a2a;border:1px solid #333;border-radius:12px;padding:14px;display:flex;justify-content:space-between;font-weight:700}
+.s{font-size:11px;color:#8a8a8a;margin-bottom:6px}
+.inv{text-align:center;padding:8px;color:#666}
+.t{font-weight:800;font-size:16px;margin-bottom:2px}
+.ss{font-size:11px;color:#7a7a7a;margin-bottom:10px}
 .pills{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.p{border:1px solid #333;background:#2a2a2a;border-radius:10px;padding:10px;text-align:center}
-.p.on{border-color:#4ea8ff;background:#102a4a}
-input{width:100%;background:#2a2a2a;border:1px solid #333;border-radius:10px;padding:12px;color:#fff}
-.chip{display:inline-block;padding:6px 12px;border:1px solid #333;background:#2a2a2a;border-radius:20px;margin:6px 4px 0 0;font-size:12px}
-.filt{display:flex;gap:6px;margin:8px 0}
-.fi{flex:1;padding:10px;border-radius:20px;border:1px solid #333;background:#2a2a2a;text-align:center;font-size:13px;font-weight:700}
-.fi.on{background:#1e4a5a;color:#7dd3ff;border-color:#2a6a82}
-.card{background:#1c1c1c;border:1px solid #2a2a2a;border-radius:14px;padding:12px;margin:10px 0}
-.pr{float:right;font-size:20px;font-weight:800}
-.badge{font-size:10px;padding:4px 8px;border-radius:10px;background:#2a3a3a}
-.row{display:flex;gap:6px;margin-top:10px}
-.ed{flex:1;background:#2a2a2a;border:1px solid #333;border-radius:8px;padding:6px;font-size:11px}
-.ed b{display:block;font-size:13px}
-.warn{background:#8a1a1a;border-radius:10px;padding:10px;font-size:11px;margin-top:10px}
+.p{border:1px solid #333;background:#2a2a2a;border-radius:12px;padding:12px;text-align:center;font-weight:600}
+.p.on{border-color:#3a7bff;background:#17315a;color:#8ab4ff}
+input{width:100%;background:#2a2a2a;border:1px solid #333;border-radius:12px;padding:14px;color:#fff}
+.chip{display:inline-block;padding:7px 12px;border:1px solid #333;background:#2a2a2a;border-radius:20px;margin:4px 4px 0 0;font-size:12px}
+.filt{display:flex;gap:6px;margin:8px 0 12px}
+.fi{flex:1;padding:10px;border-radius:20px;border:1px solid #333;background:#2a2a2a;text-align:center;font-size:12px;font-weight:700}
+.fi.on{background:#174a5e;color:#7dd3ff;border-color:#2a6a82}
+.card{background:#1c1c1c;border:1px solid #2b2b2b;border-radius:16px;padding:14px;margin:10px 0}
+.pr{float:right;font-size:20px;font-weight:900}
+.badge{font-size:10px;padding:5px 9px;border-radius:10px;background:#243a3a;color:#7ed6d6;font-weight:700}
+.row{display:flex;gap:6px;margin-top:12px}
+.ed{flex:1;background:#2a2a2a;border:1px solid #333;border-radius:10px;padding:8px;font-size:10px;color:#aaa}
+.ed b{display:block;font-size:13px;color:#fff;margin-top:2px}
+.warn{background:#8a1a1a;border-radius:12px;padding:12px;font-size:11px;margin-top:14px}
 .camb{display:flex;justify-content:space-between;align-items:center}
 </style>
 </head>
 <body>
+<div class="topbar">gabrielsomaita.github.io</div>
 <div class="wrap">
 <h1>Rota Viva</h1>
-
 <div class="box">
 <div class="s">Origem</div><div class="sel" onclick="trocar(this)">São Paulo - SP <span>▼</span></div>
-<div class="inv">⇅</div>
+<div class="inv">↕</div>
 <div class="s">Destino</div><div class="sel" onclick="trocar(this)">Manaus - AM <span>▼</span></div>
 </div>
-
 <div class="box">
-<div class="t">Período</div><div class="s">Selecione o período hidrológico</div>
+<div class="t">Período</div><div class="ss">Selecione o período hidrológico</div>
 <div class="pills">
 <div class="p on" onclick="mark(this)">Seca</div>
 <div class="p" onclick="mark(this)">Vazante</div>
 <div class="p" onclick="mark(this)">Cheia</div>
-<div class="p" onclick
+<div class="p" onclick="mark(this)">Enchente</div>
+</div>
+</div>
+<div class="box">
+<div class="t">Peso</div><div class="ss">Informe o peso da carga - digite</div>
+<input id="peso" placeholder="Digite o peso ex: 500kg, 2 ton, 14 ton">
+<div><span class="chip" onclick="peso.value='500kg'">500kg</span><span class="chip" onclick="peso.value='2 ton'">2 ton</span><span class="chip" onclick="peso.value='14 ton'">14 ton</span><span class="chip" onclick="peso.value='1200kg'">1200kg</span></div>
+</div>
+<div class="t">Filtros</div>
+<div class="filt"><div class="fi on" onclick="filtro(this)">Mais barato</div><div class="fi" onclick="filtro(this)">Mais rápido</div><div class="fi" onclick="filtro(this)">Equilibrado</div></div>
+<div class="t">Rotas recomendadas</div>
+<div class="card"><div><span class="badge">Mais barato</span> <b>Rodoviário</b> <span class="pr">R$ 2.180</span></div><div class="row"><div class="ed">ICMS <b contenteditable>18%</b></div><div class="ed">Frete <b contenteditable>R$ 1.840</b></div><div class="ed">Seguro <b contenteditable>R$ 340</b></div></div></div>
+<div class="card"><div><span class="badge">Equilibrado</span> <b>Multimodal fluvial</b> <span class="pr">R$ 3.520</span></div><div class="row"><div class="ed">ICMS <b contenteditable>18%</b></div><div class="ed">Frete <b contenteditable>R$ 2.980</b></div><div class="ed">Seguro <b contenteditable>R$ 420</b></div></div></div>
+<div class="card"><div><span class="badge">Mais rápido</span> <b>Multimodal aéreo</b> <span class="pr">R$ 4.150</span></div><div class="row"><div class="ed">ICMS <b contenteditable>18%</b></div><div class="ed">Frete <b contenteditable>R$ 3.500</b></div><div class="ed">Seguro <b contenteditable>R$ 480</b></div></div></div>
+<div class="box camb"><div><b>USD → BRL</b><br><small style="color:#888">Fonte: Banco Central • 5,42</small></div><div style="font-weight:900">5,42</div></div>
+<div class="warn">⚠️ Valores estimados - sujeitos a alteração conforme rio, combustível e taxas locais</div>
+</div>
+<script>
+function mark(el){el.parentElement.querySelectorAll('.p').forEach(p=>p.classList.remove('on'));el.classList.add('on')}
+function filtro(el){el.parentElement.querySelectorAll('.fi').forEach(p=>p.classList.remove('on'));el.classList.add('on')}
+function trocar(el){let o=["São Paulo - SP","Manaus - AM","Belém - PA","Porto Velho - RO","Rio Branco - AC","Boa Vista - RR","Macapá - AP","Palmas - TO","Santarém - PA"];let c=el.textContent.replace('▼','').trim();let i=o.indexOf(c);el.innerHTML=(o[(i+1)%o.length])+' <span>▼</span>'}
+</script>
+</body>
+</html>
