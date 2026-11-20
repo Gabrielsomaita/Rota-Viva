@@ -3,184 +3,163 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Rota Viva</title>
+<title>Rota Viva V3</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,system-ui}
-body{background:#0E1116;color:#fff}
-.top-bar{background:#1A1F2B;padding:14px;display:flex;justify-content:space-between;align-items:center}
+body{background:#000;color:#fff}
+.top-bar{background:#000;border-bottom:1px solid #222;padding:14px;display:flex;justify-content:space-between;align-items:center}
 .wrap{max-width:480px;margin:auto;padding:12px;padding-bottom:90px}
-h1{text-align:center;padding:12px;font-size:28px}
-.card{background:#1c1c1c;border:1px solid #2b2b2b;border-radius:16px;padding:14px;margin:12px 0;cursor:pointer;transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease}
+h1{text-align:center;padding:12px;font-size:28px;letter-spacing:1px}
+.card{background:#111;border:1px solid #222;border-radius:16px;padding:14px;margin:12px 0;cursor:pointer;transition:.18s}
 .card:active{transform:scale(.97)}
-.card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.4)}
-.card.best{border:2px solid #8B5CF6}
-.sel{background:#2a2a2f;border:1px solid #333;border-radius:12px;padding:12px;width:100%;color:#fff;margin:6px 0}
-.s{font-size:11px;color:#8a8a8a}
+.card.best{border:2px solid #fff}
+.sel{background:#111;border:1px solid #333;border-radius:12px;padding:12px;width:100%;color:#fff;margin:6px 0}
+.s{font-size:11px;color:#888}
 .t{font-weight:800;font-size:16px}
-.badge{background:#8B5CF6;color:#fff;font-size:10px;padding:2px 6px;border-radius:8px;margin-left:6px}
+.badge{background:#fff;color:#000;font-size:10px;padding:3px 8px;border-radius:8px;margin-left:6px;font-weight:900}
 .row{display:flex;justify-content:space-between;gap:8px}
-#usd{color:#4DD0E1;cursor:pointer;text-decoration:underline}
-.tabs{position:fixed;bottom:0;left:0;right:0;background:#1A1F2B;display:flex;border-top:1px solid #333}
-.tabs button{flex:1;padding:14px;background:none;border:none;color:#777;font-weight:700}
-.tabs button.active{color:#4DD0E1}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;padding:20px;z-index:99}
+#usd{color:#fff;border-bottom:1px solid #fff;cursor:pointer}
+.tabs{position:fixed;bottom:0;left:0;right:0;background:#000;display:flex;border-top:1px solid #222}
+.tabs button{flex:1;padding:14px;background:none;border:none;color:#555;font-weight:700}
+.tabs button.active{color:#fff}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;padding:20px;z-index:99}
 .modal.show{display:flex}
-.modal-box{background:#1A1F2B;border-radius:16px;padding:16px;width:100%;max-width:420px;max-height:85vh;overflow:auto}
-.pago{color:#22C55E;font-weight:800}
-.naopago{color:#EF4444;font-weight:800}
+.modal-box{background:#111;border:1px solid #333;border-radius:16px;padding:16px;width:100%;max-width:420px;max-height:85vh;overflow:auto}
+.pago{color:#fff;font-weight:800;background:#000;border:1px solid #fff;padding:2px 8px;border-radius:6px}
+.naopago{color:#EF4444;font-weight:800;border:1px solid #EF4444;padding:2px 8px;border-radius:6px}
+.chip{padding:6px 12px;border-radius:20px;border:1px solid #333;background:#111;color:#fff;cursor:pointer}
+.chip.on{border-color:#fff;background:#222}
 .btn{padding:8px 12px;border-radius:10px;border:none;font-weight:700;cursor:pointer}
-.btn-del{background:#333;color:#fff}
-.btn-lixeira{background:#EF4444;color:#fff}
-.chip{padding:6px 12px;border-radius:20px;border:1px solid #333;background:#2a2a2f;color:#fff;cursor:pointer}
-.chip.on{border-color:#4DD0E1;background:#1e3a3a}
+.btn-del{background:#222;color:#fff}
 </style>
 </head>
 <body>
-<div class="top-bar">
-  <span>$ <span id="usd">USD/BRL 5,42</span></span>
-  <span id="btnTabela" style="cursor:pointer;font-size:20px">⊞ Tabela</span>
-</div>
+<div class="top-bar"><span>$ <span id="usd">USD/BRL 5,42</span></span><span id="btnTabela" style="cursor:pointer">⊞ Tabela</span></div>
 <div class="wrap">
-  <h1>Rota Viva</h1>
-  <div class="card" style="cursor:default">
-    <div class="row"><div style="flex:1"><div class="s">Peso da carga (kg)</div><input id="peso" type="number" value="120" class="sel"></div>
-    <div style="flex:1;margin-left:8px"><div class="s">Valor da carga (R$)</div><input id="valorCarga" type="number" value="2800" class="sel"></div></div>
-    <div class="s">Peso e valor recalculam custo, seguro e impostos na hora</div>
-  </div>
-  <select id="origem" class="sel"></select>
-  <select id="destino" class="sel"></select>
-  <div id="cards"></div>
-  <div id="anotacoes" style="display:none">
-    <h3>Alternativas de Logística</h3>
-    <input id="altNome" class="sel" placeholder="Ex: Balsa Manaus-Itacoatiara">
-    <input id="altValor" type="number" class="sel" placeholder="Valor R$">
-    <div style="display:flex;gap:8px;margin:6px 0">
-      <button id="chipPago" class="chip on" onclick="setStatus('Pago')">● Pago</button>
-      <button id="chipNao" class="chip" onclick="setStatus('Não pago')">● Não pago</button>
-    </div>
-    <textarea id="altObs" class="sel" rows="2" placeholder="Obs: prazo, contato..."></textarea>
-    <button id="salvarAlt" class="sel" style="background:#4DD0E1;color:#000;font-weight:800">Salvar Alternativa</button>
-    <div style="display:flex;gap:8px;margin:14px 0 8px"><button class="chip on" id="filtroAtivas">Ativas</button><button class="chip" id="filtroLixeira">🗑 Lixeira</button></div>
-    <div id="listaAlt"></div>
-  </div>
+<h1>Rota Viva</h1>
+<div class="card" style="cursor:default">
+<div class="row"><div style="flex:1"><div class="s">Peso (kg)</div><input id="peso" type="number" value="1000" class="sel"></div>
+<div style="flex:1;margin-left:8px"><div class="s">Valor (R$)</div><input id="valorCarga" type="number" value="15000" class="sel"></div></div>
 </div>
-<div class="tabs">
-  <button id="tabRotas" class="active">Rotas</button>
-  <button id="tabAnot">Alternativas</button>
+<select id="origem" class="sel"></select><select id="destino" class="sel"></select>
+<div id="cards"></div>
+<div id="anotacoes" style="display:none">
+<h3>Alternativas</h3><input id="altNome" class="sel" placeholder="Ex: Balsa Manaus-Itacoatiara">
+<input id="altValor" type="number" class="sel" placeholder="Valor R$">
+<div style="display:flex;gap:8px;margin:6px 0"><button id="chipPago" class="chip on" onclick="setStatus('Pago')">● Pago</button><button id="chipNao" class="chip" onclick="setStatus('Não pago')">● Não pago</button></div>
+<textarea id="altObs" class="sel" rows="2" placeholder="Obs"></textarea>
+<button id="salvarAlt" class="sel" style="background:#fff;color:#000;font-weight:800">Salvar Alternativa</button>
+<div style="display:flex;gap:8px;margin:14px 0 8px"><button class="chip on" id="filtroAtivas">Ativas</button><button class="chip" id="filtroLixeira">🗑 Lixeira</button></div><div id="listaAlt"></div>
 </div>
+</div>
+<div class="tabs"><button id="tabRotas" class="active">Rotas</button><button id="tabAnot">Alternativas</button></div>
 <div id="modalDetalhe" class="modal"><div class="modal-box" id="detalheBox"></div></div>
-<div id="modalTabela" class="modal"><div class="modal-box">
-  <div style="display:flex;justify-content:space-between"><h3>Tabela Novembro 2026</h3><button class="btn btn-del" onclick="fecharTabela()">X</button></div>
-  <button id="atualizarPrecos" class="sel" style="background:#4DD0E1;color:#000;font-weight:800">Atualizar preços</button>
-  <div id="tabelaBox"></div>
-</div></div>
+<div id="modalTabela" class="modal"><div class="modal-box"><div style="display:flex;justify-content:space-between"><h3>Tabela Novembro 2026</h3><button class="btn btn-del" onclick="fecharTabela()">X</button></div><button id="atualizarPrecos" class="sel" style="background:#fff;color:#000;font-weight:800">Atualizar preços</button><div id="tabelaBox"></div></div></div>
 
 <script type="module">
 import Decimal from 'https://cdn.jsdelivr.net/npm/decimal.js@10.4.3/+esm';
+
+// MATRIZ DE DISTÂNCIAS REAIS EM KM - Norte + Itacoatiara etc
+const distancias = {
+  "Manaus-Itacoatiara": 270, "Itacoatiara-Manaus": 270,
+  "Manaus-Parintins": 420, "Parintins-Manaus": 420,
+  "Manaus-Urucurituba": 350, "Urucurituba-Manaus": 350,
+  "Manaus-Belém": 1800, "Belém-Manaus": 1800,
+  "Manaus-Porto Velho": 900, "Porto Velho-Manaus": 900,
+  "Manaus-Ji-Paraná": 1350, "Ji-Paraná-Manaus": 1350,
+  "Itacoatiara-Ji-Paraná": 1647, "Ji-Paraná-Itacoatiara": 1647,
+  "Itacoatiara-Parintins": 250, "Parintins-Itacoatiara": 250,
+  "Itacoatiara-Belém": 1250, "Belém-Itacoatiara": 1250,
+  "Itacoatiara-Porto Velho": 780, "Porto Velho-Itacoatiara": 780,
+  "Belém-Marabá": 540, "Marabá-Belém": 540,
+};
+function getDist(o,d){
+  const key=`${o}-${d}`; if(distancias[key]) return distancias[key];
+  // se não tiver, estima 800km para capitais distantes
+  return 1200; 
+}
+
 const cidades=["Manaus","Belém","Porto Velho","Rio Branco","Boa Vista","Palmas","Macapá","Itacoatiara","Urucurituba","Parintins","Santarém","Itapiranga","São Sebastião do Uatumã","Ananindeua","Marabá","Parauapebas","Ji-Paraná","Ariquemes","Vilhena"];
 const selO=document.getElementById('origem'), selD=document.getElementById('destino');
 cidades.forEach(c=>{selO.innerHTML+=`<option>${c}</option>`; selD.innerHTML+=`<option>${c}</option>`});
-selO.value="Manaus"; selD.value="Itacoatiara";
+selO.value="Itacoatiara"; selD.value="Ji-Paraná";
 let statusAtual='Pago';
-window.setStatus=(s)=>{statusAtual=s; document.getElementById('chipPago').classList.toggle('on',s==='Pago'); document.getElementById('chipNao').classList.toggle('on',s!=='Pago');};
-async function loadUSD(){ try{ const r=await fetch('https://economia.awesomeapi.com.br/json/last/USD-BRL'); const j=await r.json(); const v=parseFloat(j.USDBRL.bid).toFixed(2); localStorage.setItem('usd',v); document.getElementById('usd').textContent=`USD/BRL ${v}`; }catch{ document.getElementById('usd').textContent=`USD/BRL ${localStorage.getItem('usd')||'5,42'}`; } }
-document.getElementById('usd').onclick=()=>{const n=prompt('Editar USD/BRL', localStorage.getItem('usd')); if(n){localStorage.setItem('usd',n); document.getElementById('usd').textContent=`USD/BRL ${n}`; render();}};
-loadUSD();
+window.setStatus=(s)=>{statusAtual=s; chipPago.classList.toggle('on',s==='Pago'); chipNao.classList.toggle('on',s!=='Pago');};
+async function loadUSD(){ try{ const r=await fetch('https://economia.awesomeapi.com.br/json/last/USD-BRL'); const j=await r.json(); const v=parseFloat(j.USDBRL.bid).toFixed(2); localStorage.setItem('usd',v); usd.textContent=`USD/BRL ${v}`; }catch{ usd.textContent=`USD/BRL ${localStorage.getItem('usd')||'5,93'}`; } }
+usd.onclick=()=>{const n=prompt('Editar USD/BRL', localStorage.getItem('usd')); if(n){localStorage.setItem('usd',n); usd.textContent=`USD/BRL ${n}`; render();}}; loadUSD();
 
 function render(){
-  if(selO.value===selD.value){ document.getElementById('cards').innerHTML='<div style="text-align:center;color:#888;padding:20px">Origem e destino iguais</div>'; return; }
-  const peso = new Decimal(document.getElementById('peso').value||120);
-  const valor = new Decimal(document.getElementById('valorCarga').value||2800);
+  if(selO.value===selD.value){ cards.innerHTML='<div style="text-align:center;color:#888;padding:20px">Origem e destino iguais</div>'; return; }
+  const peso = new Decimal(document.getElementById('peso').value||1000);
+  const valor = new Decimal(document.getElementById('valorCarga').value||15000);
+  const dist = getDist(selO.value, selD.value);
 
+  // VELOCIDADES MÉDIAS REAIS
   const rotas=[
-    {nome:'Rodoviário', porKg:3.8, taxaFixa:85, prazo:2.1, co2:10.6, risco:'Médio', nota:82, icmsTx:0.12, obs:'AM-010 asfaltada'},
-    {nome:'Hidroviário (balsa/navio)', porKg:1.65, taxaFixa:120, prazo:6.9, co2:3.3, risco:'Alto', nota:52, icmsTx:0.07, taxaSeca:65, obs:'Seca reduz o calado'},
-    {nome:'Aéreo', porKg:18.5, taxaFixa:180, prazo:1.9, co2:12, risco:'Baixo', nota:50, icmsTx:0.18, obs:'Carga leve urgente'},
-    {nome:'Multimodal (rio+estrada)', porKg:2.9, taxaFixa:95, prazo:6.5, co2:7, risco:'Médio', nota:50, icmsTx:0.09, obs:'Balsa + truck'},
+    {nome:'Rodoviário', porKm:1.85, taxaFixa:95, vel:58, co2Fator:0.00012, risco:'Médio', nota:82, icmsTx:0.12, obs:`${dist}km - AM-010`},
+    {nome:'Hidroviário (balsa/navio)', porKm:0.65, taxaFixa:140, vel:14, co2Fator:0.00004, risco:'Alto', nota:52, icmsTx:0.07, taxaSeca:65, obs:`${dist}km rio - seca reduz calado`},
+    {nome:'Aéreo', porKm:8.2, taxaFixa:220, vel:450, co2Fator:0.00045, risco:'Baixo', nota:50, icmsTx:0.18, obs:`${dist}km - voo direto`},
+    {nome:'Multimodal (rio+estrada)', porKm:1.15, taxaFixa:110, vel:28, co2Fator:0.00008, risco:'Médio', nota:50, icmsTx:0.09, obs:`${dist}km misto`},
   ].map(r=>{
-    const baseFrete = peso.times(r.porKg);
+    const baseFrete = new Decimal(dist).times(r.porKm).times(peso.div(1000)); // dist * preço por ton/km * toneladas
     const base = baseFrete.plus(r.taxaFixa);
+    const prazo = new Decimal(dist).div(r.vel).div(10).plus(0.5).toDecimalPlaces(1); // horas / 10h por dia + carga/descarga
+    const co2 = peso.times(dist).times(r.co2Fator).div(1000).toDecimalPlaces(1); // ton CO2 proporcional
     const icms = base.times(r.icmsTx).toDecimalPlaces(2);
     const seguro = valor.times(0.02).toDecimalPlaces(2);
     const pis = base.times(0.035).toDecimalPlaces(2);
     const total = base.plus(icms).plus(seguro).plus(pis).plus(r.taxaSeca||0).toDecimalPlaces(2);
-    return {...r, base: base.toNumber(), icms: icms.toNumber(), seguro: seguro.toNumber(), pis: pis.toNumber(), total: total.toNumber()};
+    return {...r, base:base.toNumber(), icms:icms.toNumber(), seguro:seguro.toNumber(), pis:pis.toNumber(), total:total.toNumber(), prazo:prazo.toNumber(), co2:co2.toNumber(), dist};
   });
-  
   rotas.sort((a,b)=>b.nota-a.nota);
-  document.getElementById('cards').innerHTML=rotas.map((r,i)=>`
-    <div class="card ${i===0?'best':''}" onclick="window.showDetalhe(${i})">
-      <div class="row"><span class="t">${r.nome} ${i===0?'<span class=badge>MELHOR ROTA</span>':''}</span><span class="t" style="color:#4DD0E1">${r.nota}/100</span></div>
+  cards.innerHTML=rotas.map((r,i)=>`
+    <div class="card ${i===0?'best':''}" onclick="showDetalhe(${i})">
+      <div class="row"><span class="t">${r.nome} ${i===0?'<span class=badge>MELHOR ROTA</span>':''}</span><span class="t">${r.nota}/100</span></div>
       <div class="row" style="margin-top:10px">
-        <div><div class="s">Custo total</div><span class="t">R$ ${r.total.toLocaleString('pt-BR')}</span><div class="s">${peso}kg - R$ ${new Decimal(r.total).div(peso).toDecimalPlaces(2).toNumber()}/kg</div></div>
+        <div><div class="s">Custo total</div><span class="t">R$ ${r.total.toLocaleString('pt-BR')}</span><div class="s">${peso}kg • R$ ${new Decimal(r.total).div(peso).toDecimalPlaces(2)}/kg</div></div>
         <div><div class="s">Prazo</div><span class="t">${r.prazo} dias</span></div>
         <div><div class="s">CO2</div><span class="t">${r.co2} t</span></div>
         <div><div class="s">Risco</div><span class="t">${r.risco}</span></div>
       </div>
-      <div class="s" style="margin-top:6px;color:#8B5CF6">${r.obs}</div>
+      <div class="s" style="margin-top:6px;color:#fff">${r.obs}</div>
     </div>`).join('');
   window._rotas=rotas;
 }
 window.showDetalhe=(i)=>{
   const r=window._rotas[i]; const peso=document.getElementById('peso').value; const valor=document.getElementById('valorCarga').value;
-  document.getElementById('detalheBox').innerHTML=`<h3>${r.nome}</h3><div class="s">Detalhes da operação</div><br>
-  Peso: ${peso} kg<br>Valor declarado: R$ ${valor}<br><br>
-  Frete base (${r.porKg}/kg + taxa R$ ${r.taxaFixa}): R$ ${r.base}<br>
-  ICMS (${(r.icmsTx*100).toFixed(0)}%): R$ ${r.icms}<br>
-  PIS/COFINS (3.5%): R$ ${r.pis}<br>
-  Seguro (2% valor): R$ ${r.seguro}<br>
-  ${r.taxaSeca?`Taxa seca: R$ ${r.taxaSeca}<br>`:''}
-  <br><b style="font-size:18px">Total: R$ ${r.total}</b><br><br>
-  <div class="s">Cálculo com decimal.js - sem erro de float<br>Fórmula: (peso×porKg + taxaFixa) + impostos + seguro</div><br>
-  <button onclick="document.getElementById('modalDetalhe').classList.remove('show')" class=sel>Fechar</button>`;
-  document.getElementById('modalDetalhe').classList.add('show');
+  detalheBox.innerHTML=`<h3>${r.nome}</h3><div class="s">${r.dist}km - ${r.vel}km/h média</div><br>
+  Peso: ${peso}kg | Valor: R$ ${valor}<br><br>
+  Frete: R$ ${r.base}<br>ICMS: R$ ${r.icms}<br>PIS: R$ ${r.pis}<br>Seguro 2%: R$ ${r.seguro}<br>${r.taxaSeca?`Taxa seca: R$ ${r.taxaSeca}<br>`:''}
+  <br>Prazo: ${r.dist}km / ${r.vel}km/h = ${r.prazo} dias<br>
+  CO2: ${peso}kg × ${r.dist}km × fator ${r.co2Fator} = ${r.co2}t<br><br>
+  <b style="font-size:18px">Total: R$ ${r.total}</b><br><br>
+  <button onclick="modalDetalhe.classList.remove('show')" class=sel>Fechar</button>`;
+  modalDetalhe.classList.add('show');
 };
 ['origem','destino','peso','valorCarga'].forEach(id=>document.getElementById(id).addEventListener('input',render)); render();
-
-window.fecharTabela=()=>document.getElementById('modalTabela').classList.remove('show');
-document.getElementById('btnTabela').onclick=(e)=>{e.stopPropagation(); document.getElementById('modalTabela').classList.add('show'); loadTabela();};
-async function loadTabela(){
-  document.getElementById('tabelaBox').innerHTML='Carregando...';
-  try{ const r=await fetch('./logistics_prices.json?v='+Date.now()); if(!r.ok) throw 0; const j=await r.json(); localStorage.setItem('prices_cache',JSON.stringify(j)); renderTabela(j);
-  }catch{ const c=localStorage.getItem('prices_cache'); if(c) renderTabela(JSON.parse(c)); else document.getElementById('tabelaBox').innerHTML='<div class=s>Sem arquivo logistics_prices.json. Usando valores atuais da tela.</div>'+document.getElementById('cards').innerHTML; }
-}
-function renderTabela(j){ document.getElementById('tabelaBox').innerHTML=`<div class=s>Atualizado: ${j.last_updated||new Date().toLocaleDateString()}</div><table style="width:100%;font-size:12px;margin-top:8px;border-collapse:collapse"><tr style="color:#888"><th align=left>Modal</th><th align=left>Rota</th><th>R$/ton/km</th><th>Var</th></tr>${j.prices.map(p=>`<tr style="border-top:1px solid #333"><td>${p.modal}</td><td>${p.origem}→${p.destino}</td><td>R$ ${p.custo_ton_km}</td><td>${p.variacao_mes}</td></tr>`).join('')}</table>`; }
-document.getElementById('atualizarPrecos').onclick=loadTabela;
-document.getElementById('modalTabela').addEventListener('click',e=>{ if(e.target.id==='modalTabela') fecharTabela(); });
-document.getElementById('modalDetalhe').addEventListener('click',e=>{ if(e.target.id==='modalDetalhe') e.target.classList.remove('show'); });
-
-let view='ativas';
+window.fecharTabela=()=>modalTabela.classList.remove('show');
+btnTabela.onclick=(e)=>{e.stopPropagation(); modalTabela.classList.add('show'); loadTabela();};
+async function loadTabela(){ try{ const r=await fetch('./logistics_prices.json?v='+Date.now()); const j=await r.json(); tabelaBox.innerHTML=`<table style="width:100%;font-size:12px;margin-top:8px">${j.prices.map(p=>`<tr><td>${p.modal}</td><td>${p.origem}→${p.destino}</td><td>R$ ${p.custo_ton_km}</td></tr>`).join('')}</table>`; }catch{ tabelaBox.innerHTML='Sem logistics_prices.json, usando cálculo atual por distância'; } }
+atualizarPrecos.onclick=loadTabela;
+modalTabela.addEventListener('click',e=>{ if(e.target.id==='modalTabela') fecharTabela(); });
+modalDetalhe.addEventListener('click',e=>{ if(e.target.id==='modalDetalhe') e.target.classList.remove('show'); });
 function getAlts(){ return JSON.parse(localStorage.getItem('alts')||'[]'); }
 function setAlts(a){ localStorage.setItem('alts',JSON.stringify(a)); }
 function loadAlts(){
-  const alts=getAlts(); const list=document.getElementById('listaAlt');
-  const filtered=alts.filter(a=> view==='ativas' ? !a.lixeira : a.lixeira);
-  if(!filtered.length){ list.innerHTML='<div style="color:#888;text-align:center;padding:12px">Nenhuma aqui</div>'; return; }
-  list.innerHTML=filtered.map((a)=>{
-    const realIdx=alts.indexOf(a);
-    return `<div class="card" style="cursor:default">
-      <div class="row"><span class="t">${a.nome}</span><span class="${a.status==='Pago'?'pago':'naopago'}">${a.status==='Pago'?'● Pago':'● Não pago'}</span></div>
-      <div class="s">R$ ${a.valor} • ${a.obs||''} • ${a.data}</div>
-      <div style="display:flex;gap:8px;margin-top:10px">
-        <button class="btn" onclick="togglePago(${realIdx})" style="background:#222;color:#fff">${a.status==='Pago'?'Marcar Não pago':'Marcar Pago'}</button>
-        ${!a.lixeira ? `<button class="btn btn-del" onclick="toTrash(${realIdx})">🗑 Apagar</button>` : `<button class="btn" onclick="restore(${realIdx})" style="background:#22C55E;color:#000">Restaurar</button><button class="btn btn-lixeira" onclick="delForever(${realIdx})">Excluir</button>`}
-      </div>
-    </div>`;}).join('');
+  const alts=getAlts(); const filtered=alts.filter(a=> view==='ativas' ? !a.lixeira : a.lixeira);
+  listaAlt.innerHTML=filtered.length?filtered.map(a=>{
+    const realIdx=alts.indexOf(a); return `<div class="card" style="cursor:default"><div class="row"><span class="t">${a.nome}</span><span class="${a.status==='Pago'?'pago':'naopago'}">${a.status}</span></div><div class="s">R$ ${a.valor} • ${a.obs||''} • ${a.data}</div><div style="display:flex;gap:8px;margin-top:10px"><button class="btn" onclick="togglePago(${realIdx})" style="background:#222;color:#fff">${a.status==='Pago'?'Marcar Não pago':'Marcar Pago'}</button>${!a.lixeira?`<button class="btn btn-del" onclick="toTrash(${realIdx})">🗑 Apagar</button>`:`<button class="btn" onclick="restore(${realIdx})" style="background:#fff;color:#000">Restaurar</button><button class="btn" onclick="delForever(${realIdx})" style="background:#EF4444">Excluir</button>`}</div></div>`;}).join(''):'<div style="color:#888;text-align:center;padding:12px">Nenhuma aqui</div>';
 }
+let view='ativas';
 window.togglePago=(i)=>{ const a=getAlts(); a[i].status=a[i].status==='Pago'?'Não pago':'Pago'; setAlts(a); loadAlts(); };
 window.toTrash=(i)=>{ const a=getAlts(); a[i].lixeira=true; setAlts(a); loadAlts(); };
 window.restore=(i)=>{ const a=getAlts(); a[i].lixeira=false; setAlts(a); loadAlts(); };
 window.delForever=(i)=>{ if(!confirm('Excluir pra sempre?')) return; const a=getAlts(); a.splice(i,1); setAlts(a); loadAlts(); };
-document.getElementById('salvarAlt').onclick=()=>{
-  const nome=document.getElementById('altNome').value.trim(); const valor=document.getElementById('altValor').value; const obs=document.getElementById('altObs').value;
-  if(!nome) return alert('Coloca o nome da alternativa');
-  const a=getAlts(); a.unshift({nome, valor, obs, status:statusAtual, data:new Date().toLocaleDateString(), lixeira:false}); setAlts(a);
-  document.getElementById('altNome').value=''; document.getElementById('altValor').value=''; document.getElementById('altObs').value=''; loadAlts();
-};
-document.getElementById('filtroAtivas').onclick=()=>{view='ativas'; filtroAtivas.classList.add('on'); filtroLixeira.classList.remove('on'); loadAlts();};
-document.getElementById('filtroLixeira').onclick=()=>{view='lixeira'; filtroLixeira.classList.add('on'); filtroAtivas.classList.remove('on'); loadAlts();};
-tabRotas.onclick=()=>{document.getElementById('cards').style.display=''; document.getElementById('anotacoes').style.display='none'; tabRotas.classList.add('active'); tabAnot.classList.remove('active');};
-tabAnot.onclick=()=>{document.getElementById('cards').style.display='none'; document.getElementById('anotacoes').style.display=''; tabAnot.classList.add('active'); tabRotas.classList.remove('active'); loadAlts();};
+salvarAlt.onclick=()=>{const nome=altNome.value.trim(); if(!nome) return alert('Nome'); const a=getAlts(); a.unshift({nome, valor:altValor.value, obs:altObs.value, status:statusAtual, data:new Date().toLocaleDateString(), lixeira:false}); setAlts(a); altNome.value=''; altValor.value=''; altObs.value=''; loadAlts();};
+filtroAtivas.onclick=()=>{view='ativas'; filtroAtivas.classList.add('on'); filtroLixeira.classList.remove('on'); loadAlts();};
+filtroLixeira.onclick=()=>{view='lixeira'; filtroLixeira.classList.add('on'); filtroAtivas.classList.remove('on'); loadAlts();};
+tabRotas.onclick=()=>{cards.style.display=''; anotacoes.style.display='none'; tabRotas.classList.add('active'); tabAnot.classList.remove('active');};
+tabAnot.onclick=()=>{cards.style.display='none'; anotacoes.style.display=''; tabAnot.classList.add('active'); tabRotas.classList.remove('active'); loadAlts();};
 </script>
 </body>
 </html>
