@@ -24,8 +24,7 @@ h1{text-align:center;padding:12px;font-size:28px}
 .tabs button{flex:1;padding:14px;background:none;border:none;color:#777;font-weight:700}
 .tabs button.active{color:#4DD0E1}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;padding:20px;z-index:99}
-.modal.show{display:flex;animation:fade .2s ease}
-@keyframes fade{from{opacity:0}to{opacity:1}}
+.modal.show{display:flex}
 .modal-box{background:#1A1F2B;border-radius:16px;padding:16px;width:100%;max-width:420px;max-height:85vh;overflow:auto}
 .pago{color:#22C55E;font-weight:800}
 .naopago{color:#EF4444;font-weight:800}
@@ -41,48 +40,39 @@ h1{text-align:center;padding:12px;font-size:28px}
   <span>$ <span id="usd">USD/BRL 5,42</span></span>
   <span id="btnTabela" style="cursor:pointer;font-size:20px">⊞ Tabela</span>
 </div>
-
 <div class="wrap">
   <h1>Rota Viva</h1>
-
-  <!-- PESO E VALOR -->
   <div class="card" style="cursor:default">
-    <div class="row"><div style="flex:1"><div class="s">Peso da carga (kg)</div><input id="peso" type="number" value="1000" class="sel"></div>
-    <div style="flex:1;margin-left:8px"><div class="s">Valor da carga (R$)</div><input id="valorCarga" type="number" value="50000" class="sel"></div></div>
+    <div class="row"><div style="flex:1"><div class="s">Peso da carga (kg)</div><input id="peso" type="number" value="120" class="sel"></div>
+    <div style="flex:1;margin-left:8px"><div class="s">Valor da carga (R$)</div><input id="valorCarga" type="number" value="2800" class="sel"></div></div>
     <div class="s">Peso e valor recalculam custo, seguro e impostos na hora</div>
   </div>
-
   <select id="origem" class="sel"></select>
   <select id="destino" class="sel"></select>
   <div id="cards"></div>
-
-  <!-- ALTERNATIVAS -->
   <div id="anotacoes" style="display:none">
     <h3>Alternativas de Logística</h3>
-    <input id="altNome" class="sel" placeholder="Ex: Balsa Manaus-Itacoatiara / Caminhão via AM-010">
+    <input id="altNome" class="sel" placeholder="Ex: Balsa Manaus-Itacoatiara">
     <input id="altValor" type="number" class="sel" placeholder="Valor R$">
     <div style="display:flex;gap:8px;margin:6px 0">
       <button id="chipPago" class="chip on" onclick="setStatus('Pago')">● Pago</button>
       <button id="chipNao" class="chip" onclick="setStatus('Não pago')">● Não pago</button>
     </div>
-    <textarea id="altObs" class="sel" rows="2" placeholder="Obs: prazo, contato, etc"></textarea>
+    <textarea id="altObs" class="sel" rows="2" placeholder="Obs: prazo, contato..."></textarea>
     <button id="salvarAlt" class="sel" style="background:#4DD0E1;color:#000;font-weight:800">Salvar Alternativa</button>
-
     <div style="display:flex;gap:8px;margin:14px 0 8px"><button class="chip on" id="filtroAtivas">Ativas</button><button class="chip" id="filtroLixeira">🗑 Lixeira</button></div>
     <div id="listaAlt"></div>
   </div>
 </div>
-
 <div class="tabs">
   <button id="tabRotas" class="active">Rotas</button>
   <button id="tabAnot">Alternativas</button>
 </div>
-
 <div id="modalDetalhe" class="modal"><div class="modal-box" id="detalheBox"></div></div>
 <div id="modalTabela" class="modal"><div class="modal-box">
   <div style="display:flex;justify-content:space-between"><h3>Tabela Novembro 2026</h3><button class="btn btn-del" onclick="fecharTabela()">X</button></div>
   <button id="atualizarPrecos" class="sel" style="background:#4DD0E1;color:#000;font-weight:800">Atualizar preços</button>
-  <div id="tabelaBox">Carregando...</div>
+  <div id="tabelaBox"></div>
 </div></div>
 
 <script type="module">
@@ -91,73 +81,74 @@ const cidades=["Manaus","Belém","Porto Velho","Rio Branco","Boa Vista","Palmas"
 const selO=document.getElementById('origem'), selD=document.getElementById('destino');
 cidades.forEach(c=>{selO.innerHTML+=`<option>${c}</option>`; selD.innerHTML+=`<option>${c}</option>`});
 selO.value="Manaus"; selD.value="Itacoatiara";
-
 let statusAtual='Pago';
 window.setStatus=(s)=>{statusAtual=s; document.getElementById('chipPago').classList.toggle('on',s==='Pago'); document.getElementById('chipNao').classList.toggle('on',s!=='Pago');};
-
-// DOLAR
 async function loadUSD(){ try{ const r=await fetch('https://economia.awesomeapi.com.br/json/last/USD-BRL'); const j=await r.json(); const v=parseFloat(j.USDBRL.bid).toFixed(2); localStorage.setItem('usd',v); document.getElementById('usd').textContent=`USD/BRL ${v}`; }catch{ document.getElementById('usd').textContent=`USD/BRL ${localStorage.getItem('usd')||'5,42'}`; } }
 document.getElementById('usd').onclick=()=>{const n=prompt('Editar USD/BRL', localStorage.getItem('usd')); if(n){localStorage.setItem('usd',n); document.getElementById('usd').textContent=`USD/BRL ${n}`; render();}};
 loadUSD();
 
-function calc(base, arr){ let t=new Decimal(base); arr.forEach(v=>t=t.plus(v)); return t.toDecimalPlaces(2).toNumber(); }
-function getPeso(){ return new Decimal(document.getElementById('peso').value||1000); }
-function getValor(){ return new Decimal(document.getElementById('valorCarga').value||0); }
-
 function render(){
-  if(selO.value===selD.value){ document.getElementById('cards').innerHTML='<div style="text-align:center;color:#888">Origem e destino iguais</div>'; return; }
-  const peso=getPeso().toNumber(); const valor=getValor().toNumber();
-  // custo = base por kg + seguro 1% do valor da carga
+  if(selO.value===selD.value){ document.getElementById('cards').innerHTML='<div style="text-align:center;color:#888;padding:20px">Origem e destino iguais</div>'; return; }
+  const peso = new Decimal(document.getElementById('peso').value||120);
+  const valor = new Decimal(document.getElementById('valorCarga').value||2800);
+
   const rotas=[
-    {nome:'Rodoviário', porKg:40.12, prazo:2.1, co2:10.6, risco:'Médio', nota:82, icmsTx:0.08},
-    {nome:'Hidroviário (balsa/navio)', porKg:21.25, prazo:6.9, co2:3.3, risco:'Alto', nota:52, icmsTx:0.05, taxaSeca: (peso*0.5)},
-    {nome:'Aéreo', porKg:284.16, prazo:1.9, co2:12, risco:'Baixo', nota:50, icmsTx:0.12},
-    {nome:'Multimodal (rio+estrada)', porKg:30.36, prazo:6.5, co2:7, risco:'Médio', nota:50, icmsTx:0.07},
+    {nome:'Rodoviário', porKg:3.8, taxaFixa:85, prazo:2.1, co2:10.6, risco:'Médio', nota:82, icmsTx:0.12, obs:'AM-010 asfaltada'},
+    {nome:'Hidroviário (balsa/navio)', porKg:1.65, taxaFixa:120, prazo:6.9, co2:3.3, risco:'Alto', nota:52, icmsTx:0.07, taxaSeca:65, obs:'Seca reduz o calado'},
+    {nome:'Aéreo', porKg:18.5, taxaFixa:180, prazo:1.9, co2:12, risco:'Baixo', nota:50, icmsTx:0.18, obs:'Carga leve urgente'},
+    {nome:'Multimodal (rio+estrada)', porKg:2.9, taxaFixa:95, prazo:6.5, co2:7, risco:'Médio', nota:50, icmsTx:0.09, obs:'Balsa + truck'},
   ].map(r=>{
-    const base=new Decimal(r.porKg).times(peso).div(1000).toDecimalPlaces(2).toNumber();
-    const icms=new Decimal(base).times(r.icmsTx).toDecimalPlaces(2).toNumber();
-    const seguro=new Decimal(valor).times(0.01).toDecimalPlaces(2).toNumber();
-    const total=calc(base,[icms, seguro, r.taxaSeca||0]);
-    return {...r, base, icms, seguro, total, pis:new Decimal(base).times(0.01).toDecimalPlaces(2).toNumber()};
+    const baseFrete = peso.times(r.porKg);
+    const base = baseFrete.plus(r.taxaFixa);
+    const icms = base.times(r.icmsTx).toDecimalPlaces(2);
+    const seguro = valor.times(0.02).toDecimalPlaces(2);
+    const pis = base.times(0.035).toDecimalPlaces(2);
+    const total = base.plus(icms).plus(seguro).plus(pis).plus(r.taxaSeca||0).toDecimalPlaces(2);
+    return {...r, base: base.toNumber(), icms: icms.toNumber(), seguro: seguro.toNumber(), pis: pis.toNumber(), total: total.toNumber()};
   });
+  
   rotas.sort((a,b)=>b.nota-a.nota);
   document.getElementById('cards').innerHTML=rotas.map((r,i)=>`
     <div class="card ${i===0?'best':''}" onclick="window.showDetalhe(${i})">
       <div class="row"><span class="t">${r.nome} ${i===0?'<span class=badge>MELHOR ROTA</span>':''}</span><span class="t" style="color:#4DD0E1">${r.nota}/100</span></div>
       <div class="row" style="margin-top:10px">
-        <div><div class="s">Custo total</div><span class="t">R$ ${r.total.toLocaleString('pt-BR')}</span><div class="s">${peso}kg - R$ ${(r.total/peso).toFixed(2)}/kg</div></div>
+        <div><div class="s">Custo total</div><span class="t">R$ ${r.total.toLocaleString('pt-BR')}</span><div class="s">${peso}kg - R$ ${new Decimal(r.total).div(peso).toDecimalPlaces(2).toNumber()}/kg</div></div>
         <div><div class="s">Prazo</div><span class="t">${r.prazo} dias</span></div>
         <div><div class="s">CO2</div><span class="t">${r.co2} t</span></div>
         <div><div class="s">Risco</div><span class="t">${r.risco}</span></div>
       </div>
+      <div class="s" style="margin-top:6px;color:#8B5CF6">${r.obs}</div>
     </div>`).join('');
   window._rotas=rotas;
 }
 window.showDetalhe=(i)=>{
-  const r=window._rotas[i];
-  document.getElementById('detalheBox').innerHTML=`<h3>${r.nome}</h3><br>
-  Peso: ${getPeso()} kg<br>Valor carga: R$ ${getValor()}<br><br>
-  Custo base: R$ ${r.base}<br>ICMS: R$ ${r.icms}<br>PIS/COFINS: R$ ${r.pis}<br>Seguro (1% valor): R$ ${r.seguro}<br>Taxa seca: R$ ${r.taxaSeca||0}<br><br><b>Total: R$ ${r.total}</b><br><br>
+  const r=window._rotas[i]; const peso=document.getElementById('peso').value; const valor=document.getElementById('valorCarga').value;
+  document.getElementById('detalheBox').innerHTML=`<h3>${r.nome}</h3><div class="s">Detalhes da operação</div><br>
+  Peso: ${peso} kg<br>Valor declarado: R$ ${valor}<br><br>
+  Frete base (${r.porKg}/kg + taxa R$ ${r.taxaFixa}): R$ ${r.base}<br>
+  ICMS (${(r.icmsTx*100).toFixed(0)}%): R$ ${r.icms}<br>
+  PIS/COFINS (3.5%): R$ ${r.pis}<br>
+  Seguro (2% valor): R$ ${r.seguro}<br>
+  ${r.taxaSeca?`Taxa seca: R$ ${r.taxaSeca}<br>`:''}
+  <br><b style="font-size:18px">Total: R$ ${r.total}</b><br><br>
+  <div class="s">Cálculo com decimal.js - sem erro de float<br>Fórmula: (peso×porKg + taxaFixa) + impostos + seguro</div><br>
   <button onclick="document.getElementById('modalDetalhe').classList.remove('show')" class=sel>Fechar</button>`;
   document.getElementById('modalDetalhe').classList.add('show');
 };
-['origem','destino','peso','valorCarga'].forEach(id=>document.getElementById(id).oninput=render); render();
+['origem','destino','peso','valorCarga'].forEach(id=>document.getElementById(id).addEventListener('input',render)); render();
 
-// TABELA - CORRIGIDO
 window.fecharTabela=()=>document.getElementById('modalTabela').classList.remove('show');
 document.getElementById('btnTabela').onclick=(e)=>{e.stopPropagation(); document.getElementById('modalTabela').classList.add('show'); loadTabela();};
 async function loadTabela(){
-  document.getElementById('tabelaBox').textContent='Carregando...';
+  document.getElementById('tabelaBox').innerHTML='Carregando...';
   try{ const r=await fetch('./logistics_prices.json?v='+Date.now()); if(!r.ok) throw 0; const j=await r.json(); localStorage.setItem('prices_cache',JSON.stringify(j)); renderTabela(j);
-  }catch{ const c=localStorage.getItem('prices_cache'); if(c) renderTabela(JSON.parse(c)); else document.getElementById('tabelaBox').textContent='Sem cache ainda. Crie logistics_prices.json'; }
+  }catch{ const c=localStorage.getItem('prices_cache'); if(c) renderTabela(JSON.parse(c)); else document.getElementById('tabelaBox').innerHTML='<div class=s>Sem arquivo logistics_prices.json. Usando valores atuais da tela.</div>'+document.getElementById('cards').innerHTML; }
 }
-function renderTabela(j){ document.getElementById('tabelaBox').innerHTML=`<div class=s>Atualizado: ${j.last_updated||''}</div><table style="width:100%;font-size:12px;margin-top:8px">${j.prices.map(p=>`<tr><td>${p.modal}</td><td>${p.origem}->${p.destino}</td><td>R$ ${p.custo_ton_km}</td><td>${p.variacao_mes}</td></tr>`).join('')}</table>`; }
+function renderTabela(j){ document.getElementById('tabelaBox').innerHTML=`<div class=s>Atualizado: ${j.last_updated||new Date().toLocaleDateString()}</div><table style="width:100%;font-size:12px;margin-top:8px;border-collapse:collapse"><tr style="color:#888"><th align=left>Modal</th><th align=left>Rota</th><th>R$/ton/km</th><th>Var</th></tr>${j.prices.map(p=>`<tr style="border-top:1px solid #333"><td>${p.modal}</td><td>${p.origem}→${p.destino}</td><td>R$ ${p.custo_ton_km}</td><td>${p.variacao_mes}</td></tr>`).join('')}</table>`; }
 document.getElementById('atualizarPrecos').onclick=loadTabela;
-// fechar só clicando fora da caixa
 document.getElementById('modalTabela').addEventListener('click',e=>{ if(e.target.id==='modalTabela') fecharTabela(); });
 document.getElementById('modalDetalhe').addEventListener('click',e=>{ if(e.target.id==='modalDetalhe') e.target.classList.remove('show'); });
 
-// ALTERNATIVAS + LIXEIRA
 let view='ativas';
 function getAlts(){ return JSON.parse(localStorage.getItem('alts')||'[]'); }
 function setAlts(a){ localStorage.setItem('alts',JSON.stringify(a)); }
@@ -165,14 +156,14 @@ function loadAlts(){
   const alts=getAlts(); const list=document.getElementById('listaAlt');
   const filtered=alts.filter(a=> view==='ativas' ? !a.lixeira : a.lixeira);
   if(!filtered.length){ list.innerHTML='<div style="color:#888;text-align:center;padding:12px">Nenhuma aqui</div>'; return; }
-  list.innerHTML=filtered.map((a,idx)=>{
+  list.innerHTML=filtered.map((a)=>{
     const realIdx=alts.indexOf(a);
     return `<div class="card" style="cursor:default">
       <div class="row"><span class="t">${a.nome}</span><span class="${a.status==='Pago'?'pago':'naopago'}">${a.status==='Pago'?'● Pago':'● Não pago'}</span></div>
       <div class="s">R$ ${a.valor} • ${a.obs||''} • ${a.data}</div>
       <div style="display:flex;gap:8px;margin-top:10px">
         <button class="btn" onclick="togglePago(${realIdx})" style="background:#222;color:#fff">${a.status==='Pago'?'Marcar Não pago':'Marcar Pago'}</button>
-        ${!a.lixeira ? `<button class="btn btn-del" onclick="toTrash(${realIdx})">🗑 Apagar</button>` : `<button class="btn" onclick="restore(${realIdx})" style="background:#22C55E;color:#000">Restaurar</button><button class="btn btn-lixeira" onclick="delForever(${realIdx})">Excluir pra sempre</button>`}
+        ${!a.lixeira ? `<button class="btn btn-del" onclick="toTrash(${realIdx})">🗑 Apagar</button>` : `<button class="btn" onclick="restore(${realIdx})" style="background:#22C55E;color:#000">Restaurar</button><button class="btn btn-lixeira" onclick="delForever(${realIdx})">Excluir</button>`}
       </div>
     </div>`;}).join('');
 }
@@ -188,8 +179,6 @@ document.getElementById('salvarAlt').onclick=()=>{
 };
 document.getElementById('filtroAtivas').onclick=()=>{view='ativas'; filtroAtivas.classList.add('on'); filtroLixeira.classList.remove('on'); loadAlts();};
 document.getElementById('filtroLixeira').onclick=()=>{view='lixeira'; filtroLixeira.classList.add('on'); filtroAtivas.classList.remove('on'); loadAlts();};
-
-// ABAS
 tabRotas.onclick=()=>{document.getElementById('cards').style.display=''; document.getElementById('anotacoes').style.display='none'; tabRotas.classList.add('active'); tabAnot.classList.remove('active');};
 tabAnot.onclick=()=>{document.getElementById('cards').style.display='none'; document.getElementById('anotacoes').style.display=''; tabAnot.classList.add('active'); tabRotas.classList.remove('active'); loadAlts();};
 </script>
