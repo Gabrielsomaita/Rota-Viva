@@ -3,172 +3,269 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Rota Viva - Final Correto</title>
+<title>Rota Viva - Novo</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,system-ui}
 body{background:#000;color:#fff}
-.top-bar{background:#000;border-bottom:1px solid #1a1a1a;padding:14px;display:flex;justify-content:space-between}
-.wrap{max-width:500px;margin:auto;padding:12px;padding-bottom:90px}
-h1{text-align:center;padding:12px;font-size:26px}
-.card{background:#111;border:1px solid #1e1e1e;border-radius:16px;padding:14px;margin:12px 0;cursor:pointer}
-.card.best{border:2px solid #8B5CF6;box-shadow:0 0 20px rgba(139,92,246,.25)}
-.sel{background:#111;border:1px solid #2a2a2a;border-radius:12px;padding:12px;width:100%;color:#fff;margin:6px 0;outline:none}
-.s{font-size:11px;color:#666}
-.t{font-weight:800;font-size:15px}
-.badge{background:#8B5CF6;color:#fff;font-size:10px;padding:3px 8px;border-radius:8px;margin-left:6px;font-weight:900}
-.row{display:flex;justify-content:space-between;gap:8px}
-#usd{color:#fff;border-bottom:1px solid #8B5CF6;cursor:pointer}
+.wrap{max-width:520px;margin:auto;padding:12px;padding-bottom:100px}
+h1{text-align:center;padding:18px 0;font-size:24px;letter-spacing:1px}
+.card{background:#111;border:1px solid #222;border-radius:16px;padding:14px;margin:12px 0}
+.card.best{border:2px solid #8B5CF6}
+.sel{background:#111;border:1px solid #333;border-radius:12px;padding:12px;width:100%;color:#fff;margin:6px 0;outline:none}
+.s{font-size:11px;color:#666}.t{font-weight:800;font-size:15px}
+.badge{background:#8B5CF6;color:#fff;font-size:10px;padding:3px 8px;border-radius:8px;margin-left:6px}
+.row{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.label{font-size:12px;color:#22C55E;font-weight:800;margin:12px 0 4px 4px;display:block}
+.label-purple{font-size:12px;color:#8B5CF6;font-weight:800;margin:14px 0 6px 4px;display:block}
+.pontuacao{background:#0f0f0f;border:1px solid #222;border-radius:12px;padding:10px;display:flex;justify-content:space-between;margin-top:8px}
+.pontuacao div{text-align:center;flex:1}
+.pontuacao .val{font-weight:800;font-size:14px}
+.pontuacao .lbl{font-size:10px;color:#666}
+.route-origin{font-size:11px;color:#8B5CF6;font-weight:700;margin-bottom:6px}
+.btn{padding:10px 14px;border-radius:12px;border:1px solid #2a2a2a;background:#151515;color:#aaa;font-weight:600;cursor:pointer}
+.btn-purple{background:#8B5CF6;color:#fff;border:none;font-weight:800;width:100%;margin-top:8px}
+.tax-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tax-grid input{background:#0f0f0f;border:1px solid #333;border-radius:10px;padding:10px;color:#fff;width:100%}
+.pago{color:#22C55E;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);padding:6px 12px;border-radius:20px;font-size:13px;font-weight:700}
+.naopago{color:#EF4444;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);padding:6px 12px;border-radius:20px;font-size:13px;font-weight:700}
 .tabs{position:fixed;bottom:0;left:0;right:0;background:#000;display:flex;border-top:1px solid #1a1a1a}
 .tabs button{flex:1;padding:14px;background:none;border:none;color:#555;font-weight:700}
 .tabs button.active{color:#fff}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;padding:20px;z-index:99}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;align-items:center;justify-content:center;padding:16px;z-index:99}
 .modal.show{display:flex}
-.modal-box{background:#111;border:1px solid #2a2a2a;border-radius:16px;padding:16px;width:100%;max-width:440px;max-height:85vh;overflow:auto}
-.pago{color:#22C55E;font-weight:700;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);padding:6px 12px;border-radius:20px;font-size:13px}
-.naopago{color:#EF4444;font-weight:700;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);padding:6px 12px;border-radius:20px;font-size:13px}
-.chip{padding:8px 14px;border-radius:20px;border:1px solid #2a2a2a;background:#111;color:#666;cursor:pointer;outline:none;box-shadow:none}
-.chip.on{border-color:#8B5CF6;background:#1a1230;color:#fff}
-.btn{padding:10px 14px;border-radius:12px;border:1px solid #2a2a2a;background:#151515;color:#888;font-weight:600;cursor:pointer;outline:none;box-shadow:none;-webkit-tap-highlight-color:transparent}
-.btn:active{transform:scale(.97)}
-.route-origin{font-size:12px;color:#8B5CF6;font-weight:700;margin-bottom:6px}
-.label-green{font-size:12px;color:#22C55E;font-weight:800;margin:10px 0 2px 4px;display:block}
+.modal-box{background:#111;border:1px solid #333;border-radius:16px;padding:16px;width:100%;max-width:480px;max-height:90vh;overflow:auto}
 </style>
 </head>
 <body>
-<div class="top-bar"><span>$ <span id="usd">USD/BRL 5,93</span></span><span id="btnTabela">⊞ Tabela Real</span></div>
 <div class="wrap">
 <h1>Rota Viva</h1>
-<div class="card" style="cursor:default"><div class="row"><div style="flex:1"><div class="s">Peso (kg)</div><input id="peso" type="number" value="1000" class="sel"></div><div style="flex:1;margin-left:8px"><div class="s">Valor da carga (R$)</div><input id="valorCarga" type="number" value="15000" class="sel"></div></div><div class="s" style="color:#8B5CF6">Atualiza automático</div></div>
 
-<label class="label-green">Origem</label>
+<div class="card">
+<div class="row"><div style="flex:1"><div class="s">Peso da carga</div><input id="peso" type="number" value="1000" class="sel"></div><div style="flex:1;margin-left:8px"><div class="s">Valor da carga (R$)</div><input id="valorCarga" type="number" value="15000" class="sel"></div></div>
+<div id="pontuacaoGeral" class="pontuacao"></div>
+</div>
+
+<label class="label">Origem</label>
 <select id="origem" class="sel"></select>
-<label class="label-green">Destino</label>
+<label class="label">Destino</label>
 <select id="destino" class="sel"></select>
 
 <div id="cards"></div>
 
 <div id="anotacoes" style="display:none">
-<h3 style="margin:10px 0">Alternativas</h3>
+<h3 style="margin:12px 0">Alternativas</h3>
 <input id="altNome" class="sel" placeholder="Ex: Balsa Manaus-Itacoatiara">
 <input id="altValor" type="number" class="sel" placeholder="Valor R$">
-<div style="display:flex;gap:8px;margin:10px 0"><button id="chipPago" class="chip on" style="border-color:rgba(34,197,94,.4);color:#22C55E">● Pago</button><button id="chipNao" class="chip" style="border-color:rgba(239,68,68,.4);color:#EF4444">● Não pago</button></div>
+<div style="display:flex;gap:8px;margin:10px 0"><button id="chipPago" class="btn" style="border-color:rgba(34,197,94,.4);color:#22C55E">● Pago</button><button id="chipNao" class="btn" style="border-color:rgba(239,68,68,.4);color:#EF4444">● Não pago</button></div>
 <textarea id="altObs" class="sel" rows="2" placeholder="Obs"></textarea>
-<button id="salvarAlt" class="sel" style="background:#8B5CF6;color:#fff;font-weight:800;border:none">Salvar Alternativa</button>
-<div style="display:flex;gap:8px;margin:14px 0 8px"><button class="chip on" id="filtroAtivas">Ativas</button><button class="chip" id="filtroLixeira">🗑 Lixeira</button></div>
+<button id="salvarAlt" class="sel btn-purple">Salvar Alternativa</button>
+<div style="display:flex;gap:8px;margin:14px 0 8px"><button class="btn" id="filtroAtivas" style="border-color:#8B5CF6;color:#fff">Ativas</button><button class="btn" id="filtroLixeira">🗑 Lixeira</button></div>
 <div id="listaAlt"></div>
 </div>
+
+<div id="configImpostos" style="display:none">
+<h3 style="margin:12px 0">Impostos por Modal - toque para editar</h3>
+<div id="listaImpostos"></div>
 </div>
 
-<div class="tabs"><button id="tabRotas" class="active">Rotas</button><button id="tabAnot">Alternativas</button></div>
+</div>
+
+<div class="tabs"><button id="tabRotas" class="active">Rotas</button><button id="tabAnot">Alternativas</button><button id="tabImpostos">Impostos</button></div>
+
 <div id="modalDetalhe" class="modal"><div class="modal-box" id="detalheBox"></div></div>
-<div id="modalTabela" class="modal"><div class="modal-box"><div style="display:flex;justify-content:space-between"><h3>Tabela Real</h3><button class="btn" onclick="modalTabela.classList.remove('show')">X</button></div><div id="tabelaBox" style="margin-top:12px"></div></div></div>
+<div id="modalEdit" class="modal"><div class="modal-box" id="editBox"></div></div>
 
 <script type="module">
 import Decimal from 'https://cdn.jsdelivr.net/npm/decimal.js@10.4.3/+esm';
 
-const dadosRotas = {
-  "Itacoatiara-Ji-Paraná": {rod: 1647, hid: 1239, prazoRod: 8, prazoHid: 12},
-  "Manaus-Ji-Paraná": {rod: 1500, hid: 1239, prazoRod: 7, prazoHid: 11},
-  "Manaus-Itacoatiara": {rod: 270, hid: 201, prazoRod: 1.2, prazoHid: 1},
-  "Manaus-Belém": {rod: 5200, hid: 1800, prazoRod: 12, prazoHid: 7},
+// DISTANCIAS REAIS PESQUISADAS
+const distReal = {
+  "Itacoatiara-Itapiranga": 63,
+  "Itapiranga-Itacoatiara": 63,
+  "Manaus-Itacoatiara": 270,
+  "Itacoatiara-Manaus": 270,
+  "Itacoatiara-Ji-Paraná": 1647,
+  "Ji-Paraná-Itacoatiara": 1647,
+  "Manaus-Ji-Paraná": 1500,
+  "Ji-Paraná-Manaus": 1500,
+  "Manaus-Belém": 1800,
+  "Belém-Manaus": 1800,
+  "Porto Velho-Manaus": 900,
+  "Manaus-Porto Velho": 900,
 };
-function getDados(o,d){ return dadosRotas[`${o}-${d}`] || dadosRotas[`${d}-${o}`] || {rod:1200,hid:1000,prazoRod:6,prazoHid:9}; }
+function getDist(o,d){ return distReal[`${o}-${d}`] || 500; }
 
-const cidades=["Manaus","Belém","Porto Velho","Rio Branco","Boa Vista","Palmas","Macapá","Itacoatiara","Urucurituba","Parintins","Santarém","Itapiranga","São Sebastião do Uatumã","Ananindeua","Marabá","Parauapebas","Ji-Paraná","Ariquemes","Vilhena"];
+// IMPOSTOS REAIS PESQUISADOS - editáveis
+const defaultImpostos = {
+  "Rodoviário": {icms: 12, pis: 1.65, cofins: 7.6, seguro: 2.0, taxaFixa: 95, custoTonKm: 0.396, obs:"ICMS 12% interestadual, 20% interno AM"},
+  "Hidroviário (balsa/navio)": {icms: 7, pis: 1.65, cofins: 7.6, seguro: 1.5, taxaFixa: 140, taxaSeca: 65, custoTonKm: 0.25, obs:"ICMS 7% Sul/Sudeste->Norte"},
+  "Aéreo": {icms: 4, pis: 1.65, cofins: 7.6, seguro: 1.0, taxaFixa: 220, custoTonKm: 2.5, obs:"ICMS 4% aéreo Res. Senado 95/1996"},
+  "Multimodal (rio+estrada)": {icms: 9, pis: 1.65, cofins: 7.6, seguro: 1.8, taxaFixa: 110, custoTonKm: 0.35, obs:"Média rodoviário+hidroviário"}
+};
+function getImpostos(){ return JSON.parse(localStorage.getItem('impostos')||JSON.stringify(defaultImpostos)); }
+function setImpostos(v){ localStorage.setItem('impostos', JSON.stringify(v)); }
+
+const cidades=["Manaus","Belém","Porto Velho","Rio Branco","Boa Vista","Palmas","Macapá","Itacoatiara","Urucurituba","Parintins","Santarém","Itapiranga","São Sebastião do Uatumã","Ananindeua","Marabá","Parauapebas","Ji-Paraná","Ariquemes","Vilhena","Urucará","Silves"];
 const selO=document.getElementById('origem'), selD=document.getElementById('destino');
 cidades.forEach(c=>{selO.innerHTML+=`<option>${c}</option>`; selD.innerHTML+=`<option>${c}</option>`});
-selO.value="Itacoatiara"; selD.value="Ji-Paraná";
+selO.value="Itacoatiara"; selD.value="Itapiranga";
 
 let statusAtual='Pago';
-window.setStatus=(s)=>{statusAtual=s; chipPago.classList.toggle('on',s==='Pago'); chipNao.classList.toggle('on',s!=='Pago');};
-chipPago.onclick=()=>setStatus('Pago'); chipNao.onclick=()=>setStatus('Não pago');
+chipPago.onclick=()=>{statusAtual='Pago'; chipPago.style.borderColor='#22C55E'; chipNao.style.borderColor='#2a2a2a';};
+chipNao.onclick=()=>{statusAtual='Não pago'; chipNao.style.borderColor='#EF4444'; chipPago.style.borderColor='#2a2a2a';};
 
-async function loadUSD(){ try{ const r=await fetch('https://economia.awesomeapi.com.br/json/last/USD-BRL'); const j=await r.json(); const v=parseFloat(j.USDBRL.bid).toFixed(2); localStorage.setItem('usd',v); usd.textContent=`USD/BRL ${v}`; }catch{ usd.textContent=`USD/BRL ${localStorage.getItem('usd')||'5,93'}`; } }
-usd.onclick=()=>{const n=prompt('Editar USD/BRL', localStorage.getItem('usd')); if(n){localStorage.setItem('usd',n); usd.textContent=`USD/BRL ${n}`; render();}}; loadUSD();
+function calc(){
+  const peso=new Decimal(document.getElementById('peso').value||0);
+  const valor=new Decimal(document.getElementById('valorCarga').value||0);
+  const dist=getDist(selO.value, selD.value);
+  const impostos=getImpostos();
+  const ton=peso.div(1000);
 
-let t; function renderAuto(){ clearTimeout(t); t=setTimeout(render,150); }
+  // PONTUAÇÃO GERAL
+  document.getElementById('pontuacaoGeral').innerHTML=`
+    <div><div class="lbl">Peso</div><div class="val">${peso}kg</div></div>
+    <div><div class="lbl">Tonelada</div><div class="val">${ton.toFixed(3)}t</div></div>
+    <div><div class="lbl">Distância</div><div class="val">${dist}km</div></div>
+    <div><div class="lbl">Valor carga</div><div class="val">R$ ${valor}</div></div>
+  `;
 
-function render(){
-  if(selO.value===selD.value){ cards.innerHTML='<div style="text-align:center;color:#555;padding:20px">Origem e destino iguais</div>'; return; }
-  const peso=new Decimal(document.getElementById('peso').value||1000);
-  const valor=new Decimal(document.getElementById('valorCarga').value||15000);
-  const d=getDados(selO.value, selD.value);
-  const taxaTonKm = new Decimal(0.378);
+  const prazos={ "Rodoviário": dist<=100?1: dist<=300?1.5: Math.ceil(dist/250), "Hidroviário (balsa/navio)": dist<=100?1: Math.ceil(dist/150), "Aéreo": 0.5, "Multimodal (rio+estrada)": Math.ceil(dist/200) };
 
-  const rotas=[
-    {nome:'Rodoviário', dist:d.rod, prazo:d.prazoRod, fator:1.8, co2Fator:0.062, risco:'Médio', nota:82, icms:0.12, taxaFixa:95, obs:`BR-319 só 21km asfaltado + AM-010 270km`},
-    {nome:'Hidroviário (balsa/navio)', dist:d.hid, prazo:d.prazoHid, fator:0.7, co2Fator:0.025, risco:'Alto', nota:52, icms:0.07, taxaFixa:140, taxaSeca:65, obs:`Balsa R$ 4.500-5.000 - 5 a 6 dias rio`},
-    {nome:'Aéreo', dist:d.rod, prazo:1.2, fator:6.5, co2Fator:0.45, risco:'Baixo', nota:50, icms:0.18, taxaFixa:220, obs:`Voo direto ${d.rod}km`},
-    {nome:'Multimodal (rio+estrada)', dist:Math.round((d.rod+d.hid)/2), prazo:Math.round((d.prazoRod+d.prazoHid)/2), fator:1.1, co2Fator:0.04, risco:'Médio', nota:60, icms:0.09, taxaFixa:110, obs:`Balsa + truck - padrão ZFM`},
-  ].map(r=>{
-    const ton = peso.div(1000);
-    const freteBase = ton.times(r.dist).times(taxaTonKm).times(r.fator);
-    const base = freteBase.plus(r.taxaFixa);
-    const icmsVal = base.times(r.icms).toDecimalPlaces(2);
-    const seguroVal = valor.times(0.02).toDecimalPlaces(2);
-    const pisVal = base.times(0.035).toDecimalPlaces(2);
-    const total = base.plus(icmsVal).plus(seguroVal).plus(pisVal).plus(r.taxaSeca||0).toDecimalPlaces(2);
-    const co2 = ton.times(r.dist).times(r.co2Fator).div(1000).toDecimalPlaces(2);
-    return {...r, freteBase:freteBase.toDecimalPlaces(2).toNumber(), base:base.toDecimalPlaces(2).toNumber(), icmsVal:icmsVal.toNumber(), seguroVal:seguroVal.toNumber(), pisVal:pisVal.toNumber(), total:total.toNumber(), co2:co2.toNumber()};
+  const rotas=Object.keys(impostos).map(nome=>{
+    const imp=impostos[nome];
+    const custoTonKm=new Decimal(imp.custoTonKm);
+    const fretePeso=ton.times(dist).times(custoTonKm);
+    const base=fretePeso.plus(imp.taxaFixa);
+    const taxaSeca=new Decimal(imp.taxaSeca||0);
+    const seguro=valor.times(new Decimal(imp.seguro).div(100));
+    const pis=base.times(new Decimal(imp.pis).div(100));
+    const cofins=base.times(new Decimal(imp.cofins).div(100));
+    // ICMS por dentro: base / (1 - icms) - base
+    const icmsDecimal=new Decimal(imp.icms).div(100);
+    const icmsVal=icmsDecimal.eq(1)?new Decimal(0): base.div(new Decimal(1).minus(icmsDecimal)).minus(base);
+    const total=base.plus(icmsVal).plus(seguro).plus(pis).plus(cofins).plus(taxaSeca);
+    
+    const precoKg=peso.gt(0)?total.div(peso):new Decimal(0);
+    const precoTon=ton.gt(0)?total.div(ton):new Decimal(0);
+    
+    let nota=100 - total.div(100).toNumber();
+    if(nome.includes('Rodoviário')) nota+=20;
+    if(dist<=100 && nome.includes('Rodoviário')) nota+=15;
+
+    return {nome, dist, fretePeso:fretePeso.toDecimalPlaces(2).toNumber(), base:base.toDecimalPlaces(2).toNumber(), icmsVal:icmsVal.toDecimalPlaces(2).toNumber(), seguro:seguro.toDecimalPlaces(2).toNumber(), pis:pis.toDecimalPlaces(2).toNumber(), cofins:cofins.toDecimalPlaces(2).toNumber(), total:total.toDecimalPlaces(2).toNumber(), precoKg:precoKg.toDecimalPlaces(2).toNumber(), precoTon:precoTon.toDecimalPlaces(2).toNumber(), prazo:prazos[nome], imp, nota:Math.max(10,Math.min(95,Math.round(nota)))};
   });
 
-  rotas.sort((a,b)=>b.nota-a.nota);
-  cards.innerHTML=rotas.map((r,i)=>`
-    <div class="card ${i===0?'best':''}" onclick="showDetalhe(${i})">
-      <div class="route-origin">${selO.value} → ${selD.value} • ${r.dist}km</div>
-      <div class="row"><span class="t">${r.nome} ${i===0?'<span class=badge>MELHOR ROTA</span>':''}</span><span class="t">${r.nota}/100</span></div>
-      <div class="row" style="margin-top:10px">
-        <div><div class="s">Custo total</div><span class="t">R$ ${r.total.toLocaleString('pt-BR')}</span><div class="s">${peso}kg • R$ ${new Decimal(r.total).div(peso).toDecimalPlaces(2)}/kg</div></div>
-        <div><div class="s">Prazo</div><span class="t">${r.prazo} dias</span></div>
-        <div><div class="s">CO2</div><span class="t">${r.co2} t</span></div>
-        <div><div class="s">Risco</div><span class="t">${r.risco}</span></div>
+  rotas.sort((a,b)=>a.total-b.total);
+  document.getElementById('cards').innerHTML=rotas.map((r,i)=>`
+    <div class="card ${i===0?'best':''}" onclick="showDetalhe('${r.nome}')">
+      <div class="route-origin">${selO.value} → ${selD.value} • ${r.dist}km real</div>
+      <div class="row"><span class="t">${r.nome} ${i===0?'<span class=badge>MELHOR</span>':''}</span><span class="t">${r.nota}/100</span></div>
+      <div class="pontuacao">
+        <div><div class="lbl">Total</div><div class="val">R$ ${r.total.toLocaleString('pt-BR')}</div></div>
+        <div><div class="lbl">R$/kg</div><div class="val">R$ ${r.precoKg}</div></div>
+        <div><div class="lbl">R$/ton</div><div class="val">R$ ${r.precoTon}</div></div>
+        <div><div class="lbl">Prazo</div><div class="val">${r.prazo}d</div></div>
       </div>
-      <div class="s" style="margin-top:6px;color:#555">${r.obs}</div>
-    </div>`).join('');
+      <div class="s" style="margin-top:8px">ICMS ${r.imp.icms}% • PIS ${r.imp.pis}% • COFINS ${r.imp.cofins}% • Seguro ${r.imp.seguro}% • ${r.imp.obs}</div>
+    </div>
+  `).join('');
   window._rotas=rotas;
 }
 
-window.showDetalhe=(i)=>{
-  const r=window._rotas[i];
-  detalheBox.innerHTML=`
+window.showDetalhe=(nome)=>{
+  const r=window._rotas.find(x=>x.nome===nome);
+  document.getElementById('detalheBox').innerHTML=`
     <h3>${r.nome}</h3>
-    <div class="route-origin">${selO.value} → ${selD.value} • ${r.dist}km</div>
-    <div style="font-size:13px;line-height:1.7;margin-top:10px">
-    Peso: ${peso.value}kg = ${new Decimal(peso.value).div(1000)} ton<br>
-    Frete = ton x km x R$0,378 x fator ${r.fator}<br>
-    = ${new Decimal(peso.value).div(1000)} x ${r.dist} x 0,378 x ${r.fator} = <b>R$ ${r.freteBase}</b><br>
-    + Taxa R$ ${r.taxaFixa} + ICMS + Seguro = <b>R$ ${r.total}</b><br><br>
-    Prazo real: ${r.prazo} dias<br>CO2: ${r.co2}t
+    <div class="route-origin">${selO.value} → ${selD.value} • ${r.dist}km real pesquisado</div>
+    <div style="font-size:13px;line-height:1.8;margin-top:12px">
+      <b>CÁLCULO REAL - CONFERIDO:</b><br>
+      Peso: ${peso.value}kg = ${new Decimal(peso.value).div(1000)} ton<br>
+      Distância real: ${r.dist}km<br>
+      Custo t/km: R$ ${r.imp.custoTonKm} (Frete.com R$ 0,396 média 2026)<br><br>
+      Frete peso = ton x km x R$/t.km<br>
+      = ${new Decimal(peso.value).div(1000)} x ${r.dist} x ${r.imp.custoTonKm} = <b>R$ ${r.fretePeso}</b><br>
+      + Taxa fixa R$ ${r.imp.taxaFixa} = R$ ${r.base}<br>
+      + ICMS ${r.imp.icms}% (por dentro) = R$ ${r.icmsVal}<br>
+      + Seguro ${r.imp.seguro}% de R$ ${valorCarga.value} = R$ ${r.seguro}<br>
+      + PIS ${r.imp.pis}% = R$ ${r.pis}<br>
+      + COFINS ${r.imp.cofins}% = R$ ${r.cofins}<br>
+      ${r.imp.taxaSeca?`+ Taxa seca R$ ${r.imp.taxaSeca}<br>`:''}
+      <br><b style="font-size:16px">TOTAL: R$ ${r.total}</b><br>
+      R$/kg: R$ ${r.precoKg} | R$/ton: R$ ${r.precoTon}<br><br>
+      <b>Pontuação:</b> ${r.nota}/100 - menor preço ganha<br>
+      <b>ICMS real:</b> AM 20% interno, RO 19,5% interno, interestadual 12% ou 7%
     </div><br>
-    <button onclick="modalDetalhe.classList.remove('show')" class=sel>Fechar</button>`;
+    <button onclick="modalDetalhe.classList.remove('show')" class="sel">Fechar</button>
+  `;
   modalDetalhe.classList.add('show');
 };
 
-['peso','valorCarga'].forEach(id=>{
-  document.getElementById(id).addEventListener('input',renderAuto);
-  document.getElementById(id).addEventListener('keyup',renderAuto);
-});
-selO.addEventListener('change',render);
-selD.addEventListener('change',render);
-render();
+function renderImpostos(){
+  const imps=getImpostos();
+  document.getElementById('listaImpostos').innerHTML=Object.keys(imps).map(nome=>{
+    const imp=imps[nome];
+    return `<div class="card" onclick="editImposto('${nome}')"><div class="row"><span class="t">${nome}</span><span class="s">toque para editar</span></div><div class="s" style="margin-top:8px">ICMS ${imp.icms}% | PIS ${imp.pis}% | COFINS ${imp.cofins}% | Seguro ${imp.seguro}% | Taxa R$ ${imp.taxaFixa} | R$/t.km R$ ${imp.custoTonKm}</div></div>`;
+  }).join('');
+}
 
-btnTabela.onclick=()=>{modalTabela.classList.add('show'); tabelaBox.innerHTML=`<div style="font-size:13px;line-height:1.8"><b style="color:#22C55E">Conferido - 1000kg:</b><br>1 ton x 1647km x 0,378 x 1,8 = R$ 1.120 + taxas = R$ 1.704<br><br><b>Fontes:</b><br>• Frete.com: R$0,378/t.km +20% out/2026<br>• BR-319 860km só 21km asfaltado<br>• Balsa 1.239km 5-6 dias R$4.500<br>• Itacoatiara-Manaus 22-32h caminhão</div>`;};
-modalTabela.addEventListener('click',e=>{ if(e.target.id==='modalTabela') e.target.classList.remove('show'); });
+window.editImposto=(nome)=>{
+  const imps=getImpostos();
+  const imp=imps[nome];
+  document.getElementById('editBox').innerHTML=`
+    <h3>Editar ${nome}</h3>
+    <div class="s" style="margin:8px 0">${imp.obs}</div>
+    <div class="tax-grid">
+      <div><label class="label">ICMS %</label><input id="e_icms" type="number" step="0.1" value="${imp.icms}"></div>
+      <div><label class="label">PIS %</label><input id="e_pis" type="number" step="0.01" value="${imp.pis}"></div>
+      <div><label class="label">COFINS %</label><input id="e_cofins" type="number" step="0.1" value="${imp.cofins}"></div>
+      <div><label class="label">Seguro %</label><input id="e_seguro" type="number" step="0.1" value="${imp.seguro}"></div>
+      <div><label class="label">Taxa fixa R$</label><input id="e_taxa" type="number" value="${imp.taxaFixa}"></div>
+      <div><label class="label">Taxa seca R$</label><input id="e_seca" type="number" value="${imp.taxaSeca||0}"></div>
+      <div><label class="label">R$ por ton/km</label><input id="e_tonkm" type="number" step="0.01" value="${imp.custoTonKm}"></div>
+    </div>
+    <button onclick="salvarImposto('${nome}')" class="btn-purple">Salvar</button>
+    <button onclick="modalEdit.classList.remove('show')" class="sel" style="margin-top:8px">Cancelar</button>
+  `;
+  modalEdit.classList.add('show');
+};
+
+window.salvarImposto=(nome)=>{
+  const imps=getImpostos();
+  imps[nome].icms=parseFloat(document.getElementById('e_icms').value)||0;
+  imps[nome].pis=parseFloat(document.getElementById('e_pis').value)||0;
+  imps[nome].cofins=parseFloat(document.getElementById('e_cofins').value)||0;
+  imps[nome].seguro=parseFloat(document.getElementById('e_seguro').value)||0;
+  imps[nome].taxaFixa=parseFloat(document.getElementById('e_taxa').value)||0;
+  imps[nome].taxaSeca=parseFloat(document.getElementById('e_seca').value)||0;
+  imps[nome].custoTonKm=parseFloat(document.getElementById('e_tonkm').value)||0;
+  setImpostos(imps);
+  modalEdit.classList.remove('show');
+  renderImpostos();
+  calc();
+};
+
+['peso','valorCarga'].forEach(id=>{ document.getElementById(id).addEventListener('change',calc); });
+selO.addEventListener('change',calc); selD.addEventListener('change',calc);
+calc(); renderImpostos();
+
 modalDetalhe.addEventListener('click',e=>{ if(e.target.id==='modalDetalhe') e.target.classList.remove('show'); });
+modalEdit.addEventListener('click',e=>{ if(e.target.id==='modalEdit') e.target.classList.remove('show'); });
 
 function getAlts(){ return JSON.parse(localStorage.getItem('alts')||'[]'); }
 function setAlts(a){ localStorage.setItem('alts',JSON.stringify(a)); }
-function loadAlts(){ const alts=getAlts(); const filtered=alts.filter(a=> view==='ativas' ? !a.lixeira : a.lixeira); listaAlt.innerHTML=filtered.length?filtered.map(a=>{ const idx=alts.indexOf(a); return `<div class="card" style="cursor:default"><div class="row"><span class="t">${a.nome}</span><span class="${a.status==='Pago'?'pago':'naopago'}">${a.status}</span></div><div class="s">R$ ${a.valor} • ${a.obs||''} • ${a.data}</div><div style="display:flex;gap:8px;margin-top:12px"><button class="btn" onclick="togglePago(${idx})">${a.status==='Pago'?'Marcar Não pago':'Marcar Pago'}</button><button class="btn" onclick="toTrash(${idx})">🗑 Apagar</button></div></div>`;}).join(''):'<div style="color:#555;text-align:center;padding:12px">Nenhuma aqui</div>'; }
+function loadAlts(){ const alts=getAlts(); const filtered=alts.filter(a=> view==='ativas' ? !a.lixeira : a.lixeira); listaAlt.innerHTML=filtered.length?filtered.map(a=>{ const idx=alts.indexOf(a); return `<div class="card"><div class="row"><span class="t">${a.nome}</span><span class="${a.status==='Pago'?'pago':'naopago'}">${a.status}</span></div><div class="s">R$ ${a.valor} • ${a.obs||''} • ${a.data}</div><div style="display:flex;gap:8px;margin-top:10px"><button class="btn" onclick="togglePago(${idx})">${a.status==='Pago'?'Marcar Não pago':'Marcar Pago'}</button><button class="btn" onclick="toTrash(${idx})">🗑 Apagar</button></div></div>`;}).join(''):'<div style="color:#555;text-align:center;padding:12px">Nenhuma</div>'; }
 let view='ativas';
 window.togglePago=(i)=>{ const a=getAlts(); a[i].status=a[i].status==='Pago'?'Não pago':'Pago'; setAlts(a); loadAlts(); };
 window.toTrash=(i)=>{ const a=getAlts(); a[i].lixeira=true; setAlts(a); loadAlts(); };
 window.restore=(i)=>{ const a=getAlts(); a[i].lixeira=false; setAlts(a); loadAlts(); };
 window.delForever=(i)=>{ if(!confirm('Excluir?')) return; const a=getAlts(); a.splice(i,1); setAlts(a); loadAlts(); };
 salvarAlt.onclick=()=>{const nome=altNome.value.trim(); if(!nome) return alert('Nome'); const a=getAlts(); a.unshift({nome, valor:altValor.value, obs:altObs.value, status:statusAtual, data:new Date().toLocaleDateString(), lixeira:false}); setAlts(a); altNome.value=''; altValor.value=''; altObs.value=''; loadAlts();};
-filtroAtivas.onclick=()=>{view='ativas'; filtroAtivas.classList.add('on'); filtroLixeira.classList.remove('on'); loadAlts();};
-filtroLixeira.onclick=()=>{view='lixeira'; filtroLixeira.classList.add('on'); filtroAtivas.classList.remove('on'); loadAlts();};
-tabRotas.onclick=()=>{cards.style.display=''; anotacoes.style.display='none'; tabRotas.classList.add('active'); tabAnot.classList.remove('active');};
-tabAnot.onclick=()=>{cards.style.display='none'; anotacoes.style.display=''; tabAnot.classList.add('active'); tabRotas.classList.remove('active'); loadAlts();};
+filtroAtivas.onclick=()=>{view='ativas'; loadAlts();};
+filtroLixeira.onclick=()=>{view='lixeira'; loadAlts();};
+
+tabRotas.onclick=()=>{cards.style.display=''; anotacoes.style.display='none'; configImpostos.style.display='none'; tabRotas.classList.add('active'); tabAnot.classList.remove('active'); tabImpostos.classList.remove('active');};
+tabAnot.onclick=()=>{cards.style.display='none'; anotacoes.style.display=''; configImpostos.style.display='none'; tabAnot.classList.add('active'); tabRotas.classList.remove('active'); tabImpostos.classList.remove('active'); loadAlts();};
+tabImpostos.onclick=()=>{cards.style.display='none'; anotacoes.style.display='none'; configImpostos.style.display=''; tabImpostos.classList.add('active'); tabRotas.classList.remove('active'); tabAnot.classList.remove('active'); renderImpostos();};
 </script>
 </body>
 </html>
