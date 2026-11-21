@@ -4,11 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Vantis</title>
+<link rel="icon" type="image/png" href="vantis-icon.png">
+<link rel="apple-touch-icon" href="vantis-icon.png">
+<meta name="theme-color" content="#000000">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
 body{background:#000;color:#fff}
 .wrap{max-width:520px;margin:auto;padding:12px 12px 100px}
 h1{text-align:center;padding:18px 0;font-size:24px;letter-spacing:1px}
+.logo-header{display:flex;align-items:center;justify-content:center;gap:10px;padding:18px 0}
+.logo-header img{width:44px;height:44px;border-radius:12px;object-fit:cover}
+.logo-header span{font-size:24px;font-weight:800;letter-spacing:1px}
 h3{margin:12px 0}
 .card{background:#111;border:1px solid #222;border-radius:16px;padding:14px;margin:12px 0}
 .card.best{border:2px solid #8B5CF6}
@@ -49,7 +55,7 @@ h3{margin:12px 0}
 </head>
 <body>
 <div class="wrap">
-<h1>Vantis</h1>
+<div class="logo-header"><img src="vantis-icon.png" alt="Vantis"><span>Vantis</span></div>
 
 <section id="vRotas">
   <div class="card">
@@ -128,7 +134,7 @@ h3{margin:12px 0}
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brl=n=>Number(n).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
-const fnum=n=>Number(n).toLocaleString('pt-BR',{maximumFractionDigits:3}); // peso/km: sem ",00"
+const fnum=n=>Number(n).toLocaleString('pt-BR',{maximumFractionDigits:3});
 const n4=n=>Number(n).toLocaleString('pt-BR',{minimumFractionDigits:4,maximumFractionDigits:4});
 const r2=n=>Math.round((n+Number.EPSILON)*100)/100;
 const num=v=>{const n=parseFloat(String(v).replace(',','.'));return isFinite(n)&&n>0?n:0};
@@ -143,8 +149,6 @@ function confirmar(msg,fn,rotulo='Sim, excluir'){
   $('cNo').onclick=()=>$('modalEdit').classList.remove('show');
   $('cOk').onclick=()=>{$('modalEdit').classList.remove('show');fn()};
 }
-
-/* ---------- CIDADES (coordenadas: frete AÉREO e consulta automática de estrada) ---------- */
 const CID={
 "Manaus":[-3.119,-60.022],"Belém":[-1.456,-48.502],"Porto Velho":[-8.761,-63.900],"Rio Branco":[-9.975,-67.824],
 "Boa Vista":[2.823,-60.675],"Palmas":[-10.184,-48.333],"Macapá":[0.034,-51.066],"Itacoatiara":[-3.143,-58.444],
@@ -153,29 +157,22 @@ const CID={
 "Parauapebas":[-6.067,-49.903],"Ji-Paraná":[-10.885,-61.951],"Ariquemes":[-9.913,-63.041],"Vilhena":[-12.741,-60.146],
 "Urucará":[-2.536,-57.756],"Silves":[-2.840,-58.209]
 };
-// Estado de cada cidade (define o ICMS automático)
 const UF={
 "Manaus":"AM","Belém":"PA","Porto Velho":"RO","Rio Branco":"AC","Boa Vista":"RR","Palmas":"TO","Macapá":"AP","Itacoatiara":"AM",
 "Urucurituba":"AM","Parintins":"AM","Santarém":"PA","Itapiranga":"AM","São Sebastião do Uatumã":"AM","Ananindeua":"PA","Marabá":"PA",
 "Parauapebas":"PA","Ji-Paraná":"RO","Ariquemes":"RO","Vilhena":"RO","Urucará":"AM","Silves":"AM"
 };
-// ICMS interno sobre serviço de transporte por estado (2026). Interestadual entre estes estados: 12%; aéreo interestadual: 4%.
 const ICMS_INT={AC:19,AP:18,AM:20,PA:19,RO:19.5,RR:20,TO:20};
 function icmsAuto(nome,o,d){
   if(UF[o]!==UF[d]) return nome==='Aéreo'?4:12;
   return ICMS_INT[UF[o]];
 }
-// Só estas cidades têm aeroporto com carga aérea regular (as demais ficam sem o modal Aéreo)
 const AERO=new Set(["Manaus","Belém","Porto Velho","Rio Branco","Boa Vista","Palmas","Macapá","Santarém","Marabá","Parauapebas","Parintins","Ji-Paraná","Vilhena"]);
 function haversine(a,b){
   const R=6371,rad=x=>x*Math.PI/180,dLa=rad(b[0]-a[0]),dLo=rad(b[1]-a[1]);
   const h=Math.sin(dLa/2)**2+Math.cos(rad(a[0]))*Math.cos(rad(b[0]))*Math.sin(dLo/2)**2;
   return 2*R*Math.asin(Math.sqrt(h));
 }
-
-/* ---------- DISTÂNCIA AUTOMÁTICA POR ESTRADA (OSRM) ----------
- Usada só quando o par de cidades não está na malha abaixo.
- Resultado fica salvo no aparelho (não consulta duas vezes). */
 const RC=store.get('roadcache',{}),PEND={};
 function roadAuto(o,d){
   const k=o+'>'+d;
@@ -187,41 +184,36 @@ function roadAuto(o,d){
       .then(r=>r.json())
       .then(j=>{
         const m=j&&j.routes&&j.routes[0];
-        if(m){RC[k]=Math.round(m.distance/1000);store.set('roadcache',RC)} // só salva no aparelho se achou rota
-        else RC[k]=0; // sem rota: vale só nesta sessão
+        if(m){RC[k]=Math.round(m.distance/1000);store.set('roadcache',RC)}
+        else RC[k]=0;
       })
-      .catch(()=>{RC[k]=0}) // sem internet: não salva, tenta de novo na próxima sessão
+      .catch(()=>{RC[k]=0})
       .finally(()=>{delete PEND[k];render()});
   }
-  return undefined; // ainda consultando
+  return undefined;
 }
-
-/* ---------- MALHA REAL: trechos de estrada e de rio (km) ----------
- f: 'ap' = valor aproximado | 'br319' = trecho com problema na chuva */
-const J='Entroncamento AM-363'; // ponto da AM-010 onde sai a AM-363 (não aparece na tela)
+const J='Entroncamento AM-363';
 const HID=new Set([J]);
 const E=[
-['Manaus',J,'road',229,'ap'],[J,'Itacoatiara','road',40,'ap'],        // AM-010 (Manaus–Itacoatiara = 269)
-[J,'Itapiranga','road',111],[J,'Silves','road',108],                    // AM-363 / AM-330 (Manaus–Itapiranga = 340)
-['Manaus','Porto Velho','road',877,'br319'],                            // BR-319
-['Manaus','Boa Vista','road',785],                                      // BR-174
-['Porto Velho','Rio Branco','road',515],                                // BR-364
-['Porto Velho','Ariquemes','road',200,'ap'],['Ariquemes','Ji-Paraná','road',177,'ap'], // Porto Velho–Ji-Paraná = 377
-['Ji-Paraná','Vilhena','road',328,'ap'],                                // Porto Velho–Vilhena = 705
+['Manaus',J,'road',229,'ap'],[J,'Itacoatiara','road',40,'ap'],
+[J,'Itapiranga','road',111],[J,'Silves','road',108],
+['Manaus','Porto Velho','road',877,'br319'],
+['Manaus','Boa Vista','road',785],
+['Porto Velho','Rio Branco','road',515],
+['Porto Velho','Ariquemes','road',200,'ap'],['Ariquemes','Ji-Paraná','road',177,'ap'],
+['Ji-Paraná','Vilhena','road',328,'ap'],
 ['Belém','Ananindeua','road',17,'ap'],['Belém','Marabá','road',554],['Marabá','Parauapebas','road',169],
-['Marabá','Palmas','road',652],                                         // BR-153/BR-230 (inclui balsa no Araguaia)
-['Manaus','Itacoatiara','river',194],                                   // Rio Amazonas
-['Itacoatiara','Urucurituba','river',37,'ap'],['Urucurituba','Parintins','river',189,'ap'], // Manaus–Parintins = 420
-['Parintins','Santarém','river',319,'ap'],['Santarém','Belém','river',907,'ap'],           // Manaus–Belém = 1.646
+['Marabá','Palmas','road',652],
+['Manaus','Itacoatiara','river',194],
+['Itacoatiara','Urucurituba','river',37,'ap'],['Urucurituba','Parintins','river',189,'ap'],
+['Parintins','Santarém','river',319,'ap'],['Santarém','Belém','river',907,'ap'],
 ['Belém','Macapá','river',600],['Santarém','Macapá','river',770],
-['Itacoatiara','Porto Velho','river',1115],                             // Hidrovia do Madeira
+['Itacoatiara','Porto Velho','river',1115],
 ['Manaus','Urucará','river',281],['Manaus','São Sebastião do Uatumã','river',255],
 ['Itacoatiara','Urucará','river',110,'ap'],['Itacoatiara','São Sebastião do Uatumã','river',100,'ap']
 ];
 const ADJ={};
 E.forEach(([a,b,m,km,f])=>{(ADJ[a]=ADJ[a]||[]).push({to:b,from:a,m,km,f});(ADJ[b]=ADJ[b]||[]).push({to:a,from:b,m,km,f})});
-
-// menor caminho; modes = tipos de trecho permitidos; mixed = exige rio E estrada
 function trajeto(o,d,modes,mixed){
   const start=o+'|0',dist={[start]:0},prev={},done={};
   for(;;){
@@ -233,7 +225,7 @@ function trajeto(o,d,modes,mixed){
     if(n===d&&(!mixed||m==='3')){
       const legs=[];let k=u;
       while(prev[k]){legs.unshift(prev[k].e);k=prev[k].from}
-      if(mixed){const ns=[legs[0].from,...legs.map(l=>l.to)];if(new Set(ns).size!==ns.length) return null} // sem voltas
+      if(mixed){const ns=[legs[0].from,...legs.map(l=>l.to)];if(new Set(ns).size!==ns.length) return null}
       return legs;
     }
     for(const e of ADJ[n]||[]){
@@ -243,7 +235,6 @@ function trajeto(o,d,modes,mixed){
     }
   }
 }
-// junta trechos que passam por pontos escondidos
 function fundir(legs){
   const out=[];let cur=null;
   legs.forEach(l=>{
@@ -253,16 +244,11 @@ function fundir(legs){
   });
   return out;
 }
-
-/* ---------- TABELA ANTT (piso mínimo de frete, lotação) ----------
- Tabela A do Anexo II — Portaria SUROC nº 22/2026 (DOU 29/09/2026, vigente desde 30/09/2026).
- Piso = CCD × km + CC. Valores por nº de eixos: [CCD R$/km, CC R$]. Editáveis na aba Impostos. */
 const ANTT_DEF={
  'Carga geral':{2:[4.0738,451.84],3:[5.2177,541.86],4:[5.9180,588.86],5:[6.8284,657.56],6:[7.5347,671.93],7:[8.2727,831.66],9:[9.4114,903.32]},
  'Granel sólido':{2:[4.1056,460.59],3:[5.2555,552.24],4:[5.9476,597.00],5:[6.8548,664.83],6:[7.5641,680.01],7:[8.2316,820.34],9:[9.4318,908.91]},
  'Granel líquido':{2:[4.1796,471.98],3:[5.3511,569.57],4:[6.1019,621.52],5:[7.0226,693.08],6:[7.7372,709.72],7:[8.3700,840.50],9:[9.5909,934.76]}
 };
-// capacidade útil aproximada (kg) por nº de eixos — referência de mercado
 const VEIC=[
  {eix:2,nome:'Toco',cap:6000},{eix:3,nome:'Truck',cap:14000},{eix:4,nome:'Bitruck',cap:18000},
  {eix:5,nome:'Carreta 5 eixos',cap:27000},{eix:6,nome:'Carreta 6 eixos',cap:30000},
@@ -273,9 +259,6 @@ function getAntt(){
   for(const c in ANTT_DEF){o[c]={};for(const e in ANTT_DEF[c]){const v=s[c]&&s[c][e];o[c][e]=Array.isArray(v)&&v[0]>0?v:ANTT_DEF[c][e]}}
   return o;
 }
-
-/* ---------- MODAIS, IMPOSTOS, ÉPOCAS ---------- */
-// icms = 0 → automático por estado (interno do estado de origem; 12% interestadual; 4% aéreo interestadual)
 const DEFAULT_IMP={
 "Rodoviário":{icms:0,pis:1.65,cofins:7.6,seguro:0.3,taxaFixa:0,taxaSeca:0,custoTonKm:0,fracionado:2,obs:"Frete = piso ANTT (Tabela A): CCD × km + CC, conforme tipo de carga e veículo. Fracionado não tem piso oficial: o fator é uma estimativa de mercado (carga parcial cobra mais por kg). Seguro/GRIS 0,3% da carga. PIS 1,65% e COFINS 7,6% valem para Lucro Real; no Presumido use 0,65% e 3%."},
 "Hidroviário (balsa/navio)":{icms:0,pis:1.65,cofins:7.6,seguro:0.5,taxaFixa:140,taxaSeca:65,custoTonKm:0.25,fracionado:1,obs:"Tarifa estimada (não oficial; não existe piso ANTT para rio). Taxa seca só entra na época de Seca."},
@@ -289,8 +272,7 @@ function getImpostos(){
 }
 const setImpostos=v=>store.set('impostos_v2',v);
 const NOMES=Object.keys(DEFAULT_IMP);
-const SPD={road:450,river:200}; // km por dia
-// [fator de custo, fator de prazo] por tipo de trecho. Na estrada só o prazo muda (o piso ANTT não varia com a chuva).
+const SPD={road:450,river:200};
 const EPOCAS={
  'Seca':{m:'out–nov',river:[1.25,1.4],road:[1,1],txt:'Rio baixo: balsas carregam menos e navegam mais devagar.'},
  'Vazante':{m:'ago–set',river:[1.1,1.15],road:[1,1],txt:'Rio descendo: navegação um pouco mais lenta.'},
@@ -299,24 +281,20 @@ const EPOCAS={
 };
 const autoEpoca=()=>{const m=new Date().getMonth();return m===9||m===10?'Seca':m===7||m===8?'Vazante':(m===11||m<=2)?'Enchente':'Cheia'};
 const IC={road:'🚚',river:'🚢',air:'✈️'},TX={road:'estrada',river:'rio',air:'avião'};
-
-/* ---------- TELA: origem/destino/época ---------- */
 const selO=$('origem'),selD=$('destino'),selE=$('epoca');
-let distEdit=false; // true só quando você digita uma distância manual
+let distEdit=false;
 const opts=Object.keys(CID).map(c=>`<option>${esc(c)}</option>`).join('');
 selO.innerHTML=opts;selD.innerHTML=opts;selO.value="Itacoatiara";selD.value="Manaus";
 selE.innerHTML=Object.keys(EPOCAS).map(e=>`<option value="${e}">${e} (${EPOCAS[e].m})</option>`).join('');
 selE.value=autoEpoca();
 $('cargaTipo').innerHTML=Object.keys(ANTT_DEF).map(c=>`<option>${esc(c)}</option>`).join('');
 $('veiculo').innerHTML='<option value="0">Automático (menor que comporta)</option>'+VEIC.map(v=>`<option value="${v.eix}">${esc(v.nome)} (${v.eix} eixos, ~${fnum(v.cap/1000)} t)</option>`).join('');
-
-/* ---------- CÁLCULO ---------- */
 function misto(o,d){
   const m=trajeto(o,d,['road','river'],true);
   if(!m) return null;
   const len=m.reduce((t,e)=>t+e.km,0);
   const sing=[trajeto(o,d,['road'],false),trajeto(o,d,['river'],false)].filter(Boolean).map(l=>l.reduce((t,e)=>t+e.km,0));
-  if(sing.length&&len>1.3*Math.min(...sing)) return null; // desvio grande: não é alternativa de verdade
+  if(sing.length&&len>1.3*Math.min(...sing)) return null;
   return m;
 }
 function legsDoModal(nome,o,d,manual){
@@ -324,14 +302,13 @@ function legsDoModal(nome,o,d,manual){
   if(manual) return [{from:o,to:d,m:nome==='Aéreo'?'air':nome.startsWith('Hidro')?'river':'road',km:manual,f:''}];
   if(nome==='Rodoviário'){
     let l=trajeto(o,d,['road'],false);
-    if(!l){const km=roadAuto(o,d);if(km>0) l=[{from:o,to:d,m:'road',km,f:''}]} // fora da malha: consulta automática
+    if(!l){const km=roadAuto(o,d);if(km>0) l=[{from:o,to:d,m:'road',km,f:''}]}
     return l;
   }
   if(nome.startsWith('Hidro')) return trajeto(o,d,['river'],false);
   if(nome.startsWith('Multi')) return misto(o,d);
   return [{from:o,to:d,m:'air',km:Math.round(haversine(CID[o],CID[d])),f:''}];
 }
-// Piso ANTT do trecho de estrada: CCD × km + CC (+ retorno vazio opcional). Fracionado = fração do caminhão × fator, nunca acima do caminhão cheio.
 function precoRodo(kmR,peso,sel,antt,fator){
   const v=sel.veic?VEIC.find(x=>x.eix===sel.veic):(VEIC.find(x=>x.cap>=peso)||VEIC[VEIC.length-1]);
   const [ccd,cc]=antt[sel.carga][v.eix];
@@ -356,12 +333,10 @@ function precificar(nome,legs,peso,valor,imp,ep,sel,antt,icmsPct){
     if(i&&legs[i-1].m!==l.m) dias+=1;
   });
   const rod=kmRoad>0?precoRodo(kmRoad,peso,sel,antt,imp.fracionado||1):null;
-  const aqua=r2(ton*(eqRio+kmAir)*imp.custoTonKm); // rio (ajustado pela época) e ar: tarifa por t.km
+  const aqua=r2(ton*(eqRio+kmAir)*imp.custoTonKm);
   const frete=r2((rod?rod.val:0)+aqua),taxaFixa=r2(imp.taxaFixa);
-  // taxa seca: só na época de Seca e só se houver trecho de rio
   const seca=(imp.taxaSeca&&ep==='Seca'&&legs.some(l=>l.m==='river'))?r2(imp.taxaSeca):0;
   const base=r2(frete+taxaFixa+seca),seguro=r2(valor*imp.seguro/100);
-  // impostos "por dentro": incidem sobre o valor final cobrado (base + seguro)
   const aIcms=Math.min(icmsPct,99)/100,aPis=imp.pis/100,aCof=imp.cofins/100;
   const bruto=(base+seguro)/Math.max(0.01,1-aIcms-aPis-aCof);
   const icms=r2(bruto*aIcms),pis=r2(bruto*aPis),cofins=r2(bruto*aCof);
@@ -370,7 +345,6 @@ function precificar(nome,legs,peso,valor,imp,ep,sel,antt,icmsPct){
     precoKg:peso>0?r2(total/peso):0,precoTon:ton>0?r2(total/ton):0,prazo:Math.max(1,Math.ceil(dias-1e-9))};
 }
 const motivo=(n,o,d)=>n==='Aéreo'?`${[o,d].filter(c=>!AERO.has(c)).join(' e ')} não tem aeroporto com carga aérea regular.`:n==='Rodoviário'?'Não há estrada ligando essas cidades.':n.startsWith('Hidro')?'Não há rota fluvial cadastrada entre essas cidades.':'Não há rota mista (rio + estrada) que compense. Use só rodoviário ou hidroviário.';
-
 function calcular(o,d,peso,valor,manual,ep,imps,sel,antt){
   const ok=[],off=[];
   NOMES.forEach(n=>{
@@ -399,10 +373,8 @@ function render(){
   if(o===d){if(!distEdit)$('distMan').value='';$('cards').innerHTML='<div class="aviso">Escolha origem e destino diferentes.</div>';$('distInfo').textContent='';return}
   const {ok,off}=calcular(o,d,peso,valor,manual,ep,getImpostos(),getSel(),getAntt());
   ROTAS=ok;
-  // preenche a distância sozinho (estrada se existir, senão o melhor modal)
   if(!distEdit){const ref=ok.find(r=>r.nome==='Rodoviário')||ok[0];$('distMan').value=ref?ref.km:''}
   const consultando=!manual&&(o+'>'+d) in PEND;
-  // resumo automático das distâncias por modal
   $('distInfo').textContent=manual?'Usando a distância digitada (apague para voltar ao automático).':consultando?'Consultando distância por estrada…':
     ok.map(r=>`${r.nome.split(' ')[0]}: ${fnum(r.km)} km`).join(' • ');
   if(!ok.length){$('cards').innerHTML=`<div class="aviso">${consultando?'Calculando a rota por estrada…':`Não há meio de transporte cadastrado entre ${esc(o)} e ${esc(d)}. Informe a distância manual para calcular.`}</div>`;return}
@@ -424,7 +396,6 @@ function render(){
   $('cards').innerHTML=h;
 }
 $('cards').addEventListener('click',e=>{const c=e.target.closest('[data-i]');if(c) showDetalhe(+c.dataset.i)});
-
 function showDetalhe(i){
   const r=ROTAS[i];if(!r) return;
   const ep=selE.value,E_=EPOCAS[ep],q=r.rod;
@@ -468,8 +439,6 @@ function showDetalhe(i){
     <button class="btn-purple" onclick="$('modalDetalhe').classList.remove('show')">Fechar</button>`;
   $('modalDetalhe').classList.add('show');
 }
-
-/* ---------- IMPOSTOS (UI) ---------- */
 const CAMPOS=[
  ['icms','ICMS % (0 = automático)','0.1',()=>true],['pis','PIS %','0.01',()=>true],['cofins','COFINS %','0.1',()=>true],
  ['seguro','Seguro %','0.01',()=>true],['taxaFixa','Taxa fixa R$','0.01',()=>true],
@@ -536,8 +505,6 @@ function editAntt(){
   $('modalEdit').classList.add('show');
 }
 $('resetImp').onclick=()=>confirmar('Restaurar os impostos padrão?',()=>{setImpostos({});renderImpostos();render()},'Sim, restaurar');
-
-/* ---------- ALTERNATIVAS + LIXEIRA ---------- */
 let statusAtual='Pago',view='ativas';
 const novoId=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 function getAlts(){
@@ -549,7 +516,6 @@ function getAlts(){
 const setAlts=a=>store.set('alts',a);
 $('chipPago').onclick=()=>{statusAtual='Pago';$('chipPago').style.borderColor='#22C55E';$('chipNao').style.borderColor='#2a2a2a'};
 $('chipNao').onclick=()=>{statusAtual='Não pago';$('chipNao').style.borderColor='#EF4444';$('chipPago').style.borderColor='#2a2a2a'};
-
 function loadAlts(){
   const alts=getAlts(),ativas=alts.filter(a=>!a.lixeira),lix=alts.filter(a=>a.lixeira);
   $('filtroAtivas').textContent=`Ativas (${ativas.length})`;
@@ -593,8 +559,6 @@ $('salvarAlt').onclick=()=>{
 };
 $('filtroAtivas').onclick=()=>{view='ativas';loadAlts()};
 $('filtroLixeira').onclick=()=>{view='lixeira';loadAlts()};
-
-/* ---------- ABAS E EVENTOS ---------- */
 const TABS={tabRotas:'vRotas',tabAnot:'vAlt',tabImpostos:'vImp'};
 function abrirAba(id){
   for(const t in TABS){$(t).classList.toggle('active',t===id);$(TABS[t]).style.display=t===id?'':'none'}
@@ -603,9 +567,7 @@ function abrirAba(id){
 }
 for(const t in TABS) $(t).onclick=()=>abrirAba(t);
 ['peso','valorCarga'].forEach(id=>$(id).addEventListener('input',render));
-// digitar na distância = valor manual; apagar = volta ao automático
 $('distMan').addEventListener('input',()=>{distEdit=$('distMan').value.trim()!=='';render()});
-// trocar cidade = distância volta a ser automática
 [selO,selD].forEach(s=>s.addEventListener('change',()=>{distEdit=false;render()}));
 [selE,$('cargaTipo'),$('veiculo'),$('contrat'),$('retorno')].forEach(s=>s.addEventListener('change',render));
 $('trocar').onclick=()=>{const o=selO.value;selO.value=selD.value;selD.value=o;distEdit=false;render()};
