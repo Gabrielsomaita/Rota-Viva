@@ -137,8 +137,8 @@ const store={
   set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 };
 let tt;function toast(m){const t=$('toast');t.textContent=m;t.style.display='block';clearTimeout(tt);tt=setTimeout(()=>t.style.display='none',2500)}
-function confirmar(msg,fn){
-  $('editBox').innerHTML=`<h3>${esc(msg)}</h3><button class="btn-purple" id="cOk" style="background:#EF4444">Sim, excluir</button><button class="sel btn" id="cNo" style="margin-top:8px">Cancelar</button>`;
+function confirmar(msg,fn,rotulo='Sim, excluir'){
+  $('editBox').innerHTML=`<h3>${esc(msg)}</h3><button class="btn-purple" id="cOk" style="background:#EF4444">${esc(rotulo)}</button><button class="sel btn" id="cNo" style="margin-top:8px">Cancelar</button>`;
   $('modalEdit').classList.add('show');
   $('cNo').onclick=()=>$('modalEdit').classList.remove('show');
   $('cOk').onclick=()=>{$('modalEdit').classList.remove('show');fn()};
@@ -185,7 +185,11 @@ function roadAuto(o,d){
     const [a,b]=[CID[o],CID[d]];
     fetch(`https://router.project-osrm.org/route/v1/driving/${a[1]},${a[0]};${b[1]},${b[0]}?overview=false`)
       .then(r=>r.json())
-      .then(j=>{const m=j&&j.routes&&j.routes[0];RC[k]=m?Math.round(m.distance/1000):0;store.set('roadcache',RC)})
+      .then(j=>{
+        const m=j&&j.routes&&j.routes[0];
+        if(m){RC[k]=Math.round(m.distance/1000);store.set('roadcache',RC)} // só salva no aparelho se achou rota
+        else RC[k]=0; // sem rota: vale só nesta sessão
+      })
       .catch(()=>{RC[k]=0}) // sem internet: não salva, tenta de novo na próxima sessão
       .finally(()=>{delete PEND[k];render()});
   }
@@ -300,7 +304,7 @@ const IC={road:'🚚',river:'🚢',air:'✈️'},TX={road:'estrada',river:'rio',
 const selO=$('origem'),selD=$('destino'),selE=$('epoca');
 let distEdit=false; // true só quando você digita uma distância manual
 const opts=Object.keys(CID).map(c=>`<option>${esc(c)}</option>`).join('');
-selO.innerHTML=opts;selD.innerHTML=opts;selO.value="Itacoatiara";selD.value="Itapiranga";
+selO.innerHTML=opts;selD.innerHTML=opts;selO.value="Itacoatiara";selD.value="Manaus";
 selE.innerHTML=Object.keys(EPOCAS).map(e=>`<option value="${e}">${e} (${EPOCAS[e].m})</option>`).join('');
 selE.value=autoEpoca();
 $('cargaTipo').innerHTML=Object.keys(ANTT_DEF).map(c=>`<option>${esc(c)}</option>`).join('');
@@ -531,7 +535,7 @@ function editAntt(){
   desenhar();
   $('modalEdit').classList.add('show');
 }
-$('resetImp').onclick=()=>confirmar('Restaurar os impostos padrão?',()=>{setImpostos({});renderImpostos();render()});
+$('resetImp').onclick=()=>confirmar('Restaurar os impostos padrão?',()=>{setImpostos({});renderImpostos();render()},'Sim, restaurar');
 
 /* ---------- ALTERNATIVAS + LIXEIRA ---------- */
 let statusAtual='Pago',view='ativas';
